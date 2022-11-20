@@ -1,4 +1,5 @@
 public enum CardValue {
+    ANYCARD(0),
     ACE(1),
     TWO(2),
     THREE(3),
@@ -13,14 +14,14 @@ public enum CardValue {
     QUEEN(12),
     KING(13);
 
-    private int cardValue;
+    private final int valueOfCard;
 
-    private CardValue(int cardValue){
-        this.cardValue = cardValue;
+    CardValue(int cardValue){
+        this.valueOfCard = cardValue;
     }
 
-    public int getCardValue() {
-        return cardValue;
+    public int getValueOfCard() {
+        return valueOfCard;
     }
 }
 

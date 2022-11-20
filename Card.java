@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Card {
     private CardValue cardValue;
     private CardColour cardColour;
@@ -8,7 +10,7 @@ public class Card {
         this.cardValue = cardValue;
         this.cardColour = cardColour;
 
-        this.points = cardValue.getCardValue();
+        this.points = cardValue.getValueOfCard();
     }
 
     public void setCardValue(CardValue cardValue) {
@@ -34,4 +36,57 @@ public class Card {
     public int getPoints() {
         return points;
     }
+
+    public boolean isPossibleToPlayCard(StateOfRound stateOfRound){
+        CardValue lastCardValue = stateOfRound.getLastCardValue();
+        ArrayList<CardValue> possibleNextCards = stateOfRound.getPossibleNextCards();
+        ArrayList<CardColour> possibleNextColour = stateOfRound.getPossibleNextColour();
+
+        if(lastCardValue == cardValue)
+            return true;
+
+        if(stateOfRound.getRoundsOfRequest() > 0){
+            return cardValue == stateOfRound.getRequestedValue();
+        }
+
+        if(possibleNextCards.get(0) != CardValue.ANYCARD){
+            for (CardValue possibleNextCard : possibleNextCards) {
+                if (possibleNextCard == cardValue) {
+                    break;
+                }
+                return false;
+            }
+        }
+
+       if(possibleNextColour.get(0) != CardColour.ANYCOLOUR)
+           for (CardColour colour : possibleNextColour) {
+               if (colour == cardColour) {
+                   break;
+               }
+               return false;
+           }
+        return true;
+    }
+
+    public void playCard(StateOfRound stateOfRound){
+        //updateStackOfCards()
+
+        if(stateOfRound.getRoundsOfRequest() > 0){
+            stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(stateOfRound.getRequestedValue());}});
+            stateOfRound.setRoundsOfRequest(stateOfRound.getRoundsOfRequest() - 1);
+        }
+        else{
+            stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
+            stateOfRound.setPossibleNextColour(new ArrayList<>() {{add(cardColour);}});
+
+        }
+        stateOfRound.setLastCardValue(cardValue);
+
+    }
+
+    @Override
+    public String toString(){
+        return getCardValue() + " of " + getCardColour();
+    }
 }
+
