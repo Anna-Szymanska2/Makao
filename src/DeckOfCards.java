@@ -64,7 +64,9 @@ public class DeckOfCards {
         Random rand = new Random();
         int randomIndex = rand.nextInt(deckOfCards.size()-1);
 
-        return deckOfCards.get(randomIndex);
+        Card card = deckOfCards.get(randomIndex);
+        deckOfCards.remove(randomIndex);
+        return card;
     }
     public Card drawLastCard(){
         if(deckOfCards.size()==1){
@@ -75,13 +77,5 @@ public class DeckOfCards {
         Card card = deckOfCards.get(deckOfCards.size()-1);
         deckOfCards.remove(deckOfCards.size()-1);
         return card;
-    }
-    public void dealCards(Game game){
-        for(Player player:game.players){
-            for(int i = 0; i<5; i++){
-                Card card = drawLastCard();
-                player.hand.cardsInHand.add(card);
-            }
-        }
     }
 }

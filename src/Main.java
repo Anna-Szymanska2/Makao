@@ -45,7 +45,7 @@ public class Main {
         game.players.add(maciej);
         Player agata = new Player("Agata");
         game.players.add(agata);
-        deckOfCards.dealCards(game);
+        game.dealCards();
         maciej.hand.sortByCardColour();
         maciej.hand.displayCardsInHand();
         System.out.println();
