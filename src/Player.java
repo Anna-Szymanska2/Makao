@@ -8,6 +8,10 @@ public class Player {
     int roundsToStay = 0;
     String nick;
 
+    Player(String nick){
+        this.nick = nick;
+    }
+
     public void setRoundsToStay(int roundsToStay) {
         this.roundsToStay = roundsToStay;
     }

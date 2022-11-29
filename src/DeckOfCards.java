@@ -4,6 +4,7 @@ import java.util.Random;
 
 public class DeckOfCards {
     public ArrayList<Card> deckOfCards;
+    public Stack stack = new Stack();
 
     public DeckOfCards(){
         this.deckOfCards = new ArrayList();
@@ -66,6 +67,12 @@ public class DeckOfCards {
         return deckOfCards.get(randomIndex);
     }
     public Card drawLastCard(){
+        if(deckOfCards.size()==1){
+            for(Card card:stack.stack)
+                deckOfCards.add(card);
+            stack.clearStack();
+            shuffle();
+        }
         Card card = deckOfCards.get(deckOfCards.size()-1);
         deckOfCards.remove(deckOfCards.size()-1);
         return card;

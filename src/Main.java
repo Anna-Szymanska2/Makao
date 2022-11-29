@@ -36,16 +36,22 @@ public class Main {
     }
     public static void test2(){
         DeckOfCards deckOfCards = new DeckOfCards();
-        deckOfCards.printDeckOfCards();
-        System.out.println();
-        System.out.println(deckOfCards.deckOfCards.size());
-        System.out.println();
         deckOfCards.shuffle();
         deckOfCards.printDeckOfCards();
         System.out.println();
         System.out.println();
-        Card lastCard = deckOfCards.drawLastCard();
-        System.out.println(lastCard.toString());
+        Game game = new Game();
+        Player maciej = new Player("Maciej");
+        game.players.add(maciej);
+        Player agata = new Player("Agata");
+        game.players.add(agata);
+        deckOfCards.dealCards(game);
+        maciej.hand.sortByCardColour();
+        maciej.hand.displayCardsInHand();
+        System.out.println();
+        agata.hand.sortByCardValue();
+        agata.hand.displayCardsInHand();
+
         System.out.println(deckOfCards.deckOfCards.size());
     }
 }
