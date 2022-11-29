@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class Main {
     public static void main(String[] args) {
         //test();
-        test2();
+        test3();
 
 
     }
@@ -53,5 +53,10 @@ public class Main {
         agata.hand.displayCardsInHand();
 
         System.out.println(deckOfCards.deckOfCards.size());
+    }
+    public static void test3(){
+        Game game = new Game();
+        game.initializeGame();
+        game.deckOfCards.stack.printStack();
     }
 }
