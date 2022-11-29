@@ -65,4 +65,9 @@ public class DeckOfCards {
 
         return deckOfCards.get(randomIndex);
     }
+    public Card drawLastCard(){
+        Card card = deckOfCards.get(deckOfCards.size()-1);
+        deckOfCards.remove(deckOfCards.size()-1);
+        return card;
+    }
 }
