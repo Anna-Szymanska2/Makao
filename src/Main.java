@@ -2,7 +2,8 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        test();
+        //test();
+        test2();
 
 
     }
@@ -32,15 +33,18 @@ public class Main {
         System.out.println(card.isPossibleToPlayCard(stateOfRound));
         DeckOfCards deckOfCards1 = new DeckOfCards();
 
-        for(int coloursIterator = 0; coloursIterator < DeckOfCards.NUM_COLOURS; coloursIterator++){
-
-            for(int valuesIterator = 0; valuesIterator < DeckOfCards.NUM_VALUES; valuesIterator++){
-
-                System.out.print(deckOfCards1.deckOfCards[coloursIterator][valuesIterator].isPossibleToPlayCard(stateOfRound) + " ");
-            }
-            System.out.println();
-        }
-
-        System.out.println(deckOfCards1.deckOfCards[0][0].getCardValue() + " of " + deckOfCards1.deckOfCards[0][0].getCardColour() + " " + deckOfCards1.deckOfCards[0][0].getPoints());
+    }
+    public static void test2(){
+        DeckOfCards deckOfCards = new DeckOfCards();
+        deckOfCards.printDeckOfCards();
+        System.out.println();
+        System.out.println(deckOfCards.deckOfCards.size());
+        System.out.println();
+        deckOfCards.shuffle();
+        deckOfCards.printDeckOfCards();
+        System.out.println();
+        System.out.println();
+        Card randomCard = deckOfCards.drawRandomCard();
+        System.out.println(randomCard.toString());
     }
 }
