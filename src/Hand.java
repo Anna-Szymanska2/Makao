@@ -15,8 +15,8 @@ public class Hand {
     public void removeCard(int position) {
         cardsInHand.remove(position);
     }
-    public void getCard(int position) {
-        cardsInHand.get(position);
+    public Card getCard(int position) {
+        return cardsInHand.get(position);
     }
     public int getCardCount() {
         return cardsInHand.size();

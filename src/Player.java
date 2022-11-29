@@ -2,7 +2,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Player {
-    ArrayList<Card> cardsInHand = new ArrayList<>();
+    Hand hand = new Hand();
+    //ArrayList<Card> cardsInHand = new ArrayList<>();
     ArrayList<Card> chosenCards = new ArrayList<>();
     int roundsToStay = 0;
     String nick;
@@ -61,25 +62,25 @@ public class Player {
         Scanner scanner = new Scanner(System.in);
         while (true){
             System.out.println("Give number of card that you want to choose or press q to play all cards");
-            displayCardsInHand();
+            hand.displayCardsInHand();
             char answer = scanner.next().charAt(0);
             if(answer != 'q')
-                chosenCards.add(cardsInHand.get(Character.getNumericValue(answer) - 1));
+                chosenCards.add(hand.getCard(answer-1));
             else
                 break;
         }
     }
 
-    public void displayCardsInHand(){
-        for(int i = 0; i < cardsInHand.size(); i++){
-            System.out.println((i+1) + ". " + cardsInHand.get(i).toString());
-        }
-    }
+//    public void displayCardsInHand(){
+//        for(int i = 0; i < cardsInHand.size(); i++){
+//            System.out.println((i+1) + ". " + cardsInHand.get(i).toString());
+//        }
+//    }
 
     public void playChosenCards(StateOfRound stateOfRound){
         for (Card card : chosenCards) {
             card.playCard(stateOfRound);
-            cardsInHand.remove(card);
+            hand.removeCard(card);
         }
         chosenCards.clear();
     }
@@ -95,7 +96,7 @@ public class Player {
 
     public void drawCard(StateOfRound stateOfRound, DeckOfCards deckOfCards){
         Scanner scanner = new Scanner(System.in);
-        Card firstCard = deckOfCards.drawRandomCard();
+        Card firstCard = deckOfCards.drawLastCard();
         System.out.println("Choose action 1-play this card, 2-don't play this card");
         int chosenNumber = scanner.nextInt();
         if(chosenNumber == 1){
@@ -103,14 +104,14 @@ public class Player {
                 firstCard.playCard(stateOfRound);
             else{
                 System.out.println("you can't use this card");
-                cardsInHand.add(firstCard);
+                hand.addCard(firstCard);
             }
 
         }
         else{
             int cardsToDraw = stateOfRound.getCardsToDraw();
             for(int i = 0; i < cardsToDraw -1; i++)
-                cardsInHand.add(deckOfCards.drawRandomCard());
+                hand.addCard(deckOfCards.drawLastCard());
             stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
             stateOfRound.setCardsToDraw(0);
         }
@@ -125,7 +126,7 @@ public class Player {
 
     }
     public boolean hasPlayerWon(){
-        return cardsInHand.size() == 0;
+        return hand.getCardCount() == 0;
     }
 
 

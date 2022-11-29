@@ -70,4 +70,12 @@ public class DeckOfCards {
         deckOfCards.remove(deckOfCards.size()-1);
         return card;
     }
+    public void dealCards(Game game){
+        for(Player player:game.players){
+            for(int i = 0; i<5; i++){
+                Card card = drawLastCard();
+                player.hand.cardsInHand.add(card);
+            }
+        }
+    }
 }

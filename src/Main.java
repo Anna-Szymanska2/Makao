@@ -44,7 +44,8 @@ public class Main {
         deckOfCards.printDeckOfCards();
         System.out.println();
         System.out.println();
-        Card randomCard = deckOfCards.drawRandomCard();
-        System.out.println(randomCard.toString());
+        Card lastCard = deckOfCards.drawLastCard();
+        System.out.println(lastCard.toString());
+        System.out.println(deckOfCards.deckOfCards.size());
     }
 }
