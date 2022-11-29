@@ -68,8 +68,7 @@ public class DeckOfCards {
     }
     public Card drawLastCard(){
         if(deckOfCards.size()==1){
-            for(Card card:stack.stack)
-                deckOfCards.add(card);
+            deckOfCards.addAll(stack.stack);
             stack.clearStack();
             shuffle();
         }
