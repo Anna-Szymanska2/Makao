@@ -33,7 +33,7 @@ public class Player {
                 System.out.println("Choose action 1-play card(s), 2-wait round(s)");
                 int chosenNumber = scanner.nextInt();
                 if(chosenNumber == 1){
-                    isChoosingCardsInProgress = isChoosingCardsInProgress(stateOfRound);
+                    isChoosingCardsInProgress = isChoosingCardsInProgress(stateOfRound,deckOfCards);
                 }else{
                     waitRounds(stateOfRound);
                     break;
@@ -44,7 +44,7 @@ public class Player {
                 System.out.println("Choose action 1-play card(s), 2-draw card(s)");
                 int chosenNumber = scanner.nextInt();
                 if(chosenNumber == 1){
-                    isChoosingCardsInProgress = isChoosingCardsInProgress(stateOfRound);
+                    isChoosingCardsInProgress = isChoosingCardsInProgress(stateOfRound,deckOfCards);
                 }else{
                     drawCard(stateOfRound, deckOfCards);
                     break;
@@ -81,18 +81,19 @@ public class Player {
 //        }
 //    }
 
-    public void playChosenCards(StateOfRound stateOfRound){
+    public void playChosenCards(StateOfRound stateOfRound, DeckOfCards deckOfCards){
         for (Card card : chosenCards) {
             card.playCard(stateOfRound);
             hand.removeCard(card);
+            deckOfCards.stack.addCard(card);
         }
         chosenCards.clear();
     }
 
-    public boolean isChoosingCardsInProgress(StateOfRound stateOfRound){
+    public boolean isChoosingCardsInProgress(StateOfRound stateOfRound, DeckOfCards deckOfCards){
         chooseCards();
         if(areChosenCardsCorrect(stateOfRound)){
-            playChosenCards(stateOfRound);
+            playChosenCards(stateOfRound,deckOfCards);
             return false;
         }
         return true;
