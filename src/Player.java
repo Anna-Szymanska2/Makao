@@ -106,6 +106,7 @@ public class Player {
     public void drawCard(StateOfRound stateOfRound, DeckOfCards deckOfCards){
         Scanner scanner = new Scanner(System.in);
         Card firstCard = deckOfCards.drawLastCard();
+        System.out.println(firstCard.toString());
         System.out.println("Choose action 1-play this card, 2-don't play this card");
         int chosenNumber = scanner.nextInt();
         if(chosenNumber == 1){

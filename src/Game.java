@@ -19,6 +19,7 @@ public class Game {
             deckOfCards.stack.printStack();
             players.get(index).makeMove(stateOfRound, deckOfCards);
             if(players.get(index).hasPlayerWon()){
+                System.out.println("Congratulation " + players.get(index).nick+ " you have won the game");
                 System.out.println("Game is finished");
                 break;
             }

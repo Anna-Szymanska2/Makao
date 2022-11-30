@@ -18,7 +18,7 @@ public class JackCard extends Card{
         }
     }
     public CardValue chooseValue(){
-        System.out.println("Choose colour (1 - five, 2 - six, 3 - seven, 4 - eight, 5 - nine, 6 - ten, 7 - no request)");
+        System.out.println("Choose card value (1 - five, 2 - six, 3 - seven, 4 - eight, 5 - nine, 6 - ten, 7 - no request)");
         Scanner scanner = new Scanner(System.in);
         int chosenNumber = scanner.nextInt();
         CardValue chosenValue = null;
