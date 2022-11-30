@@ -5,12 +5,18 @@ public class Game {
     StateOfRound stateOfRound;
     DeckOfCards deckOfCards;
 
+    public Game(ArrayList<Player> players) {
+        this.players = players;
+        this.stateOfRound = new StateOfRound(players.size());
+        this.deckOfCards = new DeckOfCards();
+    }
 
     public void gameIsOn(){
 
         int index = 0;
 
         while (true){
+            deckOfCards.stack.printStack();
             players.get(index).makeMove(stateOfRound, deckOfCards);
             if(players.get(index).hasPlayerWon()){
                 System.out.println("Game is finished");
@@ -24,7 +30,6 @@ public class Game {
     }
 
     public void initializeGame(){
-        this.deckOfCards = new DeckOfCards();
         dealCards();
         Card card = deckOfCards.drawRandomCard();
         while(card.getClass()!=Card.class){
@@ -32,6 +37,7 @@ public class Game {
             card = deckOfCards.drawRandomCard();
         }
         deckOfCards.stack.addCard(card);
+        card.playCard(stateOfRound);
     }
     public void dealCards(){
         for(Player player:players){
@@ -40,5 +46,16 @@ public class Game {
                 player.hand.cardsInHand.add(card);
             }
         }
+    }
+
+    public static void main(String[] arg){
+        Player maciej = new Player("Maciej");
+        Player agata = new Player("Agata");
+        ArrayList<Player> players = new ArrayList<>();
+        players.add(maciej);
+        players.add(agata);
+        Game game = new Game(players);
+        game.initializeGame();
+        game.gameIsOn();
     }
 }

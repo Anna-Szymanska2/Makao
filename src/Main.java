@@ -40,11 +40,12 @@ public class Main {
         deckOfCards.printDeckOfCards();
         System.out.println();
         System.out.println();
-        Game game = new Game();
         Player maciej = new Player("Maciej");
-        game.players.add(maciej);
         Player agata = new Player("Agata");
-        game.players.add(agata);
+        ArrayList<Player> players = new ArrayList<>();
+        players.add(maciej);
+        players.add(agata);
+        Game game = new Game(players);
         game.dealCards();
         maciej.hand.sortByCardColour();
         maciej.hand.displayCardsInHand();
@@ -55,7 +56,12 @@ public class Main {
         System.out.println(deckOfCards.deckOfCards.size());
     }
     public static void test3(){
-        Game game = new Game();
+        Player maciej = new Player("Maciej");
+        Player agata = new Player("Agata");
+        ArrayList<Player> players = new ArrayList<>();
+        players.add(maciej);
+        players.add(agata);
+        Game game = new Game(players);
         game.initializeGame();
         game.deckOfCards.stack.printStack();
     }

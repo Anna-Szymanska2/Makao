@@ -21,6 +21,8 @@ public class Player {
     }
 
     public void makeMove(StateOfRound stateOfRound, DeckOfCards deckOfCards){
+        greetPlayer();
+        hand.displayCardsInHand();
         if(getRoundsToStay() > 0){
             setRoundsToStay(getRoundsToStay() - 1);
             System.out.println("This player waits in this round");
@@ -67,9 +69,9 @@ public class Player {
         while (true){
             System.out.println("Give number of card that you want to choose or press q to play all cards");
             hand.displayCardsInHand();
-            char answer = scanner.next().charAt(0);
-            if(answer != 'q')
-                chosenCards.add(hand.getCard(answer-1));
+            String answer = scanner.next();
+            if(!answer.equals("q"))
+                chosenCards.add(hand.getCard(Integer.parseInt(answer)-1));
             else
                 break;
         }
@@ -96,6 +98,8 @@ public class Player {
             playChosenCards(stateOfRound,deckOfCards);
             return false;
         }
+        else
+            System.out.println("you cannot play those cards");
         return true;
     }
 
@@ -133,6 +137,11 @@ public class Player {
     public boolean hasPlayerWon(){
         return hand.getCardCount() == 0;
     }
+
+    public void greetPlayer(){
+        System.out.println("Hi " + nick + " those are your cards");
+    }
+
 
 
 }
