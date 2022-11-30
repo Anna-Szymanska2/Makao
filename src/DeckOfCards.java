@@ -70,8 +70,11 @@ public class DeckOfCards {
     }
     public Card drawLastCard(){
         if(deckOfCards.size()==1){
+            Card card = stack.getLastCard();
+            stack.removeCard(card);
             deckOfCards.addAll(stack.stack);
             stack.clearStack();
+            stack.addCard(card);
             shuffle();
         }
         Card card = deckOfCards.get(deckOfCards.size()-1);

@@ -30,6 +30,7 @@ public class Game {
     }
 
     public void initializeGame(){
+        deckOfCards.shuffle();
         dealCards();
         Card card = deckOfCards.drawRandomCard();
         while(card.getClass()!=Card.class){
