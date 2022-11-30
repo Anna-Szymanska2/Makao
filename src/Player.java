@@ -110,8 +110,10 @@ public class Player {
         System.out.println("Choose action 1-play this card, 2-don't play this card");
         int chosenNumber = scanner.nextInt();
         if(chosenNumber == 1){
-            if(firstCard.isPossibleToPlayCard(stateOfRound))
+            if(firstCard.isPossibleToPlayCard(stateOfRound)) {
                 firstCard.playCard(stateOfRound);
+                deckOfCards.stack.addCard(firstCard);
+            }
             else{
                 System.out.println("you can't use this card");
                 hand.addCard(firstCard);
