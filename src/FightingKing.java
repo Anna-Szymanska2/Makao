@@ -10,5 +10,6 @@ public class FightingKing extends Card{
         super.playCard(stateOfRound);
         stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.KING);}});
         stateOfRound.setPossibleNextColour(new ArrayList<>() {{add(CardColour.SPADES); add(CardColour.HEARTS);}});
+        stateOfRound.setCardsToDraw(stateOfRound.getCardsToDraw() + 5);
     }
 }

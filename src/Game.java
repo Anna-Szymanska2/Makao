@@ -18,12 +18,14 @@ public class Game {
         while (true){
             deckOfCards.stack.printStack();
             players.get(index).makeMove(stateOfRound, deckOfCards);
-            if(players.get(index).hasPlayerWon()){
-                System.out.println("Congratulation " + players.get(index).nick+ " you have won the game");
+            if(players.get(index).hasPlayerWon()) {
+                System.out.println("Congratulation " + players.get(index).nick + " you have won the game");
                 System.out.println("Game is finished");
                 break;
             }
-            if(stateOfRound.getLastCardValue() == CardValue.KING && stateOfRound.getPossibleNextColour().get(0) == CardColour.SPADES)
+            Card lastCard = stateOfRound.getLastCard();
+            if(lastCard.getCardValue()
+                    == CardValue.KING && stateOfRound.getPossibleNextColour().get(0) == CardColour.SPADES)
                 index = (index + players.size() - 1)%players.size();
             else
                 index = (index + 1)%players.size();

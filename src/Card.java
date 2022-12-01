@@ -38,7 +38,8 @@ public class Card {
     }
 
     public boolean isPossibleToPlayCard(StateOfRound stateOfRound){
-        CardValue lastCardValue = stateOfRound.getLastCardValue();
+        Card lastCard = stateOfRound.getLastCard();
+        CardValue lastCardValue = lastCard.getCardValue();
         ArrayList<CardValue> possibleNextCards = stateOfRound.getPossibleNextCards();
         ArrayList<CardColour> possibleNextColour = stateOfRound.getPossibleNextColour();
 
@@ -80,7 +81,7 @@ public class Card {
             stateOfRound.setPossibleNextColour(new ArrayList<>() {{add(cardColour);}});
 
         }
-        stateOfRound.setLastCardValue(cardValue);
+        stateOfRound.setLastCard(this);
 
     }
 

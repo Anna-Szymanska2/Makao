@@ -57,6 +57,8 @@ public class Player {
     }
 
     boolean areChosenCardsCorrect(StateOfRound stateOfRound){
+        if(chosenCards.size() == 0)
+            return false;
         CardValue cardValue = chosenCards.get(0).getCardValue();
         for(int i = 1; i < chosenCards.size(); i++){
             if(chosenCards.get(i).getCardValue() != cardValue)
@@ -67,7 +69,7 @@ public class Player {
     public void chooseCards(){
         Scanner scanner = new Scanner(System.in);
         while (true){
-            System.out.println("Give number of card that you want to choose or press q to play all cards");
+            System.out.println("Give number of card that you want to choose or press q to play all chosen cards");
             hand.displayCardsInHand();
             String answer = scanner.next();
             if(!answer.equals("q"))
@@ -98,17 +100,23 @@ public class Player {
             playChosenCards(stateOfRound,deckOfCards);
             return false;
         }
-        else
+        else{
             System.out.println("you cannot play those cards");
+            chosenCards.clear();
+        }
+
+
         return true;
     }
 
     public void drawCard(StateOfRound stateOfRound, DeckOfCards deckOfCards){
         Scanner scanner = new Scanner(System.in);
         Card firstCard = deckOfCards.drawLastCard();
+        Card lastCard = stateOfRound.getLastCard();
         System.out.println(firstCard.toString());
         System.out.println("Choose action 1-play this card, 2-don't play this card");
         int chosenNumber = scanner.nextInt();
+        int cardsToDraw = stateOfRound.getCardsToDraw();
         if(chosenNumber == 1){
             if(firstCard.isPossibleToPlayCard(stateOfRound)) {
                 firstCard.playCard(stateOfRound);
@@ -117,14 +125,21 @@ public class Player {
             else{
                 System.out.println("you can't use this card");
                 hand.addCard(firstCard);
+                for(int i = 0; i < cardsToDraw -1; i++)
+                    hand.addCard(deckOfCards.drawLastCard());
+                stateOfRound.setCardsToDraw(0);
+                stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
+
+                stateOfRound.setPossibleNextColour(new ArrayList<>() {{add(lastCard.getCardColour());}});
             }
 
         }
         else{
-            int cardsToDraw = stateOfRound.getCardsToDraw();
+            hand.addCard(firstCard);
             for(int i = 0; i < cardsToDraw -1; i++)
                 hand.addCard(deckOfCards.drawLastCard());
             stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
+            stateOfRound.setPossibleNextColour(new ArrayList<>() {{add(lastCard.getCardColour());}});
             stateOfRound.setCardsToDraw(0);
         }
 

@@ -17,7 +17,7 @@ public class Main {
         StateOfRound stateOfRound = new StateOfRound(
                 new ArrayList<>() {{add(CardValue.FIVE);}},
                 new ArrayList<>() {{add(CardColour.DIAMONDS);}},
-                CardValue.FIVE,
+                new Card(CardColour.CLUBS, CardValue.ACE),
                 players
         );
 
