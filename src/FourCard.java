@@ -6,8 +6,8 @@ public class FourCard extends Card{
     }
 
     @Override
-    public void playCard(StateOfRound stateOfRound){
-        super.playCard(stateOfRound);
+    public void playCard(StateOfRound stateOfRound, Stack stack){
+        super.playCard(stateOfRound, stack);
         stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.FOUR);}});
         stateOfRound.setRoundsToStay(stateOfRound.getRoundsToStay() + 1);
     }

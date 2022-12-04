@@ -43,6 +43,13 @@ public class Card {
         ArrayList<CardValue> possibleNextCards = stateOfRound.getPossibleNextCards();
         ArrayList<CardColour> possibleNextColour = stateOfRound.getPossibleNextColour();
 
+        if(lastCard.getClass() == FightingKing.class && stateOfRound.getCardsToDraw() > 0) {
+            if(this.getClass() == FightingKing.class)
+                return true;
+            else
+                return false;
+        }
+
         if(lastCardValue == cardValue)
             return true;
 
@@ -69,12 +76,12 @@ public class Card {
         return true;
     }
 
-    public void playCard(StateOfRound stateOfRound){
-        //updateStackOfCards()
+    public void playCard(StateOfRound stateOfRound, Stack stack){
+        stack.addCard(this);
 
         if(stateOfRound.getRoundsOfRequest() > 0){
             stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(stateOfRound.getRequestedValue());}});
-            stateOfRound.setRoundsOfRequest(stateOfRound.getRoundsOfRequest() - 1);
+
         }
         else{
             stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
@@ -88,6 +95,18 @@ public class Card {
     @Override
     public String toString(){
         return getCardValue() + " of " + getCardColour();
+    }
+
+    @Override
+    public boolean equals(Object object){
+        Card card = (Card) object;
+        if(card.getCardValue() != this.cardValue)
+            return false;
+
+        if(card.getCardColour() != this.cardColour)
+            return false;
+
+        return true;
     }
 }
 

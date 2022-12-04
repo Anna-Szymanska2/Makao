@@ -6,8 +6,8 @@ public class AceCard extends Card{
         super(cardColour, cardValue);
     }
     @Override
-    public void playCard(StateOfRound stateOfRound){
-        super.playCard(stateOfRound);
+    public void playCard(StateOfRound stateOfRound, Stack stack){
+        super.playCard(stateOfRound, stack);
         stateOfRound.setPossibleNextColour(new ArrayList<>() {{add(chooseColour());}});
     }
 

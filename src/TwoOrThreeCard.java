@@ -6,8 +6,8 @@ public class TwoOrThreeCard extends Card{
         super(cardColour, cardValue);
     }
     @Override
-    public void playCard(StateOfRound stateOfRound){
-        super.playCard(stateOfRound);
+    public void playCard(StateOfRound stateOfRound, Stack stack){
+        super.playCard(stateOfRound, stack);
         stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.THREE); add( CardValue.TWO);}});
         stateOfRound.setCardsToDraw(stateOfRound.getCardsToDraw() + getCardValue().getValueOfCard());
     }

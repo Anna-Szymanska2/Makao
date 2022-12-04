@@ -7,8 +7,8 @@ public class JackCard extends Card{
     }
 
     @Override
-    public void playCard(StateOfRound stateOfRound){
-        super.playCard(stateOfRound);
+    public void playCard(StateOfRound stateOfRound, Stack stack){
+        super.playCard(stateOfRound, stack);
         CardValue chosenValue = chooseValue();
         if(chosenValue != CardValue.ANYCARD){
             stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.JACK);add(chosenValue);}});

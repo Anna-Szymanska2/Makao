@@ -25,10 +25,10 @@ public class Main {
         TwoOrThreeCard twoOrThreeCard = new TwoOrThreeCard(CardColour.DIAMONDS, CardValue.TWO);
         QueenCard queen = new QueenCard(CardColour.CLUBS, CardValue.QUEEN);
         AceCard ace = new AceCard(CardColour.CLUBS, CardValue.ACE);
-        card.playCard(stateOfRound);
+        //card.playCard(stateOfRound, );
         //twoOrThreeCard.playCard(stateOfRound);
         queen.isPossibleToPlayCard(stateOfRound);
-        ace.playCard(stateOfRound);
+        //ace.playCard(stateOfRound, );
         System.out.println(card.getCardValue() + " of " + card.getCardColour() + " " + card.getPoints());
         System.out.println(card.isPossibleToPlayCard(stateOfRound));
         DeckOfCards deckOfCards1 = new DeckOfCards();
