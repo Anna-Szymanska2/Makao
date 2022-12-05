@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
-public class FightingKing extends Card{
-    public FightingKing(CardColour cardColour, CardValue cardValue){
+public class FightingKingCard extends Card{
+    public FightingKingCard(CardColour cardColour, CardValue cardValue){
         super(cardColour, cardValue);
     }
 

@@ -41,13 +41,13 @@ public class DeckOfCards {
             Card card = new QueenCard(CardColour.values()[j], CardValue.QUEEN);
             this.deckOfCards.add(card);
         }
-        Card card = new Card(CardColour.CLUBS, CardValue.KING);
+        Card card = new BasicKingCard(CardColour.CLUBS, CardValue.KING);
         this.deckOfCards.add(card);
-        Card card2 = new Card(CardColour.DIAMONDS, CardValue.KING);
+        Card card2 = new BasicKingCard(CardColour.DIAMONDS, CardValue.KING);
         this.deckOfCards.add(card2);
-        Card card3 = new FightingKing(CardColour.HEARTS, CardValue.KING);
+        Card card3 = new FightingKingCard(CardColour.HEARTS, CardValue.KING);
         this.deckOfCards.add(card3);
-        Card card4 = new FightingKing(CardColour.SPADES, CardValue.KING);
+        Card card4 = new FightingKingCard(CardColour.SPADES, CardValue.KING);
         this.deckOfCards.add(card4);
 
     }

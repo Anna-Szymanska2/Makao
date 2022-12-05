@@ -43,8 +43,8 @@ public class Card {
         ArrayList<CardValue> possibleNextCards = stateOfRound.getPossibleNextCards();
         CardColour possibleNextColour = stateOfRound.getPossibleNextColour();
 
-        if(lastCard.getClass() == FightingKing.class && stateOfRound.getCardsToDraw() > 0) {
-            if(this.getClass() == FightingKing.class)
+        if(lastCard.getClass() == FightingKingCard.class && stateOfRound.getCardsToDraw() > 0) {
+            if(this.getClass() == FightingKingCard.class)
                 return true;
             else
                 return false;
