@@ -12,9 +12,9 @@ public class JackCard extends Card{
         CardValue chosenValue = chooseValue();
         if(chosenValue != CardValue.ANYCARD){
             stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.JACK);add(chosenValue);}});
-            stateOfRound.setRoundsOfRequest(stateOfRound.getPlayers());
+            stateOfRound.setRoundsOfRequest(stateOfRound.getPlayers() + 1);
             stateOfRound.setRequestedValue(chosenValue);
-            stateOfRound.setPossibleNextColour(new ArrayList<>() {{add(CardColour.ANYCOLOUR);}});
+            stateOfRound.setPossibleNextColour(CardColour.ANYCOLOUR);
         }
     }
     public CardValue chooseValue(){

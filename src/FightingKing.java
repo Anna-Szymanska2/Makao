@@ -9,7 +9,7 @@ public class FightingKing extends Card{
     public void playCard(StateOfRound stateOfRound, Stack stack){
         super.playCard(stateOfRound, stack);
         stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.KING);}});
-        stateOfRound.setPossibleNextColour(new ArrayList<>() {{add(CardColour.SPADES); add(CardColour.HEARTS);}});
+       // stateOfRound.setPossibleNextColour(new ArrayList<>() {{add(CardColour.SPADES); add(CardColour.HEARTS);}});
         stateOfRound.setCardsToDraw(stateOfRound.getCardsToDraw() + 5);
     }
 }

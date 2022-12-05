@@ -41,7 +41,7 @@ public class Card {
         Card lastCard = stateOfRound.getLastCard();
         CardValue lastCardValue = lastCard.getCardValue();
         ArrayList<CardValue> possibleNextCards = stateOfRound.getPossibleNextCards();
-        ArrayList<CardColour> possibleNextColour = stateOfRound.getPossibleNextColour();
+        CardColour possibleNextColour = stateOfRound.getPossibleNextColour();
 
         if(lastCard.getClass() == FightingKing.class && stateOfRound.getCardsToDraw() > 0) {
             if(this.getClass() == FightingKing.class)
@@ -50,44 +50,46 @@ public class Card {
                 return false;
         }
 
-        if(lastCardValue == cardValue)
+        if(lastCardValue == cardValue){
             return true;
+        }
+
 
         if(stateOfRound.getRoundsOfRequest() > 0){
             return cardValue == stateOfRound.getRequestedValue();
         }
 
+        boolean isOneOfPossibleCards = false;
         if(possibleNextCards.get(0) != CardValue.ANYCARD){
             for (CardValue possibleNextCard : possibleNextCards) {
                 if (possibleNextCard == cardValue) {
+                    isOneOfPossibleCards = true;
                     break;
                 }
-                return false;
             }
+            if(!isOneOfPossibleCards)
+                return false;
         }
 
-       if(possibleNextColour.get(0) != CardColour.ANYCOLOUR)
-           for (CardColour colour : possibleNextColour) {
-               if (colour == cardColour) {
-                   break;
-               }
+       if(possibleNextColour != CardColour.ANYCOLOUR)
+           if(possibleNextColour != cardColour)
                return false;
-           }
+
         return true;
     }
 
     public void playCard(StateOfRound stateOfRound, Stack stack){
         stack.addCard(this);
 
-        if(stateOfRound.getRoundsOfRequest() > 0){
+       /* if(stateOfRound.getRoundsOfRequest() - 1 > 0){
             stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(stateOfRound.getRequestedValue());}});
 
         }
-        else{
-            stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
-            stateOfRound.setPossibleNextColour(new ArrayList<>() {{add(cardColour);}});
+        else{*/
+        stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
+        stateOfRound.setPossibleNextColour(cardColour);
 
-        }
+        // }
         stateOfRound.setLastCard(this);
 
     }

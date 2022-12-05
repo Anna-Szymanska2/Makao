@@ -89,9 +89,24 @@ public class Player {
 //    }
 
     public void playChosenCards(StateOfRound stateOfRound, DeckOfCards deckOfCards){
-        for (Card card : chosenCards) {
-            card.playCard(stateOfRound, deckOfCards.stack );
-            hand.removeCard(card);
+        Card lastCard = chosenCards.get(chosenCards.size() - 1);
+        boolean isJackOrAce = false;
+        if(lastCard.getCardValue() == CardValue.JACK || lastCard.getCardValue() == CardValue.ACE)
+            isJackOrAce = true;
+
+        if(isJackOrAce) {
+            for (Card card : chosenCards) {
+                if(!card.equals(lastCard))
+                    deckOfCards.stack.addCard(card);
+                hand.removeCard(card);
+            }
+            lastCard.playCard(stateOfRound, deckOfCards.stack);
+        }
+        else{
+            for (Card card : chosenCards) {
+                card.playCard(stateOfRound, deckOfCards.stack);
+                hand.removeCard(card);
+            }
         }
         chosenCards.clear();
     }
@@ -131,8 +146,8 @@ public class Player {
                 stateOfRound.setCardsToDraw(0);
                 stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
 
-                if(lastCard.getClass() == FightingKing.class)
-                    stateOfRound.setPossibleNextColour(new ArrayList<>() {{add(lastCard.getCardColour());}});
+                /*if(lastCard.getClass() == FightingKing.class)
+                    stateOfRound.setPossibleNextColour(new ArrayList<>() {{add(lastCard.getCardColour());}});*/
             }
 
         }
@@ -141,8 +156,8 @@ public class Player {
             for(int i = 0; i < cardsToDraw -1; i++)
                 hand.addCard(deckOfCards.drawLastCard());
             stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
-            if(lastCard.getClass() == FightingKing.class)
-                stateOfRound.setPossibleNextColour(new ArrayList<>() {{add(lastCard.getCardColour());}});
+            /*if(lastCard.getClass() == FightingKing.class)
+                stateOfRound.setPossibleNextColour(new ArrayList<>() {{add(lastCard.getCardColour());}});*/
             stateOfRound.setCardsToDraw(0);
         }
 
