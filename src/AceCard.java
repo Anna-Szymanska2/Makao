@@ -6,9 +6,9 @@ public class AceCard extends Card{
         super(cardColour, cardValue);
     }
     @Override
-    public void playCard(StateOfRound stateOfRound){
-        super.playCard(stateOfRound);
-        stateOfRound.setPossibleNextColour(new ArrayList<>() {{add(chooseColour());}});
+    public void playCard(StateOfRound stateOfRound, Stack stack){
+        super.playCard(stateOfRound, stack);
+        stateOfRound.setPossibleNextColour(chooseColour());
     }
 
     public CardColour chooseColour(){

@@ -5,7 +5,7 @@ public class StateOfRound {
 
 
     private ArrayList<CardValue> possibleNextCards = new ArrayList<>();
-    private ArrayList<CardColour> possibleNextColour = new ArrayList<>();
+    private CardColour possibleNextColour = null;
     private Card lastCard =  null;
     private int cardsToDraw;
     private int roundsToStay;
@@ -13,7 +13,7 @@ public class StateOfRound {
     private int roundsOfRequest;
     private CardValue requestedValue = null;
 
-    public StateOfRound(ArrayList<CardValue> possibleNextCards, ArrayList<CardColour> possibleNextColour, Card lastCard, int players) {
+    public StateOfRound(ArrayList<CardValue> possibleNextCards, CardColour possibleNextColour, Card lastCard, int players) {
         this.possibleNextCards = possibleNextCards;
         this.possibleNextColour = possibleNextColour;
         this.lastCard = lastCard;
@@ -54,7 +54,7 @@ public class StateOfRound {
         return roundsToStay;
     }
 
-    public ArrayList<CardColour> getPossibleNextColour() {
+    public CardColour getPossibleNextColour() {
         return possibleNextColour;
     }
 
@@ -78,7 +78,7 @@ public class StateOfRound {
         this.possibleNextCards = possibleNextCards;
     }
 
-    public void setPossibleNextColour(ArrayList<CardColour> possibleNextColour) {
+    public void setPossibleNextColour(CardColour possibleNextColour) {
         this.possibleNextColour = possibleNextColour;
     }
 

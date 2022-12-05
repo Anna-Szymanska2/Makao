@@ -24,8 +24,7 @@ public class Game {
                 break;
             }
             Card lastCard = stateOfRound.getLastCard();
-            if(lastCard.getCardValue()
-                    == CardValue.KING && stateOfRound.getPossibleNextColour().get(0) == CardColour.SPADES)
+            if(lastCard.getCardValue() == CardValue.KING && lastCard.getCardColour() == CardColour.SPADES && stateOfRound.getCardsToDraw() > 0)
                 index = (index + players.size() - 1)%players.size();
             else
                 index = (index + 1)%players.size();
@@ -40,8 +39,7 @@ public class Game {
             deckOfCards.deckOfCards.add(card);
             card = deckOfCards.drawRandomCard();
         }
-        deckOfCards.stack.addCard(card);
-        card.playCard(stateOfRound);
+        card.playCard(stateOfRound, deckOfCards.stack );
     }
     public void dealCards(){
         for(Player player:players){
@@ -55,9 +53,11 @@ public class Game {
     public static void main(String[] arg){
         Player maciej = new Player("Maciej");
         Player agata = new Player("Agata");
+        Player kuba = new Player("Kuba");
         ArrayList<Player> players = new ArrayList<>();
         players.add(maciej);
         players.add(agata);
+        players.add(kuba);
         Game game = new Game(players);
         game.initializeGame();
         game.gameIsOn();

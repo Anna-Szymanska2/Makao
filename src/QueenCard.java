@@ -5,22 +5,19 @@ public class QueenCard extends Card{
         super(cardColour, cardValue);
     }
     @Override
-    public void playCard(StateOfRound stateOfRound){
-        super.playCard(stateOfRound);
-        stateOfRound.setPossibleNextColour(new ArrayList<>() {{add(CardColour.ANYCOLOUR);}});
+    public void playCard(StateOfRound stateOfRound, Stack stack){
+        super.playCard(stateOfRound, stack);
+        stateOfRound.setPossibleNextColour(CardColour.ANYCOLOUR);
     }
     @Override
     public boolean isPossibleToPlayCard(StateOfRound stateOfRound){
         ArrayList<CardValue> possibleNextCards = stateOfRound.getPossibleNextCards();
-        if(possibleNextCards.get(0) != CardValue.ANYCARD){
-            for (CardValue possibleNextCard : possibleNextCards) {
-                if (possibleNextCard == getCardValue()) {
-                    break;
-                }
-                return false;
-            }
-        }
-        return true;
+        if(stateOfRound.getRoundsOfRequest() > 0)
+            return false;
+
+        return possibleNextCards.get(0) == CardValue.ANYCARD;
+
+
     }
 
 }
