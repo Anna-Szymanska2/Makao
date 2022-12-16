@@ -1,3 +1,5 @@
+package model.cards;
+
 public enum CardValue {
     ANYCARD(0),
     ACE(1),

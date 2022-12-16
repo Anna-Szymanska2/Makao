@@ -1,3 +1,9 @@
+package model.game;
+
+import model.cards.Card;
+import model.cards.CardColour;
+import model.cards.CardValue;
+
 import java.util.ArrayList;
 
 public class StateOfRound {

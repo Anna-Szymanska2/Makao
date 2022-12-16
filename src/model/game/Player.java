@@ -1,9 +1,14 @@
+package model.game;
+
+import model.cards.Card;
+import model.cards.CardValue;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Player {
     Hand hand = new Hand();
-    //ArrayList<Card> cardsInHand = new ArrayList<>();
+    //ArrayList<model.cards.Card> cardsInHand = new ArrayList<>();
     ArrayList<Card> chosenCards = new ArrayList<>();
     int roundsToStay = 0;
     String nick;

@@ -1,3 +1,8 @@
+package model.cards;
+
+import model.game.Stack;
+import model.game.StateOfRound;
+
 public class BasicKingCard extends Card {
     public BasicKingCard(CardColour cardColour, CardValue cardValue) {
         super(cardColour, cardValue);

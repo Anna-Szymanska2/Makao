@@ -1,4 +1,8 @@
-import java.util.ArrayList;
+package model.cards;
+
+import model.game.Stack;
+import model.game.StateOfRound;
+
 import java.util.Scanner;
 
 public class AceCard extends Card{

@@ -1,3 +1,5 @@
+package model.cards;
+
 public enum CardColour {
     ANYCOLOUR(0),
     HEARTS(1),

@@ -1,3 +1,9 @@
+package model.game;
+
+import model.cards.Card;
+import model.cards.CardColour;
+import model.cards.CardValue;
+
 import java.util.ArrayList;
 
 public class Game {
@@ -20,7 +26,7 @@ public class Game {
             players.get(index).makeMove(stateOfRound, deckOfCards);
             if(players.get(index).hasPlayerWon()) {
                 System.out.println("Congratulation " + players.get(index).nick + " you have won the game");
-                System.out.println("Game is finished");
+                System.out.println("model.game.Game is finished");
                 break;
             }
             Card lastCard = stateOfRound.getLastCard();
@@ -35,7 +41,7 @@ public class Game {
         deckOfCards.shuffle();
         dealCards();
         Card card = deckOfCards.drawRandomCard();
-        while(card.getClass()!=Card.class){
+        while(card.getClass()!= Card.class){
             deckOfCards.deckOfCards.add(card);
             card = deckOfCards.drawRandomCard();
         }

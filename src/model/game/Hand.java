@@ -1,3 +1,7 @@
+package model.game;
+
+import model.cards.Card;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
