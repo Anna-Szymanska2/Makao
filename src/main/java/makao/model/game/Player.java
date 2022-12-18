@@ -33,16 +33,21 @@ public class Player {
     public void removeFromHand(Card card){
         hand.removeCard(card);
     }
-    public void addToChosen(Card card){
+    public void addToChosen(int index){
+        Card card = hand.cardsInHand.get(index);
         removeFromHand(card);
         chosenCards.add(card);
     }
-    public void removeFromChosen(Card card){
+    public void removeFromChosen(int index){
+        Card card = chosenCards.get(index);
         chosenCards.remove(card);
         addToHand(card);
     }
     public int getNumberOfCards(){
        return hand.getCardCount();
+    }
+    public void displayCards(){
+        hand.displayCardsInHand();
     }
 
     public void makeMove(StateOfRound stateOfRound, DeckOfCards deckOfCards){

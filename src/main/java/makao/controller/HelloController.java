@@ -2,17 +2,13 @@ package makao.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import makao.model.cards.Card;
 import makao.model.game.Game;
 import makao.model.game.Player;
-import makao.view.Main;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -20,6 +16,8 @@ import java.util.ResourceBundle;
 public class HelloController implements Initializable {
     private Game game;
     private Player player;
+    private final int numberOfCardsInRow = 25;
+    private final int maxNumberOfSelectedCards = 4;
     @FXML
     private HBox bottomRowCardsHBox;
     @FXML
@@ -60,8 +58,9 @@ public class HelloController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        initHBox(bottomRowCardsHBox);
-        initHBox(upRowCardsHBox);
+        initCardsInHandHBox(bottomRowCardsHBox);
+        initCardsInHandHBox(upRowCardsHBox);
+        initSelectedCardHBox();
         ArrayList<Card> cards = player.getCardsInHand();
         for (int i = 0; i < 5; i++) {
             Card card = cards.get(i);
@@ -81,42 +80,82 @@ public class HelloController implements Initializable {
 
 
 
+    public void initSelectedCardHBox(){
+        for(int i = 0; i <maxNumberOfSelectedCards; i++) {
+            ImageView view = (ImageView) selectedCardsHBox.getChildren().get(i);
+            view.setVisible(false);
+            view.setOnMouseClicked((mouseEvent) -> {
+                ImageView chosenCardView = (ImageView)mouseEvent.getSource();
+                chooseSelectedCard(chosenCardView);
 
-    public void initHBox(HBox cardsHBox){
-        for(int i = 0; i <25; i++) {
+            });
+        }
+
+    }
+    public void initCardsInHandHBox(HBox cardsHBox){
+        for(int i = 0; i <numberOfCardsInRow; i++) {
             ImageView view = (ImageView) cardsHBox.getChildren().get(i);
             view.setVisible(false);
             view.setOnMouseClicked((mouseEvent) -> {
-                chosenCardView = (ImageView)mouseEvent.getSource();
-                chooseCard();
+                ImageView chosenCardView = (ImageView)mouseEvent.getSource();
+                chooseCard(chosenCardView);
 
             });
         }
     }
-    public void chooseCard(){
+    public void chooseCard(ImageView chosenCardView ){
         ImageView view = (ImageView)selectedCardsHBox.getChildren().get(selectedCardsIndex);
-        view.setImage(chosenCardView.getImage());
-        view.setVisible(true);
-        chosenCardView.setImage(null);
-        chosenCardView.setVisible(false);
-        chosenCardView.toFront();
+        int lastSelectedCardIndex = findLastChosenCardIndex(chosenCardView);
+        swapCardsInViews(chosenCardView, view);
         selectedCardsIndex++;
-        if(selectedCardsIndex == 4)
+        player.addToChosen(lastSelectedCardIndex);
+        player.displayCards();
+        if(selectedCardsIndex == maxNumberOfSelectedCards)
             playCards();
     }
 
-    public int findLastSelectedCardIndex(ImageView selectedCard) {
+    public void swapCardsInViews(ImageView sourceView, ImageView destinationView){
+        destinationView.setImage(sourceView.getImage());
+        destinationView.setVisible(true);
+        sourceView.setImage(null);
+        sourceView.setVisible(false);
+        sourceView.toFront();
+    }
+    public void chooseSelectedCard(ImageView chosenCardView){
         int playerNumberOfCards = player.getNumberOfCards();
-        if(playerNumberOfCards > 25){
-            for(int i = 0 ; i < playerNumberOfCards - 25; i++){
-                if(upRowCardsHBox.getChildren().get(i) == selectedCard){
+        ImageView firstFreeCardView;
+        if(playerNumberOfCards > numberOfCardsInRow)
+            firstFreeCardView = (ImageView) upRowCardsHBox.getChildren().get(playerNumberOfCards - numberOfCardsInRow);
+        else
+            firstFreeCardView = (ImageView) bottomRowCardsHBox.getChildren().get(playerNumberOfCards);
+        int number = findLastSelectedCardIndex(chosenCardView);
+        player.removeFromChosen(number);
+        swapCardsInViews(chosenCardView, firstFreeCardView);
+        selectedCardsIndex--;
+        player.displayCards();
+    }
+    public int findLastSelectedCardIndex(ImageView selectedCard) {
+        for (int i = 0; i < maxNumberOfSelectedCards; i++) {
+            if (selectedCardsHBox.getChildren().get(i) == selectedCard) {
+                return i;
+            }
+
+        }
+        return 100; //something went wrong
+    }
+
+    public int findLastChosenCardIndex(ImageView chosenCard) {
+        int playerNumberOfCards = player.getNumberOfCards();
+        if(playerNumberOfCards > numberOfCardsInRow){
+            for(int i = 0 ; i < playerNumberOfCards - numberOfCardsInRow; i++){
+                if(upRowCardsHBox.getChildren().get(i) == chosenCard){
                     wasSelectedCardFromBottomRow = false;
-                    return i;
+                    return i + numberOfCardsInRow;
                 }
             }
         }
         for (int i = 0; i< playerNumberOfCards; i++){
-            if(bottomRowCardsHBox.getChildren().get(i) == selectedCard){
+            if(bottomRowCardsHBox.getChildren().get(i) ==chosenCard){
                 wasSelectedCardFromBottomRow = true;
                 return i;
             }
