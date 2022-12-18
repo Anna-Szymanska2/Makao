@@ -6,8 +6,8 @@ import  makao.model.game.StateOfRound;
 import java.util.Scanner;
 
 public class AceCard extends Card {
-    public AceCard(CardColour cardColour, CardValue cardValue){
-        super(cardColour, cardValue);
+    public AceCard(CardColour cardColour, CardValue cardValue, String imagePath){
+        super(cardColour, cardValue, imagePath);
     }
     @Override
     public void playCard(StateOfRound stateOfRound, Stack stack){

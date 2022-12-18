@@ -13,7 +13,7 @@ public class Main {
     }
     public static void test(){
 
-        DeckOfCards deckOfCards = new DeckOfCards();
+       /* DeckOfCards deckOfCards = new DeckOfCards();
         Card randomCard = deckOfCards.drawRandomCard();
         int players = 4;
         System.out.println(randomCard.getCardValue() + " of " + randomCard.getCardColour() + " " + randomCard.getPoints());
@@ -36,7 +36,7 @@ public class Main {
         System.out.println(card.getCardValue() + " of " + card.getCardColour() + " " + card.getPoints());
         System.out.println(card.isPossibleToPlayCard(stateOfRound));
         DeckOfCards deckOfCards1 = new DeckOfCards();
-
+*/
     }
     public static void test2(){
         DeckOfCards deckOfCards = new DeckOfCards();

@@ -13,7 +13,7 @@ public class Player {
     int roundsToStay = 0;
     String nick;
 
-    Player(String nick){
+    public Player(String nick){
         this.nick = nick;
     }
 
@@ -23,6 +23,26 @@ public class Player {
 
     public int getRoundsToStay() {
         return roundsToStay;
+    }
+    public ArrayList<Card> getCardsInHand(){
+        return hand.cardsInHand;
+    }
+    public void addToHand(Card card){
+        hand.addCard(card);
+    }
+    public void removeFromHand(Card card){
+        hand.removeCard(card);
+    }
+    public void addToChosen(Card card){
+        removeFromHand(card);
+        chosenCards.add(card);
+    }
+    public void removeFromChosen(Card card){
+        chosenCards.remove(card);
+        addToHand(card);
+    }
+    public int getNumberOfCards(){
+       return hand.getCardCount();
     }
 
     public void makeMove(StateOfRound stateOfRound, DeckOfCards deckOfCards){
@@ -87,13 +107,15 @@ public class Player {
         }
     }
 
+
+
 //    public void displayCardsInHand(){
 //        for(int i = 0; i < cardsInHand.size(); i++){
 //            System.out.println((i+1) + ". " + cardsInHand.get(i).toString());
 //        }
 //    }
 
-    public void playChosenCards(StateOfRound stateOfRound, DeckOfCards deckOfCards){
+    public void playChosenCardsConsole(StateOfRound stateOfRound, DeckOfCards deckOfCards){
         Card lastCard = chosenCards.get(chosenCards.size() - 1);
         boolean isJackOrAce = false;
         if(lastCard.getCardValue() == CardValue.JACK || lastCard.getCardValue() == CardValue.ACE)
@@ -116,10 +138,33 @@ public class Player {
         chosenCards.clear();
     }
 
+    public void playChosenCards(StateOfRound stateOfRound, DeckOfCards deckOfCards){
+        Card lastCard = chosenCards.get(chosenCards.size() - 1);
+        boolean isJackOrAce = false;
+        if(lastCard.getCardValue() == CardValue.JACK || lastCard.getCardValue() == CardValue.ACE)
+            isJackOrAce = true;
+
+        if(isJackOrAce) {
+            for (Card card : chosenCards) {
+                if(!card.equals(lastCard))
+                    deckOfCards.stack.addCard(card);
+                //hand.removeCard(card);
+            }
+            lastCard.playCard(stateOfRound, deckOfCards.stack);
+        }
+        else{
+            for (Card card : chosenCards) {
+                card.playCard(stateOfRound, deckOfCards.stack);
+                //hand.removeCard(card);
+            }
+        }
+        chosenCards.clear();
+    }
+
     public boolean isChoosingCardsInProgress(StateOfRound stateOfRound, DeckOfCards deckOfCards){
         chooseCards();
         if(areChosenCardsCorrect(stateOfRound)){
-            playChosenCards(stateOfRound,deckOfCards);
+            playChosenCardsConsole(stateOfRound,deckOfCards);
             return false;
         }
         else{

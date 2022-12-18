@@ -16,4 +16,15 @@ public enum CardColour {
     public int getColourValue(){
         return colourValue;
     }
+    @Override
+    public String toString() {
+        String color = "";
+        switch(colourValue){
+            case 1 -> color = "hearts";
+            case 2 -> color = "spades";
+            case 3 -> color = "clubs";
+            case 4 -> color = "diamonds";
+        }
+        return color;
+    }
 }

@@ -6,8 +6,8 @@ import  makao.model.game.StateOfRound;
 import java.util.ArrayList;
 
 public class QueenCard extends Card {
-    public QueenCard(CardColour cardColour, CardValue cardValue){
-        super(cardColour, cardValue);
+    public QueenCard(CardColour cardColour, CardValue cardValue, String imagePath){
+        super(cardColour, cardValue, imagePath);
     }
     @Override
     public void playCard(StateOfRound stateOfRound, Stack stack){

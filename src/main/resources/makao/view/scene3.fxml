@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
 
 <AnchorPane prefHeight="610.0" prefWidth="838.0" style="-fx-background-color: #50C878;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="makao.controller.HelloController">
    <children>
-      <HBox fx:id="upRowCardsHBox" layoutX="213.0" layoutY="420.0" prefHeight="100.0" prefWidth="200.0">
+      <HBox layoutX="213.0" layoutY="420.0" prefHeight="100.0" prefWidth="200.0">
          <children>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
                <HBox.margin>
@@ -19,294 +16,402 @@
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
-               <HBox.margin>
-                  <Insets right="-70.0" />
-               </HBox.margin>
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
             </ImageView>
          </children>
          <opaqueInsets>
             <Insets bottom="-150.0" />
          </opaqueInsets>
       </HBox>
-      <HBox fx:id="bottomRowCardsHBox" layoutX="213.0" layoutY="454.0" prefHeight="100.0" prefWidth="200.0">
+      <HBox layoutX="213.0" layoutY="454.0" prefHeight="100.0" prefWidth="200.0">
          <children>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
                   <Insets right="-70.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/cards_images/2_of_hearts.png" />
+               </image>
                <HBox.margin>
-                  <Insets right="-70.0" />
+                  <Insets />
                </HBox.margin>
             </ImageView>
          </children>
       </HBox>
-      <ImageView fx:id="deckView" fitHeight="150.0" fitWidth="90.0" layoutX="720.0" layoutY="151.0" onMouseClicked="#drawCard" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../controller/cards_images/back.jpg" />
-         </image>
-      </ImageView>
-      <Button fx:id="playCradsButton" layoutX="710.0" layoutY="330.0" mnemonicParsing="false" text="Play chosen cards" />
-      <ImageView fx:id="drewCardView" fitHeight="150.0" fitWidth="90.0" layoutX="602.0" layoutY="149.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="stackCardImageView" fitHeight="150.0" fitWidth="90.0" layoutX="476.0" layoutY="149.0" pickOnBounds="true" preserveRatio="true" />
-      <HBox fx:id="selectedCardsHBox" layoutX="243.0" layoutY="151.0" prefHeight="119.0" prefWidth="154.0">
-         <children>
-            <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
-               <HBox.margin>
-                  <Insets right="-70.0" />
-               </HBox.margin>
-            </ImageView>
-            <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
-               <HBox.margin>
-                  <Insets right="-70.0" />
-               </HBox.margin>
-            </ImageView>
-            <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
-               <HBox.margin>
-                  <Insets right="-70.0" />
-               </HBox.margin>
-            </ImageView>
-            <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true" />
-         </children>
-      </HBox>
-      <VBox layoutX="8.0" prefHeight="200.0" prefWidth="100.0">
-         <children>
-            <Label text="Cards to draw" />
-            <Label text="Chosen color" />
-            <Label text="Requested value " />
-            <Label text="Rounds to wait" />
-         </children>
-      </VBox>
    </children>
 </AnchorPane>

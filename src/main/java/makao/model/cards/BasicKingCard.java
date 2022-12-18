@@ -4,8 +4,8 @@ import  makao.model.game.Stack;
 import  makao.model.game.StateOfRound;
 
 public class BasicKingCard extends Card {
-    public BasicKingCard(CardColour cardColour, CardValue cardValue) {
-        super(cardColour, cardValue);
+    public BasicKingCard(CardColour cardColour, CardValue cardValue, String imagePath) {
+        super(cardColour, cardValue, imagePath);
     }
 
     @Override

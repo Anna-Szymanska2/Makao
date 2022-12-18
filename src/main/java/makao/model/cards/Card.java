@@ -8,13 +8,14 @@ import java.util.ArrayList;
 public class Card {
     private CardValue cardValue;
     private CardColour cardColour;
+    private String imagePath;
 
     private int points;
 
-    public Card(CardColour cardColour, CardValue cardValue) {
+    public Card(CardColour cardColour, CardValue cardValue, String imagePath) {
         this.cardValue = cardValue;
         this.cardColour = cardColour;
-
+        this.imagePath = imagePath;
         this.points = cardValue.getValueOfCard();
     }
 
@@ -97,6 +98,10 @@ public class Card {
         // }
         stateOfRound.setLastCard(this);
 
+    }
+
+    public String getImagePath() {
+        return imagePath;
     }
 
     @Override

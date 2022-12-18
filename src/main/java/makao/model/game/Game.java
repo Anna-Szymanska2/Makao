@@ -56,6 +56,10 @@ public class Game {
         }
     }
 
+    public Stack getStack(){
+        return deckOfCards.stack;
+    }
+
     public static void main(String[] arg){
         Player maciej = new Player("Maciej");
         Player agata = new Player("Agata");

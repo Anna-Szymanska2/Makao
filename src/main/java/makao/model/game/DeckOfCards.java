@@ -13,46 +13,58 @@ public class DeckOfCards {
 
     public DeckOfCards(){
         this.deckOfCards = new ArrayList();
+        //"cards_images/2_of_clubs.png"
 
         for (int j = 1; j < 5; j++) {
-            Card card = new AceCard(CardColour.values()[j], CardValue.ACE);
+            String imagePath = "cards_images/ace_of_" + CardColour.values()[j].toString() + ".png";
+            Card card = new AceCard(CardColour.values()[j], CardValue.ACE, imagePath);
             this.deckOfCards.add(card);
         }
         for (int j = 1; j < 5; j++) {
-            Card card = new TwoOrThreeCard(CardColour.values()[j], CardValue.TWO);
+            String imagePath = "cards_images/2_of_" + CardColour.values()[j].toString() + ".png";
+            Card card = new TwoOrThreeCard(CardColour.values()[j], CardValue.TWO, imagePath);
             this.deckOfCards.add(card);
         }
         for (int j = 1; j < 5; j++) {
-            Card card = new TwoOrThreeCard(CardColour.values()[j], CardValue.THREE);
+            String imagePath = "cards_images/3_of_" + CardColour.values()[j].toString() + ".png";
+            Card card = new TwoOrThreeCard(CardColour.values()[j], CardValue.THREE, imagePath);
             this.deckOfCards.add(card);
         }
         for (int j = 1; j < 5; j++) {
-            Card card = new FourCard(CardColour.values()[j], CardValue.FOUR);
+            String imagePath = "cards_images/4_of_" + CardColour.values()[j].toString() + ".png";
+            Card card = new FourCard(CardColour.values()[j], CardValue.FOUR, imagePath);
             this.deckOfCards.add(card);
         }
         for (int i=5; i<11; i++) {
             CardValue value = CardValue.values()[i];
 
             for (int j = 1; j < 5; j++) {
-                Card card = new Card(CardColour.values()[j], value);
+                String imagePath = "cards_images/" + i+ "_of_" + CardColour.values()[j].toString() + ".png";
+                Card card = new Card(CardColour.values()[j], value, imagePath);
                 this.deckOfCards.add(card);
             }
         }
         for (int j = 1; j < 5; j++) {
-            Card card = new JackCard(CardColour.values()[j], CardValue.JACK);
+            String imagePath = "cards_images/jack_of_" + CardColour.values()[j].toString() + ".png";
+            Card card = new JackCard(CardColour.values()[j], CardValue.JACK, imagePath);
             this.deckOfCards.add(card);
         }
         for (int j = 1; j < 5; j++) {
-            Card card = new QueenCard(CardColour.values()[j], CardValue.QUEEN);
+            String imagePath = "cards_images/queen_of_" + CardColour.values()[j].toString() + ".png";
+            Card card = new QueenCard(CardColour.values()[j], CardValue.QUEEN, imagePath);
             this.deckOfCards.add(card);
         }
-        Card card = new BasicKingCard(CardColour.CLUBS, CardValue.KING);
+        String imagePath = "cards_images/king_of_clubs.png";
+        Card card = new BasicKingCard(CardColour.CLUBS, CardValue.KING, imagePath);
         this.deckOfCards.add(card);
-        Card card2 = new BasicKingCard(CardColour.DIAMONDS, CardValue.KING);
+        imagePath = "cards_images/king_of_diamonds.png";
+        Card card2 = new BasicKingCard(CardColour.DIAMONDS, CardValue.KING, imagePath);
         this.deckOfCards.add(card2);
-        Card card3 = new FightingKingCard(CardColour.HEARTS, CardValue.KING);
+        imagePath = "cards_images/king_of_hearts.png";
+        Card card3 = new FightingKingCard(CardColour.HEARTS, CardValue.KING, imagePath);
         this.deckOfCards.add(card3);
-        Card card4 = new FightingKingCard(CardColour.SPADES, CardValue.KING);
+        imagePath = "cards_images/king_of_spades.png";
+        Card card4 = new FightingKingCard(CardColour.SPADES, CardValue.KING, imagePath);
         this.deckOfCards.add(card4);
 
     }

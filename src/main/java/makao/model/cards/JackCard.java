@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class JackCard extends Card {
-    public JackCard(CardColour cardColour, CardValue cardValue){
-        super(cardColour, cardValue);
+    public JackCard(CardColour cardColour, CardValue cardValue, String imagePath){
+        super(cardColour, cardValue, imagePath);
     }
 
     @Override

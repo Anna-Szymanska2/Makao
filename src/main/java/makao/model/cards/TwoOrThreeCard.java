@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 public class TwoOrThreeCard extends Card {
 
-    public TwoOrThreeCard(CardColour cardColour, CardValue cardValue){
-        super(cardColour, cardValue);
+    public TwoOrThreeCard(CardColour cardColour, CardValue cardValue, String imagePath){
+        super(cardColour, cardValue, imagePath);
     }
     @Override
     public void playCard(StateOfRound stateOfRound, Stack stack){
