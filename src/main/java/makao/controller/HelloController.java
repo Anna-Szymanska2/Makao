@@ -2,12 +2,15 @@ package makao.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import makao.model.cards.Card;
 import makao.model.game.Game;
 import makao.model.game.Player;
+import makao.model.game.StateOfRound;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -27,11 +30,12 @@ public class HelloController implements Initializable {
 
     @FXML
     private ImageView stackCardImageView;
-    //Image image1 = new Image(getClass().getResourceAsStream("2_of_clubs.png"));
     @FXML
     private ImageView deckView;
     @FXML
     private ImageView drewCardView;
+    @FXML
+    private Button playCardsButton;
     private int selectedCardsIndex;
     private int lastSelectedCardIndex;
     private ImageView chosenCardView;
@@ -111,7 +115,7 @@ public class HelloController implements Initializable {
         player.addToChosen(lastSelectedCardIndex);
         player.displayCards();
         if(selectedCardsIndex == maxNumberOfSelectedCards)
-            playCards();
+            tryToPlayCards();
     }
 
     public void swapCardsInViews(ImageView sourceView, ImageView destinationView){
@@ -168,11 +172,48 @@ public class HelloController implements Initializable {
 
 
     }
-    public void putBackSelectedCard(){
+    public void putBackSelectedCards(){
+        int numberOfSelectedCards = selectedCardsIndex;
+        for(int i = 0; i < numberOfSelectedCards; i++){
+            ImageView view = (ImageView) selectedCardsHBox.getChildren().get(0);
+            chooseSelectedCard(view);
+        }
+        selectedCardsIndex = 0;
+    }
+
+    public void removePlayedCards(){
+        for(int i = 0; i< selectedCardsIndex; i++){
+            ImageView view = (ImageView)  selectedCardsHBox.getChildren().get(i);
+            view.setVisible(false);
+            view.setImage(null);
+        }
+        selectedCardsIndex = 0;
 
     }
-    public void playCards(){
+    public void tryToPlayCards(){
+        if(player.areChosenCardsCorrect(game.getStateOfRound())){
+            player.playChosenCards(game.getStateOfRound(), game.getDeckOfCards());
+            removePlayedCards();
+            updateStackView(game.getStateOfRound());
+            //end of round, send message
+        }
 
+        else{
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle(null);
+            alert.setHeaderText(null);
+            alert.setContentText("Playing those cards is againts the rules!");
+            alert.showAndWait();
+            putBackSelectedCards();
+        }
+
+
+    }
+
+    public void updateStackView(StateOfRound stateOfRound){
+        Card card = stateOfRound.getLastCard();
+        Image image = new Image(getClass().getResource(card.getImagePath()).toExternalForm());
+        stackCardImageView.setImage(image);
     }
 
 }

@@ -89,7 +89,7 @@ public class Player {
 
     }
 
-    boolean areChosenCardsCorrect(StateOfRound stateOfRound){
+    public boolean areChosenCardsCorrect(StateOfRound stateOfRound){
         if(chosenCards.size() == 0)
             return false;
         CardValue cardValue = chosenCards.get(0).getCardValue();

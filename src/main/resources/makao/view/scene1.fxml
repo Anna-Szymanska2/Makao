@@ -277,7 +277,7 @@
             <Image url="@../controller/cards_images/back.jpg" />
          </image>
       </ImageView>
-      <Button fx:id="playCradsButton" layoutX="710.0" layoutY="330.0" mnemonicParsing="false" text="Play chosen cards" />
+      <Button fx:id="playCardsButton" layoutX="710.0" layoutY="330.0" mnemonicParsing="false" onAction="#tryToPlayCards" text="Play chosen cards" />
       <ImageView fx:id="drewCardView" fitHeight="150.0" fitWidth="90.0" layoutX="602.0" layoutY="149.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="stackCardImageView" fitHeight="150.0" fitWidth="90.0" layoutX="476.0" layoutY="149.0" pickOnBounds="true" preserveRatio="true" />
       <HBox fx:id="selectedCardsHBox" layoutX="243.0" layoutY="151.0" prefHeight="119.0" prefWidth="154.0">

@@ -17,6 +17,18 @@ public class Game {
         this.deckOfCards = new DeckOfCards();
     }
 
+    public StateOfRound getStateOfRound() {
+        return stateOfRound;
+    }
+
+    public DeckOfCards getDeckOfCards() {
+        return deckOfCards;
+    }
+
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
+
     public void gameIsOn(){
 
         int index = 0;
