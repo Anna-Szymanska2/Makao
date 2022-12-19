@@ -43,6 +43,11 @@ public class Player {
         chosenCards.remove(card);
         addToHand(card);
     }
+
+    public ArrayList<Card> getChosenCards() {
+        return chosenCards;
+    }
+
     public int getNumberOfCards(){
        return hand.getCardCount();
     }
@@ -181,6 +186,8 @@ public class Player {
         return true;
     }
 
+
+
     public void drawCard(StateOfRound stateOfRound, DeckOfCards deckOfCards){
         Scanner scanner = new Scanner(System.in);
         Card firstCard = deckOfCards.drawLastCard();
@@ -195,28 +202,34 @@ public class Player {
             }
             else{
                 System.out.println("you can't use this card");
-                hand.addCard(firstCard);
+                /*hand.addCard(firstCard);
                 for(int i = 0; i < cardsToDraw -1; i++)
                     hand.addCard(deckOfCards.drawLastCard());
                 stateOfRound.setCardsToDraw(0);
-                stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
-
-                /*if(lastCard.getClass() == FightingKing.class)
-                    stateOfRound.setPossibleNextColour(new ArrayList<>() {{add(lastCard.getCardColour());}});*/
+                stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});*/
+                takeDrewCards(firstCard, stateOfRound, deckOfCards);
             }
 
         }
         else{
-            hand.addCard(firstCard);
+            /*hand.addCard(firstCard);
             for(int i = 0; i < cardsToDraw -1; i++)
                 hand.addCard(deckOfCards.drawLastCard());
             stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
-            /*if(lastCard.getClass() == FightingKing.class)
-                stateOfRound.setPossibleNextColour(new ArrayList<>() {{add(lastCard.getCardColour());}});*/
-            stateOfRound.setCardsToDraw(0);
+            stateOfRound.setCardsToDraw(0);*/
+            takeDrewCards(firstCard, stateOfRound, deckOfCards);
         }
 
 
+    }
+
+    public void takeDrewCards(Card firstCard, StateOfRound stateOfRound, DeckOfCards deckOfCards){
+        int cardsToDraw = stateOfRound.getCardsToDraw();
+        hand.addCard(firstCard);
+        for(int i = 0; i < cardsToDraw -1; i++)
+            hand.addCard(deckOfCards.drawLastCard());
+        stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
+        stateOfRound.setCardsToDraw(0);
     }
 
     public void waitRounds(StateOfRound stateOfRound){

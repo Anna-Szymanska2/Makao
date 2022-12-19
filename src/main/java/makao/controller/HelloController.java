@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -14,12 +15,13 @@ import makao.model.game.StateOfRound;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class HelloController implements Initializable {
     private Game game;
     private Player player;
-    private final int numberOfCardsInRow = 25;
+    private final int maxNumberOfCardsInRow = 25;
     private final int maxNumberOfSelectedCards = 4;
     @FXML
     private HBox bottomRowCardsHBox;
@@ -65,7 +67,7 @@ public class HelloController implements Initializable {
         initCardsInHandHBox(bottomRowCardsHBox);
         initCardsInHandHBox(upRowCardsHBox);
         initSelectedCardHBox();
-        ArrayList<Card> cards = player.getCardsInHand();
+        /*ArrayList<Card> cards = player.getCardsInHand();
         for (int i = 0; i < 5; i++) {
             Card card = cards.get(i);
             Image image = new Image(getClass().getResource(card.getImagePath()).toExternalForm());
@@ -74,7 +76,8 @@ public class HelloController implements Initializable {
             view.setImage(image);
             view.setVisible(true);
 
-        }
+        }*/
+        showCards();
         playerCardsIndexes[0] = 0;
         playerCardsIndexes[1] = 4;
         Image image = new Image(getClass().getResource(game.getStack().getLastCard().getImagePath()).toExternalForm());
@@ -97,7 +100,7 @@ public class HelloController implements Initializable {
 
     }
     public void initCardsInHandHBox(HBox cardsHBox){
-        for(int i = 0; i <numberOfCardsInRow; i++) {
+        for(int i = 0; i < maxNumberOfCardsInRow; i++) {
             ImageView view = (ImageView) cardsHBox.getChildren().get(i);
             view.setVisible(false);
             view.setOnMouseClicked((mouseEvent) -> {
@@ -114,8 +117,10 @@ public class HelloController implements Initializable {
         selectedCardsIndex++;
         player.addToChosen(lastSelectedCardIndex);
         player.displayCards();
+        showCards();
         if(selectedCardsIndex == maxNumberOfSelectedCards)
             tryToPlayCards();
+
     }
 
     public void swapCardsInViews(ImageView sourceView, ImageView destinationView){
@@ -128,8 +133,8 @@ public class HelloController implements Initializable {
     public void chooseSelectedCard(ImageView chosenCardView){
         int playerNumberOfCards = player.getNumberOfCards();
         ImageView firstFreeCardView;
-        if(playerNumberOfCards > numberOfCardsInRow)
-            firstFreeCardView = (ImageView) upRowCardsHBox.getChildren().get(playerNumberOfCards - numberOfCardsInRow);
+        if(playerNumberOfCards >= maxNumberOfCardsInRow)
+            firstFreeCardView = (ImageView) upRowCardsHBox.getChildren().get(playerNumberOfCards - maxNumberOfCardsInRow);
         else
             firstFreeCardView = (ImageView) bottomRowCardsHBox.getChildren().get(playerNumberOfCards);
         int number = findLastSelectedCardIndex(chosenCardView);
@@ -150,11 +155,11 @@ public class HelloController implements Initializable {
 
     public int findLastChosenCardIndex(ImageView chosenCard) {
         int playerNumberOfCards = player.getNumberOfCards();
-        if(playerNumberOfCards > numberOfCardsInRow){
-            for(int i = 0 ; i < playerNumberOfCards - numberOfCardsInRow; i++){
+        if(playerNumberOfCards > maxNumberOfCardsInRow){
+            for(int i = 0; i < playerNumberOfCards - maxNumberOfCardsInRow; i++){
                 if(upRowCardsHBox.getChildren().get(i) == chosenCard){
                     wasSelectedCardFromBottomRow = false;
-                    return i + numberOfCardsInRow;
+                    return i + maxNumberOfCardsInRow;
                 }
             }
         }
@@ -169,6 +174,38 @@ public class HelloController implements Initializable {
     }
 
     public void drawCard(){
+        putBackSelectedCards();
+        Card firstCard = game.getDeckOfCards().drawLastCard();
+        Image image = new Image(getClass().getResource(firstCard.getImagePath()).toExternalForm());
+        drewCardView.setImage(image);
+        drewCardView.setVisible(true);
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(null);
+        alert.setHeaderText(null);
+        alert.setContentText("You drew " + firstCard + ". What do you want to do?");
+
+        ButtonType buttonTypeOne = new ButtonType("Try to play it");
+        ButtonType buttonTypeTwo = new ButtonType("Take it");
+
+        alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == buttonTypeOne){
+            player.getChosenCards().add(firstCard);
+            tryToPlayCards();
+            if(!firstCard.isPossibleToPlayCard(game.getStateOfRound())){
+                player.getChosenCards().remove(firstCard);
+                player.takeDrewCards(firstCard, game.getStateOfRound(), game.getDeckOfCards());
+                showCards();
+
+            }
+        } else {
+            player.takeDrewCards(firstCard, game.getStateOfRound(), game.getDeckOfCards());
+            showCards();
+        }
+        drewCardView.setImage(null);
+
 
 
     }
@@ -179,6 +216,7 @@ public class HelloController implements Initializable {
             chooseSelectedCard(view);
         }
         selectedCardsIndex = 0;
+
     }
 
     public void removePlayedCards(){
@@ -214,6 +252,43 @@ public class HelloController implements Initializable {
         Card card = stateOfRound.getLastCard();
         Image image = new Image(getClass().getResource(card.getImagePath()).toExternalForm());
         stackCardImageView.setImage(image);
+    }
+
+    public void showCards(){
+        ArrayList<Card> cards = player.getCardsInHand();
+        int numberOfCardsInBottomRow = 0;
+        for(int i = 0; i < maxNumberOfSelectedCards; i++){
+            ImageView view = (ImageView) upRowCardsHBox.getChildren().get(i);
+            view.setImage(null);
+            view.setVisible(false);
+        }
+        if(player.getNumberOfCards() > maxNumberOfCardsInRow){
+            numberOfCardsInBottomRow = maxNumberOfCardsInRow;
+            for(int i = 0; i < player.getNumberOfCards() - maxNumberOfCardsInRow; i++){
+                Card card = cards.get(i + maxNumberOfCardsInRow);
+                Image image = new Image(getClass().getResource(card.getImagePath()).toExternalForm());
+                ImageView view = (ImageView) upRowCardsHBox.getChildren().get(i);
+                view.setImage(image);
+                view.setVisible(true);
+            }
+
+        }
+        else
+            numberOfCardsInBottomRow = player.getNumberOfCards();
+        for (int i = 0; i < numberOfCardsInBottomRow; i++) {
+            Card card = cards.get(i);
+            Image image = new Image(getClass().getResource(card.getImagePath()).toExternalForm());
+            ImageView view = (ImageView) bottomRowCardsHBox.getChildren().get(i);
+            view.setImage(image);
+            view.setVisible(true);
+
+        }
+        for(int i = numberOfCardsInBottomRow; i < maxNumberOfCardsInRow; i++){
+            ImageView view = (ImageView) bottomRowCardsHBox.getChildren().get(i);
+            view.setImage(null);
+            view.setVisible(false);
+        }
+
     }
 
 }
