@@ -111,14 +111,16 @@ public class HelloController implements Initializable {
         }
     }
     public void chooseCard(ImageView chosenCardView ){
-        ImageView view = (ImageView)selectedCardsHBox.getChildren().get(selectedCardsIndex);
+        //int chosenCardsNumber = player.getNumberOfCards();
+        //ImageView view = (ImageView)selectedCardsHBox.getChildren().get(chosenCardsNumber);
         int lastSelectedCardIndex = findLastChosenCardIndex(chosenCardView);
-        swapCardsInViews(chosenCardView, view);
-        selectedCardsIndex++;
+        //swapCardsInViews(chosenCardView, view);
+        //selectedCardsIndex++;
         player.addToChosen(lastSelectedCardIndex);
         player.displayCards();
         showCards();
-        if(selectedCardsIndex == maxNumberOfSelectedCards)
+        showSelectedCards();
+        if(player.getChosenCards().size() == maxNumberOfSelectedCards)
             tryToPlayCards();
 
     }
@@ -131,16 +133,18 @@ public class HelloController implements Initializable {
         sourceView.toFront();
     }
     public void chooseSelectedCard(ImageView chosenCardView){
-        int playerNumberOfCards = player.getNumberOfCards();
-        ImageView firstFreeCardView;
-        if(playerNumberOfCards >= maxNumberOfCardsInRow)
+       /* int playerNumberOfCards = player.getNumberOfCards();
+        ImageView firstFreeCardView;*/
+        /*if(playerNumberOfCards >= maxNumberOfCardsInRow)
             firstFreeCardView = (ImageView) upRowCardsHBox.getChildren().get(playerNumberOfCards - maxNumberOfCardsInRow);
         else
-            firstFreeCardView = (ImageView) bottomRowCardsHBox.getChildren().get(playerNumberOfCards);
+            firstFreeCardView = (ImageView) bottomRowCardsHBox.getChildren().get(playerNumberOfCards);*/
         int number = findLastSelectedCardIndex(chosenCardView);
         player.removeFromChosen(number);
-        swapCardsInViews(chosenCardView, firstFreeCardView);
-        selectedCardsIndex--;
+        //swapCardsInViews(chosenCardView, firstFreeCardView);
+        //selectedCardsIndex--;
+        showSelectedCards();;
+        showCards();
         player.displayCards();
     }
     public int findLastSelectedCardIndex(ImageView selectedCard) {
@@ -174,7 +178,9 @@ public class HelloController implements Initializable {
     }
 
     public void drawCard(){
-        putBackSelectedCards();
+        player.putBackChosenCards();
+        showCards();
+        showSelectedCards();
         Card firstCard = game.getDeckOfCards().drawLastCard();
         Image image = new Image(getClass().getResource(firstCard.getImagePath()).toExternalForm());
         drewCardView.setImage(image);
@@ -196,7 +202,7 @@ public class HelloController implements Initializable {
             tryToPlayCards();
             if(!firstCard.isPossibleToPlayCard(game.getStateOfRound())){
                 player.getChosenCards().remove(firstCard);
-                player.takeDrewCards(firstCard, game.getStateOfRound(), game.getDeckOfCards());
+                player.takeDrewCards(null, game.getStateOfRound(), game.getDeckOfCards());
                 showCards();
 
             }
@@ -231,7 +237,9 @@ public class HelloController implements Initializable {
     public void tryToPlayCards(){
         if(player.areChosenCardsCorrect(game.getStateOfRound())){
             player.playChosenCards(game.getStateOfRound(), game.getDeckOfCards());
-            removePlayedCards();
+            //removePlayedCards();
+            showCards();;
+            showSelectedCards();
             updateStackView(game.getStateOfRound());
             //end of round, send message
         }
@@ -240,9 +248,11 @@ public class HelloController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle(null);
             alert.setHeaderText(null);
-            alert.setContentText("Playing those cards is againts the rules!");
+            alert.setContentText("Playing those cards is against the rules!");
             alert.showAndWait();
-            putBackSelectedCards();
+            player.putBackChosenCards();
+            showSelectedCards();;
+            showCards();
         }
 
 
@@ -254,10 +264,28 @@ public class HelloController implements Initializable {
         stackCardImageView.setImage(image);
     }
 
+    public void showSelectedCards(){
+        int chosenCardsNumber = player.getChosenCards().size();
+        ArrayList<Card> cards = player.getChosenCards();
+        for (int i = 0; i < chosenCardsNumber; i++) {
+            Card card = cards.get(i);
+            Image image = new Image(getClass().getResource(card.getImagePath()).toExternalForm());
+            ImageView view = (ImageView) selectedCardsHBox.getChildren().get(i);
+            view.setImage(image);
+            view.setVisible(true);
+
+        }
+        for(int i = chosenCardsNumber; i < maxNumberOfSelectedCards; i++){
+            ImageView view = (ImageView) selectedCardsHBox.getChildren().get(i);
+            view.setImage(null);
+            view.setVisible(false);
+        }
+    }
+
     public void showCards(){
         ArrayList<Card> cards = player.getCardsInHand();
         int numberOfCardsInBottomRow = 0;
-        for(int i = 0; i < maxNumberOfSelectedCards; i++){
+        for(int i = 0; i < maxNumberOfCardsInRow; i++){
             ImageView view = (ImageView) upRowCardsHBox.getChildren().get(i);
             view.setImage(null);
             view.setVisible(false);

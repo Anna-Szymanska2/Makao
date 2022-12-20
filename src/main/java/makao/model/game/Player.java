@@ -171,6 +171,13 @@ public class Player {
         chosenCards.clear();
     }
 
+    public void putBackChosenCards(){
+        for(Card card: chosenCards){
+            addToHand(card);
+        }
+        chosenCards.clear();
+    }
+
     public boolean isChoosingCardsInProgress(StateOfRound stateOfRound, DeckOfCards deckOfCards){
         chooseCards();
         if(areChosenCardsCorrect(stateOfRound)){
@@ -225,7 +232,8 @@ public class Player {
 
     public void takeDrewCards(Card firstCard, StateOfRound stateOfRound, DeckOfCards deckOfCards){
         int cardsToDraw = stateOfRound.getCardsToDraw();
-        hand.addCard(firstCard);
+        if(firstCard != null)
+            hand.addCard(firstCard);
         for(int i = 0; i < cardsToDraw -1; i++)
             hand.addCard(deckOfCards.drawLastCard());
         stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
