@@ -2,13 +2,13 @@ package makao.server;
 
 
 import makao.model.cards.Card;
+import makao.model.cards.CardValue;
 import makao.model.game.Hand;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
 
 public class ServerPlayer implements Runnable{
     private Socket socket;
@@ -23,9 +23,10 @@ public class ServerPlayer implements Runnable{
     private Hand hand = new Hand();
 
 
-    public ServerPlayer(Socket socket){
+    public ServerPlayer(Socket socket, ServerGame serverGame){
         try{
             this.socket = socket;
+            this.serverGame = serverGame;
             this.out = new ObjectOutputStream(socket.getOutputStream());
             this.in = new ObjectInputStream(socket.getInputStream());
             ClientMessage clientMessage;
@@ -41,60 +42,80 @@ public class ServerPlayer implements Runnable{
         ServerMessage serverMessage = new ServerMessage("WELCOME");
         try {
             out.writeObject(serverMessage);
-            gameIsOn = true;
-        while (socket.isConnected()){
-            do{
-                playMakao();
-            }while(gameIsOn);
-            serverMessage = new ServerMessage("END",serverGame.getWhoseTurn(),serverGame.getCardOnTopOfTheStack(),serverGame.getStateOfRound());
-            out.writeObject(serverMessage);
+        while (socket.isConnected()) {
+                while(gameIsOn){
+                    playMakao();
+                }
         }
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void playMakao(){
-        String whoseTurn = serverGame.getWhoseTurn();
-        ServerMessage serverMessage = new ServerMessage("DEFAULT",whoseTurn,serverGame.getCardOnTopOfTheStack(),serverGame.getStateOfRound());
-        sendServerMessage(serverMessage);
-        if(whoseTurn.equals(this.clientName)){
-            receivedMessage = false;
-            getClientMessage();
-            switch (messageFromClient.actionID) {
-                case "DRAW":
-                    drawCard();
-                    serverMessage.setNewHand(hand);
-                    serverMessage.setActionID("DRAW");
-                    sendServerMessage(serverMessage);
-                    receivedMessage = false;
-                    getClientMessage();
-                    switch (messageFromClient.actionID){
-                        case "DRAW_MORE" :
-                            for(int i = 0; i < messageFromClient.numberOfCardsToDraw; i++)
-                                drawCard();
-                            serverMessage.setNewHand(hand);
-                            sendServerMessage(serverMessage);
-                            break;
-                        case "END":
-                            break;
-                        case "PLAY":
-                            for(Card card : messageFromClient.cardsToPlay){
+    private void playMakao() throws IOException {
+        if (!serverGame.isGameIsOn()) {
+            ServerMessage serverMessage = new ServerMessage("END", serverGame.getWhoseTurn(), serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound());
+            out.writeObject(serverMessage);
+        } else {
+            String whoseTurn = serverGame.getWhoseTurn();
+            ServerMessage serverMessage = new ServerMessage("DEFAULT", whoseTurn, serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound());
+            serverMessage.setNewHand(hand);
+            out.writeObject(serverMessage);
+            if (whoseTurn.equals(this.clientName)) {
+                receivedMessage = false;
+                getClientMessage();
+                switch (messageFromClient.actionID) {
+                    case "DRAW":
+                        drawCard();
+                        serverMessage.setNewHand(hand);
+                        serverMessage.setActionID("DRAW");
+                        sendServerMessage(serverMessage);
+                        receivedMessage = false;
+                        getClientMessage();
+                        switch (messageFromClient.actionID) {
+                            case "DRAW_MORE":
+                                for (int i = 0; i < messageFromClient.numberOfCardsToDraw; i++)
+                                    drawCard();
+                                serverMessage.setNewHand(hand);
+                                sendServerMessage(serverMessage);
+                                break;
+                            case "END":
+                                break;
+                            case "PLAY":
+                                for (Card card : messageFromClient.cardsToPlay) {
+                                    hand.removeCard(card);
+                                    card.playCard(serverGame.getStateOfRound(), serverGame.getStack());
+                                }
+                                break;
+                        }
+                        break;
+                    case "WAIT":
+                        break;
+                    case "PLAY":
+                        Card lastCard = messageFromClient.cardsToPlay.get(messageFromClient.cardsToPlay.size() - 1);
+                        boolean isJackOrAce = false;
+                        if (lastCard.getCardValue() == CardValue.JACK || lastCard.getCardValue() == CardValue.ACE)
+                            isJackOrAce = true;
+
+                        if (isJackOrAce) {
+                            for (Card card : messageFromClient.cardsToPlay) {
+                                if (!card.equals(lastCard))
+                                    serverGame.getDeckOfCards().stack.addCard(card);
                                 hand.removeCard(card);
-                                card.playCard(serverGame.getStateOfRound(),serverGame.getStack());
                             }
-                            break;
-                    }
-                    break;
-                case "WAIT":
-                    break;
-                case "PLAY":
-                    for(Card card : messageFromClient.cardsToPlay){
-                        card.playCard(serverGame.getStateOfRound(),serverGame.getStack());
-                    }
-                    break;
+                            lastCard.playCard(serverGame.getStateOfRound(), serverGame.getStack());
+                        } else {
+                            for (Card card : messageFromClient.cardsToPlay) {
+                                card.playCard(serverGame.getStateOfRound(), serverGame.getStack());
+                                hand.removeCard(card);
+                            }
+                        }
+                        messageFromClient.cardsToPlay.clear();
+                        break;
+                }
+                this.turnIsOn = false;
             }
-            this.turnIsOn = false;
         }
     }
 

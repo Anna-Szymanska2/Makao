@@ -4,6 +4,7 @@ import makao.model.cards.Card;
 import makao.model.cards.CardColour;
 import makao.model.cards.CardValue;
 import makao.model.game.DeckOfCards;
+import makao.model.game.Player;
 import makao.model.game.Stack;
 import makao.model.game.StateOfRound;
 
@@ -22,27 +23,34 @@ public class ServerGame implements Runnable{
     public void run() {
         initializeGame();
         gameIsOn = true;
+        for (ServerPlayer serverPlayer:serverPlayers)
+            serverPlayer.setGameIsOn(true);
+        whoseTurn = serverPlayers.get(0).getClientName();
+        serverPlayers.get(0).setTurnIsOn(true);
         do{
             playMakao();
         }while(gameIsOn);
-
+        System.out.println("Game has ended");
     }
 
     public void playMakao(){
-        whoseTurn = serverPlayers.get(index).getClientName();
-        serverPlayers.get(index).setTurnIsOn(true);
-        if(serverPlayers.get(index).hasPlayerWon()) {
-            System.out.println("Game is finished");
-            for(ServerPlayer serverPlayer : serverPlayers){
-                serverPlayer.setGameIsOn(false);
+
+        if(!serverPlayers.get(index).isTurnIsOn()){
+            Card lastCard = stateOfRound.getLastCard();
+            if (lastCard.getCardValue() == CardValue.KING && lastCard.getCardColour() == CardColour.SPADES && stateOfRound.getCardsToDraw() > 0)
+                index = (index + serverPlayers.size() - 1) % serverPlayers.size();
+            else
+                index = (index + 1) % serverPlayers.size();
+            whoseTurn = serverPlayers.get(index).getClientName();
+            serverPlayers.get(index).setTurnIsOn(true);
+            if (serverPlayers.get(index).hasPlayerWon()) {
+                System.out.println("Game is finished");
+//            for(ServerPlayer serverPlayer : serverPlayers){
+//                serverPlayer.setGameIsOn(false);
+//            }
+                gameIsOn = false;
             }
-            gameIsOn = false;
         }
-        Card lastCard = stateOfRound.getLastCard();
-        if(lastCard.getCardValue() == CardValue.KING && lastCard.getCardColour() == CardColour.SPADES && stateOfRound.getCardsToDraw() > 0)
-            index = (index + serverPlayers.size() - 1)%serverPlayers.size();
-        else
-            index = (index + 1)%serverPlayers.size();
     }
 
     public StateOfRound getStateOfRound() {
@@ -93,5 +101,10 @@ public class ServerGame implements Runnable{
     public void setStateOfRound(StateOfRound stateOfRound) {
         this.stateOfRound = stateOfRound;
     }
-
+    public DeckOfCards getDeckOfCards() {
+        return deckOfCards;
+    }
+    public boolean isGameIsOn() {
+        return gameIsOn;
+    }
 }

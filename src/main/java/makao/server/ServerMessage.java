@@ -13,7 +13,7 @@ public class ServerMessage implements Serializable {
     private Card cardOnTopOfTheStack;
     private StateOfRound stateOfRound;
     private Hand newHand;
-    private ArrayList<Card> cardsToDraw = new ArrayList<>();
+   //private ArrayList<Card> cardsToDraw = new ArrayList<>();
 
     ServerMessage(String whoseTurn, Card cardOnTopOfTheStack, StateOfRound stateOfRound){
         this.whoseTurn = whoseTurn;
@@ -30,9 +30,9 @@ public class ServerMessage implements Serializable {
         this.stateOfRound = stateOfRound;
     }
 
-    public void setCardsToDraw(ArrayList<Card> cardsToDraw) {
-        this.cardsToDraw = cardsToDraw;
-    }
+//    public void setCardsToDraw(ArrayList<Card> cardsToDraw) {
+//        this.cardsToDraw = cardsToDraw;
+//    }
     public void setNewHand(Hand newHand) {
         this.newHand = newHand;
     }

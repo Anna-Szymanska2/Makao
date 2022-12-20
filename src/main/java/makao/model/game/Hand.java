@@ -2,12 +2,13 @@ package makao.model.game;
 
 import makao.model.cards.Card;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
-public class Hand {
+public class Hand implements Serializable {
     ArrayList<Card> cardsInHand = new ArrayList<>();
 
     public void addCard(Card c) {

@@ -24,15 +24,15 @@ public class Server {
             Thread gameThread = new Thread(serverGame);
             for(int i = 0; i < numberOfPlayers; i++){
                 Socket socket = serverSocket.accept();
-                System.out.println("A new client has connected");
-                ServerPlayer serverPlayer = new ServerPlayer(socket);
+                ServerPlayer serverPlayer = new ServerPlayer(socket,serverGame);
+                System.out.println("A new client has connected: " + serverPlayer.getClientName());
                 serverGame.addServerPlayer(serverPlayer);
                 Thread clientThread = new Thread(serverPlayer);
                 clientThread.start();
             }
             gameThread.start();
         }catch (IOException e) {
-
+            e.printStackTrace();
         }
     }
 

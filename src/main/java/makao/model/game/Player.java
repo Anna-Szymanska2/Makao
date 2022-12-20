@@ -134,7 +134,6 @@ public class Player {
     public void drawCard(StateOfRound stateOfRound, DeckOfCards deckOfCards){
         Scanner scanner = new Scanner(System.in);
         Card firstCard = deckOfCards.drawLastCard();
-        Card lastCard = stateOfRound.getLastCard();
         System.out.println(firstCard.toString());
         System.out.println("Choose action 1-play this card, 2-don't play this card");
         int chosenNumber = scanner.nextInt();
@@ -165,8 +164,6 @@ public class Player {
                 stateOfRound.setPossibleNextColour(new ArrayList<>() {{add(lastCard.getCardColour());}});*/
             stateOfRound.setCardsToDraw(0);
         }
-
-
     }
 
     public void waitRounds(StateOfRound stateOfRound){
