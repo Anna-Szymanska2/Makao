@@ -1,14 +1,16 @@
 package makao.controller;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import makao.model.cards.Card;
+import javafx.scene.layout.TilePane;
+import makao.model.cards.*;
 import makao.model.game.Game;
 import makao.model.game.Player;
 import makao.model.game.StateOfRound;
@@ -18,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class HelloController implements Initializable {
+public class HelloController implements Initializable, AceListener, JackListener {
     private Game game;
     private Player player;
     private final int maxNumberOfCardsInRow = 25;
@@ -38,16 +40,23 @@ public class HelloController implements Initializable {
     private ImageView drewCardView;
     @FXML
     private Button playCardsButton;
+    @FXML
+    Label cardsToDrawLabel;
+    @FXML
+    Label chosenColorLabel;
+    @FXML
+    Label requestedValueLabel;
+    @FXML
+    Label roundsToWaitLabel;
     private int selectedCardsIndex;
     private int lastSelectedCardIndex;
     private ImageView chosenCardView;
+    private boolean isThisPlayerRound = true;
     private int[] playerCardsIndexes = new int[2];
     private boolean wasSelectedCardFromBottomRow = true;
 
 
-    public static void main(String []arg){
 
-    }
 
     public HelloController(){
         Player maciej = new Player("Maciej");
@@ -60,31 +69,79 @@ public class HelloController implements Initializable {
         game = new Game(players);
         game.initializeGame();
         player = maciej;
+
     }
+    public static void main(String []arg){
+
+
+    }
+    public void test(){
+        Player maciej = new Player("Maciej");
+        Player agata = new Player("Agata");
+        Player kuba = new Player("Kuba");
+        ArrayList<Player> players = new ArrayList<>();
+        players.add(maciej);
+        players.add(agata);
+        players.add(kuba);
+        Game game = new Game(players);
+        AceCard card = new AceCard(CardColour.CLUBS, CardValue.ACE, "sth");
+        card.setListener(this);
+        card.playCard(game.getStateOfRound(), game.getStack());
+
+    }
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        updateStateOfRoundLabels(game.getStateOfRound());
         initCardsInHandHBox(bottomRowCardsHBox);
         initCardsInHandHBox(upRowCardsHBox);
         initSelectedCardHBox();
-        /*ArrayList<Card> cards = player.getCardsInHand();
-        for (int i = 0; i < 5; i++) {
-            Card card = cards.get(i);
-            Image image = new Image(getClass().getResource(card.getImagePath()).toExternalForm());
-            ImageView view = (ImageView) bottomRowCardsHBox.getChildren().get(i);
-            //ImageView view = (ImageView) upRowCardsHBox.getChildren().get(i);
-            view.setImage(image);
-            view.setVisible(true);
-
-        }*/
         showCards();
+        for(Card card: player.getCardsInHand()){
+            if(card.getCardValue() == CardValue.ACE){
+                AceCard cardCasted = (AceCard) card;
+                cardCasted.setListener(this);
+            }
+            if(card.getCardValue() == CardValue.JACK){
+                JackCard cardCasted = (JackCard) card;
+                cardCasted.setListener(this);
+            }
+        }
         playerCardsIndexes[0] = 0;
         playerCardsIndexes[1] = 4;
         Image image = new Image(getClass().getResource(game.getStack().getLastCard().getImagePath()).toExternalForm());
         stackCardImageView.setImage(image);
+        deckView.setOnMouseClicked((mouseEvent) -> {
+            if(isThisPlayerRound){
+                drawCard();
+            }
+
+
+        });
+
 
     }
 
+    public void nextPlayerMove(){
+        updateStateOfRoundLabels(game.getStateOfRound());
+        updateStackView(game.getStateOfRound());
+    }
+
+    public void updateStateOfRoundLabels(StateOfRound stateOfRound){
+        cardsToDrawLabel.setText("Cards to draw - " + stateOfRound.getCardsToDraw());
+        if(stateOfRound.getChosenColor() == null)
+            chosenColorLabel.setText("Chosen color - None");
+        else
+            chosenColorLabel.setText("Chosen color - " + stateOfRound.getChosenColor());
+        if(stateOfRound.getRoundsOfRequest() > 0)
+            requestedValueLabel.setText("Requested value - " + stateOfRound.getRequestedValue());
+        else
+            requestedValueLabel.setText("Requested value - None");
+        roundsToWaitLabel.setText("Rounds to wait - " + stateOfRound.getRoundsToStay());
+
+    }
 
 
     public void initSelectedCardHBox(){
@@ -104,18 +161,17 @@ public class HelloController implements Initializable {
             ImageView view = (ImageView) cardsHBox.getChildren().get(i);
             view.setVisible(false);
             view.setOnMouseClicked((mouseEvent) -> {
-                ImageView chosenCardView = (ImageView)mouseEvent.getSource();
-                chooseCard(chosenCardView);
+                if(isThisPlayerRound){
+                    ImageView chosenCardView = (ImageView)mouseEvent.getSource();
+                    chooseCard(chosenCardView);
+                }
+
 
             });
         }
     }
     public void chooseCard(ImageView chosenCardView ){
-        //int chosenCardsNumber = player.getNumberOfCards();
-        //ImageView view = (ImageView)selectedCardsHBox.getChildren().get(chosenCardsNumber);
         int lastSelectedCardIndex = findLastChosenCardIndex(chosenCardView);
-        //swapCardsInViews(chosenCardView, view);
-        //selectedCardsIndex++;
         player.addToChosen(lastSelectedCardIndex);
         player.displayCards();
         showCards();
@@ -125,24 +181,9 @@ public class HelloController implements Initializable {
 
     }
 
-    public void swapCardsInViews(ImageView sourceView, ImageView destinationView){
-        destinationView.setImage(sourceView.getImage());
-        destinationView.setVisible(true);
-        sourceView.setImage(null);
-        sourceView.setVisible(false);
-        sourceView.toFront();
-    }
     public void chooseSelectedCard(ImageView chosenCardView){
-       /* int playerNumberOfCards = player.getNumberOfCards();
-        ImageView firstFreeCardView;*/
-        /*if(playerNumberOfCards >= maxNumberOfCardsInRow)
-            firstFreeCardView = (ImageView) upRowCardsHBox.getChildren().get(playerNumberOfCards - maxNumberOfCardsInRow);
-        else
-            firstFreeCardView = (ImageView) bottomRowCardsHBox.getChildren().get(playerNumberOfCards);*/
         int number = findLastSelectedCardIndex(chosenCardView);
         player.removeFromChosen(number);
-        //swapCardsInViews(chosenCardView, firstFreeCardView);
-        //selectedCardsIndex--;
         showSelectedCards();;
         showCards();
         player.displayCards();
@@ -182,6 +223,14 @@ public class HelloController implements Initializable {
         showCards();
         showSelectedCards();
         Card firstCard = game.getDeckOfCards().drawLastCard();
+        if(firstCard.getCardValue() == CardValue.ACE){
+            AceCard firstCardCasted = (AceCard) firstCard;
+            firstCardCasted.setListener(this);
+        }
+        if(firstCard.getCardValue() == CardValue.JACK){
+            JackCard firstCardCasted = (JackCard) firstCard;
+            firstCardCasted.setListener(this);
+        }
         Image image = new Image(getClass().getResource(firstCard.getImagePath()).toExternalForm());
         drewCardView.setImage(image);
         drewCardView.setVisible(true);
@@ -202,46 +251,37 @@ public class HelloController implements Initializable {
             tryToPlayCards();
             if(!firstCard.isPossibleToPlayCard(game.getStateOfRound())){
                 player.getChosenCards().remove(firstCard);
-                player.takeDrewCards(null, game.getStateOfRound(), game.getDeckOfCards());
+                player.takeDrewCards(null, game.getStateOfRound(), game.getDeckOfCards(), this, this);
                 showCards();
+                updateStateOfRoundLabels(game.getStateOfRound());
+                // end of round
+                //endOfThisPlayerRound();
 
             }
         } else {
-            player.takeDrewCards(firstCard, game.getStateOfRound(), game.getDeckOfCards());
+            player.takeDrewCards(firstCard, game.getStateOfRound(), game.getDeckOfCards(), this, this);
             showCards();
+            updateStateOfRoundLabels(game.getStateOfRound());
+            // end of round
+            //endOfThisPlayerRound();
         }
         drewCardView.setImage(null);
 
 
-
     }
-    public void putBackSelectedCards(){
-        int numberOfSelectedCards = selectedCardsIndex;
-        for(int i = 0; i < numberOfSelectedCards; i++){
-            ImageView view = (ImageView) selectedCardsHBox.getChildren().get(0);
-            chooseSelectedCard(view);
-        }
-        selectedCardsIndex = 0;
-
-    }
-
-    public void removePlayedCards(){
-        for(int i = 0; i< selectedCardsIndex; i++){
-            ImageView view = (ImageView)  selectedCardsHBox.getChildren().get(i);
-            view.setVisible(false);
-            view.setImage(null);
-        }
-        selectedCardsIndex = 0;
-
+    public void endOfThisPlayerRound(){
+        isThisPlayerRound = false;
     }
     public void tryToPlayCards(){
         if(player.areChosenCardsCorrect(game.getStateOfRound())){
             player.playChosenCards(game.getStateOfRound(), game.getDeckOfCards());
-            //removePlayedCards();
             showCards();;
             showSelectedCards();
             updateStackView(game.getStateOfRound());
+            updateStateOfRoundLabels(game.getStateOfRound());
             //end of round, send message
+            //endOfThisPlayerRound();
+
         }
 
         else{
@@ -269,54 +309,71 @@ public class HelloController implements Initializable {
         ArrayList<Card> cards = player.getChosenCards();
         for (int i = 0; i < chosenCardsNumber; i++) {
             Card card = cards.get(i);
-            Image image = new Image(getClass().getResource(card.getImagePath()).toExternalForm());
-            ImageView view = (ImageView) selectedCardsHBox.getChildren().get(i);
-            view.setImage(image);
-            view.setVisible(true);
+            setView(card, selectedCardsHBox, i);
 
         }
-        for(int i = chosenCardsNumber; i < maxNumberOfSelectedCards; i++){
-            ImageView view = (ImageView) selectedCardsHBox.getChildren().get(i);
+        clearViews(chosenCardsNumber, maxNumberOfSelectedCards, selectedCardsHBox);
+    }
+
+    public void clearViews(int firstView, int lastView, HBox viewsHBox){
+        for(int i = firstView; i < lastView; i++){
+            ImageView view = (ImageView) viewsHBox.getChildren().get(i);
             view.setImage(null);
             view.setVisible(false);
         }
+    }
+
+    public void setView(Card card, HBox viewsHBox, int index){
+        Image image = new Image(getClass().getResource(card.getImagePath()).toExternalForm());
+        ImageView view = (ImageView) viewsHBox.getChildren().get(index);
+        view.setImage(image);
+        view.setVisible(true);
     }
 
     public void showCards(){
         ArrayList<Card> cards = player.getCardsInHand();
         int numberOfCardsInBottomRow = 0;
-        for(int i = 0; i < maxNumberOfCardsInRow; i++){
-            ImageView view = (ImageView) upRowCardsHBox.getChildren().get(i);
-            view.setImage(null);
-            view.setVisible(false);
-        }
+        clearViews(0, maxNumberOfCardsInRow, upRowCardsHBox);
         if(player.getNumberOfCards() > maxNumberOfCardsInRow){
             numberOfCardsInBottomRow = maxNumberOfCardsInRow;
             for(int i = 0; i < player.getNumberOfCards() - maxNumberOfCardsInRow; i++){
                 Card card = cards.get(i + maxNumberOfCardsInRow);
-                Image image = new Image(getClass().getResource(card.getImagePath()).toExternalForm());
-                ImageView view = (ImageView) upRowCardsHBox.getChildren().get(i);
-                view.setImage(image);
-                view.setVisible(true);
+                setView(card, upRowCardsHBox, i);
             }
-
         }
         else
             numberOfCardsInBottomRow = player.getNumberOfCards();
         for (int i = 0; i < numberOfCardsInBottomRow; i++) {
             Card card = cards.get(i);
-            Image image = new Image(getClass().getResource(card.getImagePath()).toExternalForm());
-            ImageView view = (ImageView) bottomRowCardsHBox.getChildren().get(i);
-            view.setImage(image);
-            view.setVisible(true);
+            setView(card, bottomRowCardsHBox, i);
 
         }
-        for(int i = numberOfCardsInBottomRow; i < maxNumberOfCardsInRow; i++){
-            ImageView view = (ImageView) bottomRowCardsHBox.getChildren().get(i);
-            view.setImage(null);
-            view.setVisible(false);
-        }
-
+        clearViews(numberOfCardsInBottomRow, maxNumberOfCardsInRow, bottomRowCardsHBox);
     }
 
+    @Override
+    public CardColour aceWasPlayed(ActionEvent event) {
+        CardColour[]  colors= { CardColour.HEARTS, CardColour.SPADES, CardColour.CLUBS, CardColour.DIAMONDS};
+        ChoiceDialog d = new ChoiceDialog(colors[0], colors);
+        d.getDialogPane().getButtonTypes().remove(1,2 );
+        d.setContentText("What color do you want?");
+        d.setTitle(null);
+        d.setHeaderText(null);
+        d.showAndWait();
+
+        return (CardColour) d.getSelectedItem();
+    }
+
+    @Override
+    public CardValue jackWasPlayed(ActionEvent event) {
+        CardValue[]  values = { CardValue.FIVE, CardValue.SIX, CardValue.SEVEN, CardValue.EIGHT, CardValue.NINE, CardValue.TEN, CardValue.ANYCARD};
+        ChoiceDialog d = new ChoiceDialog(values[0], values);
+        d.getDialogPane().getButtonTypes().remove(1,2 );
+        d.setContentText("What is your requested value?");
+        d.setTitle(null);
+        d.setHeaderText(null);
+        d.showAndWait();
+
+        return (CardValue) d.getSelectedItem();
+    }
 }

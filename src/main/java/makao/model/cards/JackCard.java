@@ -1,14 +1,21 @@
 package makao.model.cards;
 
+import javafx.event.ActionEvent;
 import  makao.model.game.Stack;
 import  makao.model.game.StateOfRound;
 
+import java.security.CryptoPrimitive;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class JackCard extends Card {
+    private JackListener listener;
     public JackCard(CardColour cardColour, CardValue cardValue, String imagePath){
         super(cardColour, cardValue, imagePath);
+    }
+
+    public void setListener(JackListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -23,7 +30,7 @@ public class JackCard extends Card {
         }
     }
     public CardValue chooseValue(){
-        System.out.println("Choose card value (1 - five, 2 - six, 3 - seven, 4 - eight, 5 - nine, 6 - ten, 7 - no request)");
+       /* System.out.println("Choose card value (1 - five, 2 - six, 3 - seven, 4 - eight, 5 - nine, 6 - ten, 7 - no request)");
         Scanner scanner = new Scanner(System.in);
         int chosenNumber = scanner.nextInt();
         CardValue chosenValue = null;
@@ -36,7 +43,8 @@ public class JackCard extends Card {
             case 5 -> chosenValue = CardValue.NINE;
             case 6 -> chosenValue = CardValue.TEN;
             case 7 -> chosenValue = CardValue.ANYCARD;
-        }
+        }*/
+        CardValue chosenValue = listener.jackWasPlayed(new ActionEvent());
         return chosenValue;
     }
 }

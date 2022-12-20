@@ -272,7 +272,7 @@
             </ImageView>
          </children>
       </HBox>
-      <ImageView fx:id="deckView" fitHeight="150.0" fitWidth="90.0" layoutX="720.0" layoutY="151.0" onMouseClicked="#drawCard" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="deckView" fitHeight="150.0" fitWidth="90.0" layoutX="720.0" layoutY="151.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../controller/cards_images/back.jpg" />
          </image>
@@ -303,12 +303,12 @@
                </HBox.margin></ImageView>
          </children>
       </HBox>
-      <VBox layoutX="8.0" prefHeight="200.0" prefWidth="100.0">
+      <VBox layoutX="8.0" prefHeight="200.0" prefWidth="166.0">
          <children>
-            <Label text="Cards to draw" />
-            <Label text="Chosen color" />
-            <Label text="Requested value " />
-            <Label text="Rounds to wait" />
+            <Label fx:id="cardsToDrawLabel" prefHeight="18.0" prefWidth="145.0" text="Cards to draw" />
+            <Label fx:id="chosenColorLabel" prefHeight="18.0" prefWidth="177.0" text="Chosen color" />
+            <Label fx:id="requestedValueLabel" prefHeight="18.0" prefWidth="195.0" text="Requested value " />
+            <Label fx:id="roundsToWaitLabel" prefHeight="18.0" prefWidth="173.0" text="Rounds to wait" />
          </children>
       </VBox>
    </children>

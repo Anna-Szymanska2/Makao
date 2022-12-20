@@ -18,6 +18,7 @@ public class StateOfRound {
     private int players;
     private int roundsOfRequest;
     private CardValue requestedValue = null;
+    private CardColour chosenColor = null;
 
     public StateOfRound(ArrayList<CardValue> possibleNextCards, CardColour possibleNextColour, Card lastCard, int players) {
         this.possibleNextCards = possibleNextCards;
@@ -33,6 +34,14 @@ public class StateOfRound {
 
     public CardValue getRequestedValue() {
         return requestedValue;
+    }
+
+    public CardColour getChosenColor() {
+        return chosenColor;
+    }
+
+    public void setChosenColor(CardColour chosenColor) {
+        this.chosenColor = chosenColor;
     }
 
     public void setRequestedValue(CardValue requestedValue) {

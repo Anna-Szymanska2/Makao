@@ -97,6 +97,7 @@ public class Card {
 
         // }
         stateOfRound.setLastCard(this);
+        stateOfRound.setChosenColor(null);
 
     }
 

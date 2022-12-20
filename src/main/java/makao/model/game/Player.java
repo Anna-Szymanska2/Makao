@@ -1,7 +1,6 @@
 package makao.model.game;
 
-import makao.model.cards.Card;
-import  makao.model.cards.CardValue;
+import makao.model.cards.*;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -209,33 +208,49 @@ public class Player {
             }
             else{
                 System.out.println("you can't use this card");
-                /*hand.addCard(firstCard);
+                hand.addCard(firstCard);
                 for(int i = 0; i < cardsToDraw -1; i++)
                     hand.addCard(deckOfCards.drawLastCard());
                 stateOfRound.setCardsToDraw(0);
-                stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});*/
-                takeDrewCards(firstCard, stateOfRound, deckOfCards);
+                stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
+                //takeDrewCards(firstCard, stateOfRound, deckOfCards);
             }
 
         }
         else{
-            /*hand.addCard(firstCard);
+            hand.addCard(firstCard);
             for(int i = 0; i < cardsToDraw -1; i++)
                 hand.addCard(deckOfCards.drawLastCard());
             stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
-            stateOfRound.setCardsToDraw(0);*/
-            takeDrewCards(firstCard, stateOfRound, deckOfCards);
+            stateOfRound.setCardsToDraw(0);
+            //takeDrewCards(firstCard, stateOfRound, deckOfCards);
         }
 
 
     }
 
-    public void takeDrewCards(Card firstCard, StateOfRound stateOfRound, DeckOfCards deckOfCards){
+    public void takeDrewCards(Card firstCard, StateOfRound stateOfRound, DeckOfCards deckOfCards, AceListener aceListener, JackListener jackListener){
         int cardsToDraw = stateOfRound.getCardsToDraw();
-        if(firstCard != null)
+
+        if(firstCard != null){
             hand.addCard(firstCard);
-        for(int i = 0; i < cardsToDraw -1; i++)
-            hand.addCard(deckOfCards.drawLastCard());
+            /*if(firstCard.getCardValue() == CardValue.ACE){
+                AceCard firstCardCasted = (AceCard) firstCard;
+                firstCardCasted.setListener(listener);
+            }*/
+        }
+        for(int i = 0; i < cardsToDraw -1; i++){
+            Card card = deckOfCards.drawLastCard();
+            if(card.getCardValue() == CardValue.ACE){
+                AceCard cardCasted = (AceCard) card;
+                cardCasted.setListener(aceListener);
+            }
+            if(card.getCardValue() == CardValue.JACK){
+                JackCard cardCasted = (JackCard) card;
+                cardCasted.setListener(jackListener);
+            }
+            hand.addCard(card);
+        }
         stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
         stateOfRound.setCardsToDraw(0);
     }
