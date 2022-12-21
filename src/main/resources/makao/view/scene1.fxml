@@ -311,5 +311,6 @@
             <Label fx:id="roundsToWaitLabel" prefHeight="18.0" prefWidth="173.0" text="Rounds to wait" />
          </children>
       </VBox>
+      <Button fx:id="waitRoundsButton" layoutX="725.0" layoutY="364.0" mnemonicParsing="false" onAction="#waitRounds" text="Wait rounds" />
    </children>
 </AnchorPane>

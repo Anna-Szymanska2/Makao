@@ -14,13 +14,14 @@ import makao.model.cards.*;
 import makao.model.game.Game;
 import makao.model.game.Player;
 import makao.model.game.StateOfRound;
+import makao.model.game.WaitListener;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class HelloController implements Initializable, AceListener, JackListener {
+public class HelloController implements Initializable, AceListener, JackListener, WaitListener {
     private Game game;
     private Player player;
     private final int maxNumberOfCardsInRow = 25;
@@ -48,6 +49,8 @@ public class HelloController implements Initializable, AceListener, JackListener
     Label requestedValueLabel;
     @FXML
     Label roundsToWaitLabel;
+    @FXML
+    Button waitRoundsButton;
     private int selectedCardsIndex;
     private int lastSelectedCardIndex;
     private ImageView chosenCardView;
@@ -75,25 +78,13 @@ public class HelloController implements Initializable, AceListener, JackListener
 
 
     }
-    public void test(){
-        Player maciej = new Player("Maciej");
-        Player agata = new Player("Agata");
-        Player kuba = new Player("Kuba");
-        ArrayList<Player> players = new ArrayList<>();
-        players.add(maciej);
-        players.add(agata);
-        players.add(kuba);
-        Game game = new Game(players);
-        AceCard card = new AceCard(CardColour.CLUBS, CardValue.ACE, "sth");
-        card.setListener(this);
-        card.playCard(game.getStateOfRound(), game.getStack());
-
-    }
 
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        player.setListener(this);
+        waitRoundsButton.setVisible(false);
         updateStateOfRoundLabels(game.getStateOfRound());
         initCardsInHandHBox(bottomRowCardsHBox);
         initCardsInHandHBox(upRowCardsHBox);
@@ -127,6 +118,16 @@ public class HelloController implements Initializable, AceListener, JackListener
     public void nextPlayerMove(){
         updateStateOfRoundLabels(game.getStateOfRound());
         updateStackView(game.getStateOfRound());
+    }
+
+    public void nextThisPlayerMove(StateOfRound stateOfRound){
+        updateStateOfRoundLabels(game.getStateOfRound());
+        player.checkStateOfRound(stateOfRound);
+        if(stateOfRound.getRoundsToStay() > 0){
+            waitRoundsButton.setVisible(true);
+            deckView.setVisible(false);
+        }
+            
     }
 
     public void updateStateOfRoundLabels(StateOfRound stateOfRound){
@@ -256,6 +257,8 @@ public class HelloController implements Initializable, AceListener, JackListener
                 updateStateOfRoundLabels(game.getStateOfRound());
                 // end of round
                 //endOfThisPlayerRound();
+                nextThisPlayerMove(game.getStateOfRound());
+
 
             }
         } else {
@@ -264,6 +267,7 @@ public class HelloController implements Initializable, AceListener, JackListener
             updateStateOfRoundLabels(game.getStateOfRound());
             // end of round
             //endOfThisPlayerRound();
+            nextThisPlayerMove(game.getStateOfRound());
         }
         drewCardView.setImage(null);
 
@@ -281,6 +285,7 @@ public class HelloController implements Initializable, AceListener, JackListener
             updateStateOfRoundLabels(game.getStateOfRound());
             //end of round, send message
             //endOfThisPlayerRound();
+            nextThisPlayerMove(game.getStateOfRound());
 
         }
 
@@ -350,30 +355,48 @@ public class HelloController implements Initializable, AceListener, JackListener
         }
         clearViews(numberOfCardsInBottomRow, maxNumberOfCardsInRow, bottomRowCardsHBox);
     }
+    public void waitRounds(){
+        player.waitRounds(game.getStateOfRound());
+        waitRoundsButton.setVisible(false);
+        deckView.setVisible(true);
+        // end of round
+        nextThisPlayerMove(game.getStateOfRound());
+    }
 
     @Override
     public CardColour aceWasPlayed(ActionEvent event) {
         CardColour[]  colors= { CardColour.HEARTS, CardColour.SPADES, CardColour.CLUBS, CardColour.DIAMONDS};
-        ChoiceDialog d = new ChoiceDialog(colors[0], colors);
-        d.getDialogPane().getButtonTypes().remove(1,2 );
-        d.setContentText("What color do you want?");
-        d.setTitle(null);
-        d.setHeaderText(null);
-        d.showAndWait();
+        ChoiceDialog choiceDialog = new ChoiceDialog(colors[0], colors);
+        choiceDialog.getDialogPane().getButtonTypes().remove(1,2 );
+        choiceDialog.setContentText("What color do you want?");
+        choiceDialog.setTitle(null);
+        choiceDialog.setHeaderText(null);
+        choiceDialog.showAndWait();
 
-        return (CardColour) d.getSelectedItem();
+        return (CardColour) choiceDialog.getSelectedItem();
     }
 
     @Override
     public CardValue jackWasPlayed(ActionEvent event) {
         CardValue[]  values = { CardValue.FIVE, CardValue.SIX, CardValue.SEVEN, CardValue.EIGHT, CardValue.NINE, CardValue.TEN, CardValue.ANYCARD};
-        ChoiceDialog d = new ChoiceDialog(values[0], values);
-        d.getDialogPane().getButtonTypes().remove(1,2 );
-        d.setContentText("What is your requested value?");
-        d.setTitle(null);
-        d.setHeaderText(null);
-        d.showAndWait();
+        ChoiceDialog choiceDialog = new ChoiceDialog(values[0], values);
+        choiceDialog.getDialogPane().getButtonTypes().remove(1,2 );
+        choiceDialog.setContentText("What is your requested value?");
+        choiceDialog.setTitle(null);
+        choiceDialog.setHeaderText(null);
+        choiceDialog.showAndWait();
 
-        return (CardValue) d.getSelectedItem();
+        return (CardValue) choiceDialog.getSelectedItem();
+    }
+
+    @Override
+    public void playerWaitsInThisRound(int roundsToStay) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(null);
+        alert.setHeaderText(null);
+        alert.setContentText("You wait in this round. Rounds to wait left: " + roundsToStay);
+        alert.showAndWait();
+        //end of round
+        nextThisPlayerMove(game.getStateOfRound());
     }
 }

@@ -11,9 +11,14 @@ public class Player {
     ArrayList<Card> chosenCards = new ArrayList<>();
     int roundsToStay = 0;
     String nick;
+    private WaitListener listener;
 
     public Player(String nick){
         this.nick = nick;
+    }
+
+    public void setListener(WaitListener listener) {
+        this.listener = listener;
     }
 
     public void setRoundsToStay(int roundsToStay) {
@@ -52,6 +57,15 @@ public class Player {
     }
     public void displayCards(){
         hand.displayCardsInHand();
+    }
+    public void checkStateOfRound(StateOfRound stateOfRound){
+        if(stateOfRound.getRoundsOfRequest() > 0)
+            stateOfRound.setRoundsOfRequest(stateOfRound.getRoundsOfRequest() - 1);
+
+        if(getRoundsToStay() > 0){
+            setRoundsToStay(getRoundsToStay() - 1);
+            listener.playerWaitsInThisRound(getRoundsToStay());
+        }
     }
 
     public void makeMove(StateOfRound stateOfRound, DeckOfCards deckOfCards){
