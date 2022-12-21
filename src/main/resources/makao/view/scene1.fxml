@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="610.0" prefWidth="838.0" style="-fx-background-color: #50C878;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="makao.controller.HelloController">
    <children>
@@ -312,5 +313,10 @@
          </children>
       </VBox>
       <Button fx:id="waitRoundsButton" layoutX="725.0" layoutY="364.0" mnemonicParsing="false" onAction="#waitRounds" text="Wait rounds" />
+      <Label fx:id="timerLabel" layoutX="97.0" layoutY="513.0" prefHeight="50.0" prefWidth="62.0" text="00:00">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

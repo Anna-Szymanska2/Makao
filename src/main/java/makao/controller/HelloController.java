@@ -1,25 +1,29 @@
 package makao.controller;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import makao.model.cards.*;
 import makao.model.game.Game;
 import makao.model.game.Player;
 import makao.model.game.StateOfRound;
 import makao.model.game.WaitListener;
 
+
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class HelloController implements Initializable, AceListener, JackListener, WaitListener {
     private Game game;
@@ -41,6 +45,7 @@ public class HelloController implements Initializable, AceListener, JackListener
     private ImageView drewCardView;
     @FXML
     private Button playCardsButton;
+    private Timer timer;
     @FXML
     Label cardsToDrawLabel;
     @FXML
@@ -51,6 +56,10 @@ public class HelloController implements Initializable, AceListener, JackListener
     Label roundsToWaitLabel;
     @FXML
     Button waitRoundsButton;
+    @FXML
+    Label timerLabel;
+    private Alert drawCardAlert;
+    private ChoiceDialog choiceDialog;
     private int selectedCardsIndex;
     private int lastSelectedCardIndex;
     private ImageView chosenCardView;
@@ -121,13 +130,68 @@ public class HelloController implements Initializable, AceListener, JackListener
     }
 
     public void nextThisPlayerMove(StateOfRound stateOfRound){
+        if(timer != null)
+            timer.cancel();
         updateStateOfRoundLabels(game.getStateOfRound());
         player.checkStateOfRound(stateOfRound);
         if(stateOfRound.getRoundsToStay() > 0){
             waitRoundsButton.setVisible(true);
             deckView.setVisible(false);
         }
-            
+        timer = new Timer();
+        timerLabel.setStyle(("-fx-text-fill: black"));
+
+        TimerTask task = new TimerTask() {
+            int timeLeft = 120000;
+
+
+            @Override
+            public void run() {
+
+                Platform.runLater(()->{
+                    timeLeft=timeLeft-1000;
+                    int minutes = (timeLeft/60000);
+                    int seconds = (timeLeft/1000) % 60;
+                    String seconds_string = String.format("%02d", seconds);
+                    String minutes_string = String.format("%02d", minutes);
+                    if(timeLeft == 10000){
+                        timerLabel.setStyle(("-fx-text-fill: red"));
+
+                    }
+                    timerLabel.setText(minutes_string+":"+seconds_string);
+
+                    if(timeLeft == 0){
+                        timer.cancel();
+                        if(choiceDialog!= null) {
+                            choiceDialog.close();
+                        }
+                        else if(drawCardAlert != null){
+                            drawCardAlert.setResult(new ButtonType("Take it"));
+                            drawCardAlert.close();
+                        } else if (stateOfRound.getRoundsToStay() > 0) {
+                            waitRounds();
+                        } else{
+                            Card firstCard = drawFirstCard();
+                            player.addToHand(firstCard);
+                        }
+                        //end of round
+                        showCards();
+                        showSelectedCards();
+                        nextThisPlayerMove(game.getStateOfRound());
+
+
+
+                    }
+
+                });
+
+
+            }
+        };
+        timer.scheduleAtFixedRate(task, 0, 1000);
+
+
+
     }
 
     public void updateStateOfRoundLabels(StateOfRound stateOfRound){
@@ -136,7 +200,7 @@ public class HelloController implements Initializable, AceListener, JackListener
             chosenColorLabel.setText("Chosen color - None");
         else
             chosenColorLabel.setText("Chosen color - " + stateOfRound.getChosenColor());
-        if(stateOfRound.getRoundsOfRequest() > 0)
+        if(stateOfRound.getRoundsOfRequest() > 1)
             requestedValueLabel.setText("Requested value - " + stateOfRound.getRequestedValue());
         else
             requestedValueLabel.setText("Requested value - None");
@@ -218,8 +282,7 @@ public class HelloController implements Initializable, AceListener, JackListener
         return 100; //something went wrong then
 
     }
-
-    public void drawCard(){
+    Card drawFirstCard(){
         player.putBackChosenCards();
         showCards();
         showSelectedCards();
@@ -232,21 +295,28 @@ public class HelloController implements Initializable, AceListener, JackListener
             JackCard firstCardCasted = (JackCard) firstCard;
             firstCardCasted.setListener(this);
         }
+        return firstCard;
+    }
+
+
+    public void drawCard(){
+        Card firstCard = drawFirstCard();
         Image image = new Image(getClass().getResource(firstCard.getImagePath()).toExternalForm());
         drewCardView.setImage(image);
         drewCardView.setVisible(true);
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(null);
-        alert.setHeaderText(null);
-        alert.setContentText("You drew " + firstCard + ". What do you want to do?");
+        drawCardAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        drawCardAlert.setTitle(null);
+        drawCardAlert.setHeaderText(null);
+        drawCardAlert.setContentText("You drew " + firstCard + ". What do you want to do?");
 
         ButtonType buttonTypeOne = new ButtonType("Try to play it");
         ButtonType buttonTypeTwo = new ButtonType("Take it");
 
-        alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo);
+        drawCardAlert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo);
 
-        Optional<ButtonType> result = alert.showAndWait();
+        Optional<ButtonType> result = drawCardAlert.showAndWait();
+        drawCardAlert = null;
         if (result.get() == buttonTypeOne){
             player.getChosenCards().add(firstCard);
             tryToPlayCards();
@@ -275,6 +345,9 @@ public class HelloController implements Initializable, AceListener, JackListener
     }
     public void endOfThisPlayerRound(){
         isThisPlayerRound = false;
+        timer.cancel();
+        showSelectedCards();;
+        showCards();
     }
     public void tryToPlayCards(){
         if(player.areChosenCardsCorrect(game.getStateOfRound())){
@@ -366,27 +439,31 @@ public class HelloController implements Initializable, AceListener, JackListener
     @Override
     public CardColour aceWasPlayed(ActionEvent event) {
         CardColour[]  colors= { CardColour.HEARTS, CardColour.SPADES, CardColour.CLUBS, CardColour.DIAMONDS};
-        ChoiceDialog choiceDialog = new ChoiceDialog(colors[0], colors);
+        choiceDialog = new ChoiceDialog(colors[0], colors);
         choiceDialog.getDialogPane().getButtonTypes().remove(1,2 );
         choiceDialog.setContentText("What color do you want?");
         choiceDialog.setTitle(null);
         choiceDialog.setHeaderText(null);
         choiceDialog.showAndWait();
+        CardColour chosenColor = (CardColour) choiceDialog.getSelectedItem();
+        choiceDialog = null;
 
-        return (CardColour) choiceDialog.getSelectedItem();
+        return chosenColor;
     }
 
     @Override
     public CardValue jackWasPlayed(ActionEvent event) {
         CardValue[]  values = { CardValue.FIVE, CardValue.SIX, CardValue.SEVEN, CardValue.EIGHT, CardValue.NINE, CardValue.TEN, CardValue.ANYCARD};
-        ChoiceDialog choiceDialog = new ChoiceDialog(values[0], values);
+        choiceDialog = new ChoiceDialog(values[6], values);
         choiceDialog.getDialogPane().getButtonTypes().remove(1,2 );
         choiceDialog.setContentText("What is your requested value?");
         choiceDialog.setTitle(null);
         choiceDialog.setHeaderText(null);
         choiceDialog.showAndWait();
+        CardValue chosenValue = (CardValue) choiceDialog.getSelectedItem();
+       choiceDialog = null;
 
-        return (CardValue) choiceDialog.getSelectedItem();
+        return chosenValue;
     }
 
     @Override
@@ -395,7 +472,7 @@ public class HelloController implements Initializable, AceListener, JackListener
         alert.setTitle(null);
         alert.setHeaderText(null);
         alert.setContentText("You wait in this round. Rounds to wait left: " + roundsToStay);
-        alert.showAndWait();
+        alert.show();
         //end of round
         nextThisPlayerMove(game.getStateOfRound());
     }
