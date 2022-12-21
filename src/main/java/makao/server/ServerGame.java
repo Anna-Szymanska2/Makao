@@ -24,9 +24,9 @@ public class ServerGame implements Runnable{
         initializeGame();
         gameIsOn = true;
         for (ServerPlayer serverPlayer:serverPlayers)
-            serverPlayer.setGameIsOn(true);
-        whoseTurn = serverPlayers.get(0).getClientName();
-        serverPlayers.get(0).setTurnIsOn(true);
+                serverPlayer.setGameIsOn(true);
+//        whoseTurn = serverPlayers.get(0).getClientName();
+//        serverPlayers.get(0).setTurnIsOn(true);
         do{
             playMakao();
         }while(gameIsOn);
@@ -35,12 +35,6 @@ public class ServerGame implements Runnable{
 
     public void playMakao(){
 
-        if(!serverPlayers.get(index).isTurnIsOn()){
-            Card lastCard = stateOfRound.getLastCard();
-            if (lastCard.getCardValue() == CardValue.KING && lastCard.getCardColour() == CardColour.SPADES && stateOfRound.getCardsToDraw() > 0)
-                index = (index + serverPlayers.size() - 1) % serverPlayers.size();
-            else
-                index = (index + 1) % serverPlayers.size();
             whoseTurn = serverPlayers.get(index).getClientName();
             serverPlayers.get(index).setTurnIsOn(true);
             if (serverPlayers.get(index).hasPlayerWon()) {
@@ -50,7 +44,12 @@ public class ServerGame implements Runnable{
 //            }
                 gameIsOn = false;
             }
-        }
+            Card lastCard = stateOfRound.getLastCard();
+            if (lastCard.getCardValue() == CardValue.KING && lastCard.getCardColour() == CardColour.SPADES && stateOfRound.getCardsToDraw() > 0)
+                index = (index + serverPlayers.size() - 1) % serverPlayers.size();
+            else
+                index = (index + 1) % serverPlayers.size();
+
     }
 
     public StateOfRound getStateOfRound() {

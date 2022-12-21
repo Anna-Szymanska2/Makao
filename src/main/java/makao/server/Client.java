@@ -254,12 +254,12 @@ public class Client {
             hand.removeCard(card);
         }
         ClientMessage clientMessage = new ClientMessage(name,stateOfRound,"PLAY",0,chosenCards);
-        chosenCards.clear();
         try {
             out.writeObject(clientMessage);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        chosenCards.clear();
     }
 
     public boolean isChoosingCardsInProgress(StateOfRound stateOfRound){

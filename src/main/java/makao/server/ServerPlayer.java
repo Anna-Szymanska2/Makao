@@ -43,7 +43,9 @@ public class ServerPlayer implements Runnable{
         try {
             out.writeObject(serverMessage);
         while (socket.isConnected()) {
+            System.out.println(clientName + "connected");
                 while(gameIsOn){
+                    System.out.println(clientName + "playing");
                     playMakao();
                 }
         }
