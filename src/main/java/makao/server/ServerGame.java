@@ -17,6 +17,7 @@ public class ServerGame implements Runnable{
     private DeckOfCards deckOfCards = new DeckOfCards();
     private String whoseTurn;
     private boolean gameIsOn = false;
+    private boolean nextTurn = false;
     int index = 0;
 
     @Override
@@ -34,9 +35,16 @@ public class ServerGame implements Runnable{
     }
 
     public void playMakao(){
-
+        nextTurn = true;
+        for (ServerPlayer serverPlayer : serverPlayers) {
+            if(serverPlayer.getTurnIsOn())
+                nextTurn = false;
+        }
+        if(nextTurn) {
             whoseTurn = serverPlayers.get(index).getClientName();
-            serverPlayers.get(index).setTurnIsOn(true);
+            for (ServerPlayer serverPlayer : serverPlayers) {
+                serverPlayer.setTurnIsOn(true);
+            }
             if (serverPlayers.get(index).hasPlayerWon()) {
                 System.out.println("Game is finished");
 //            for(ServerPlayer serverPlayer : serverPlayers){
@@ -49,6 +57,8 @@ public class ServerGame implements Runnable{
                 index = (index + serverPlayers.size() - 1) % serverPlayers.size();
             else
                 index = (index + 1) % serverPlayers.size();
+            nextTurn = false;
+        }
 
     }
 
