@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane fx:id="registerPane" prefHeight="404.0" prefWidth="722.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="makao.controller.RegisterController">
+   <children>
+      <HBox fx:id="firstHBox" layoutX="346.0" layoutY="50.0" prefHeight="75.0" prefWidth="376.0">
+         <children>
+            <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../../../../../../Users/ania0/Desktop/1_11zon.jpg" />
+               </image>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </ImageView>
+            <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
+         </children></HBox>
+      <HBox fx:id="secondHBox" layoutX="346.0" layoutY="125.0" prefHeight="75.0" prefWidth="376.0">
+         <children>
+            <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </HBox>
+      <HBox fx:id="thirdHBox" layoutX="346.0" layoutY="200.0" prefHeight="75.0" prefWidth="376.0">
+         <children>
+            <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </ImageView>
+            <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </HBox>
+      <HBox fx:id="fourthHBox" layoutX="346.0" layoutY="275.0" prefHeight="75.0" prefWidth="376.0">
+         <children>
+            <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </ImageView>
+            <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </HBox>
+      <ImageView fx:id="chosenAvatarView" fitHeight="75.0" fitWidth="75.0" layoutX="26.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../controller/avatars/9.jpg" />
+         </image>
+      </ImageView>
+      <Label layoutX="128.0" layoutY="80.0" text="Chosen avatar" textFill="WHITE" />
+      <TextField fx:id="nickTextField" layoutX="128.0" layoutY="150.0" />
+      <Label layoutX="52.0" layoutY="154.0" text="nick" textFill="WHITE" />
+      <Label layoutX="12.0" layoutY="254.0" prefWidth="102.0" text="repeated password" textFill="WHITE" />
+      <Label layoutX="37.0" layoutY="204.0" text="password" textFill="WHITE" />
+      <Button fx:id="signUpButton" layoutX="221.0" layoutY="300.0" mnemonicParsing="false" onAction="#tryToSignUp" text="Sign up" />
+      <Button fx:id="backToSignInButton" layoutX="128.0" layoutY="300.0" mnemonicParsing="false" onAction="#returnToLogView" text="Back to sign in" />
+      <PasswordField fx:id="passwordField" layoutX="128.0" layoutY="200.0" />
+      <PasswordField fx:id="secondPasswordField" layoutX="128.0" layoutY="250.0" />
+   </children>
+</AnchorPane>
