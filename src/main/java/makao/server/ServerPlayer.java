@@ -63,7 +63,7 @@ public class ServerPlayer implements Runnable{
             if(turnIsOn) {
                 String whoseTurn = serverGame.getWhoseTurn();
                 ServerMessage serverMessage = new ServerMessage("DEFAULT", whoseTurn, serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound());
-                serverMessage.setNewHand(hand);
+                serverMessage.setNewHand(getHand());
                 out.writeObject(serverMessage);
                 if (whoseTurn.equals(this.clientName)) {
                     receivedMessage = false;
@@ -71,17 +71,19 @@ public class ServerPlayer implements Runnable{
                     switch (messageFromClient.actionID) {
                         case "DRAW":
                             drawCard();
-                            serverMessage.setNewHand(hand);
-                            serverMessage.setActionID("DRAW");
-                            sendServerMessage(serverMessage);
+                            ServerMessage serverMessage2 = new ServerMessage("DEFAULT", whoseTurn, serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound());
+                            serverMessage2.setNewHand(hand);
+                            serverMessage2.setActionID("DRAW");
+                            sendServerMessage(serverMessage2);
                             receivedMessage = false;
                             getClientMessage();
                             switch (messageFromClient.actionID) {
                                 case "DRAW_MORE":
                                     for (int i = 0; i < messageFromClient.numberOfCardsToDraw; i++)
                                         drawCard();
-                                    serverMessage.setNewHand(hand);
-                                    sendServerMessage(serverMessage);
+                                    ServerMessage serverMessage3 = new ServerMessage("DEFAULT", whoseTurn, serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound());
+                                    serverMessage3.setNewHand(hand);
+                                    sendServerMessage(serverMessage3);
                                     break;
                                 case "END":
                                     break;
@@ -199,6 +201,9 @@ public class ServerPlayer implements Runnable{
 
     public String getClientName() {
         return clientName;
+    }
+    public Hand getHand() {
+        return hand;
     }
 
     public boolean hasPlayerWon(){

@@ -9,6 +9,7 @@ import makao.model.game.StateOfRound;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -24,6 +25,7 @@ public class Client {
     Hand hand = new Hand();
     ArrayList<Card> chosenCards = new ArrayList<>();
     int roundsToStay = 0;
+
 
     public Client(Socket socket, String name){
         try{
