@@ -89,11 +89,16 @@ public class RegisterController implements Initializable {
         if(nick.length() <= 3 || password.length() <= 3 || password2.length() <= 3){
             alert.setContentText("All fields must be filled in with words with minimum 4 letters");
             alert.showAndWait();
+            secondPasswordField.clear();
+            passwordField.clear();
+            nickTextField.clear();
             return;
         }
         if(!password2.equals(password)){
             alert.setContentText("Passwords must be the same");
             alert.showAndWait();
+            secondPasswordField.clear();
+            passwordField.clear();
             return;
         }
 

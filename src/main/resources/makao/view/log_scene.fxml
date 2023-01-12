@@ -10,7 +10,7 @@
    <children>
       <Button fx:id="registerButton" layoutX="60.0" layoutY="170.0" mnemonicParsing="false" onAction="#changeViewToRegister" prefHeight="26.0" prefWidth="105.0" text="Zarejestruj" />
       <Button fx:id="logInButton" layoutX="192.0" layoutY="170.0" mnemonicParsing="false" onAction="#tryToLogIn" prefHeight="26.0" prefWidth="106.0" text="Zaloguj" />
-      <TextField fx:id="nickTextFiled" layoutX="151.0" layoutY="60.0" />
+      <TextField fx:id="nickTextField" layoutX="151.0" layoutY="60.0" />
       <Label layoutX="60.0" layoutY="64.0" prefWidth="25.0" text="nick" />
       <Label layoutX="60.0" layoutY="103.0" text="password" />
       <PasswordField fx:id="passwordField" layoutX="151.0" layoutY="99.0" />

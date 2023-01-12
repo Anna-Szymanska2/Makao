@@ -24,13 +24,13 @@ public class LoggingController {
     private Button logInButton;
 
     @FXML
-    private TextField nickTextFiled;
+    private TextField nickTextField;
 
     @FXML
     private PasswordField passwordField;
 
     public void changeViewToRegister() throws IOException {
-        nickTextFiled.clear();
+        nickTextField.clear();
         passwordField.clear();
         Stage stage = (Stage) loggingPane.getScene().getWindow();
         stage.close();
@@ -44,7 +44,7 @@ public class LoggingController {
 
     }
     public void tryToLogIn(){
-        String nick = nickTextFiled.getText();
+        String nick = nickTextField.getText();
         String password = passwordField.getText();
         if(nick.length() <= 3|| password.length() <= 3){
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -52,6 +52,8 @@ public class LoggingController {
             alert.setHeaderText(null);
             alert.setContentText("All fields must be filled in with words with minimum 4 letters!");
             alert.showAndWait();
+            nickTextField.clear();
+            passwordField.clear();
             return;
         }
 
