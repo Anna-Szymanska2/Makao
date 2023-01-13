@@ -2,41 +2,53 @@ package makao.model.game;
 
 import makao.model.cards.*;
 
+import java.io.*;
 import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        //test();
-        test3();
+        test();
+        //test3();
 
 
     }
     public static void test(){
 
-       /* DeckOfCards deckOfCards = new DeckOfCards();
-        Card randomCard = deckOfCards.drawRandomCard();
-        int players = 4;
-        System.out.println(randomCard.getCardValue() + " of " + randomCard.getCardColour() + " " + randomCard.getPoints());
+        Hand hand = new Hand();
+        hand.addCard(new Card(CardColour.SPADES, CardValue.KING, "imagePath"));
+        FileOutputStream fileOut = null;
+        try {
+            fileOut = new FileOutputStream("user.ser");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(hand);
+            out.close(); fileOut.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("Object has been saved");
 
-        StateOfRound stateOfRound = new StateOfRound(
-                new ArrayList<>() {{add(CardValue.FIVE);}},
-                CardColour.DIAMONDS,
-                new Card(CardColour.CLUBS, CardValue.ACE),
-                players
-        );
+        Hand user2 = null;
 
-        Card card = new Card(CardColour.DIAMONDS, CardValue.SEVEN);
-        TwoOrThreeCard twoOrThreeCard = new TwoOrThreeCard(CardColour.DIAMONDS, CardValue.TWO);
-        QueenCard queen = new QueenCard(CardColour.CLUBS, CardValue.QUEEN);
-        AceCard ace = new AceCard(CardColour.CLUBS, CardValue.ACE);
-        //card.playCard(stateOfRound, );
-        //twoOrThreeCard.playCard(stateOfRound);
-        queen.isPossibleToPlayCard(stateOfRound);
-        //ace.playCard(stateOfRound, );
-        System.out.println(card.getCardValue() + " of " + card.getCardColour() + " " + card.getPoints());
-        System.out.println(card.isPossibleToPlayCard(stateOfRound));
-        DeckOfCards deckOfCards1 = new DeckOfCards();
-*/
+        FileInputStream fileIn = null;
+        try {
+            fileIn = new FileInputStream("user.ser");
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            user2 = (Hand) in.readObject();
+            in.close(); fileIn.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        user2.displayCardsInHand();
+
+
+
     }
     public static void test2(){
         DeckOfCards deckOfCards = new DeckOfCards();

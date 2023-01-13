@@ -16,10 +16,9 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import makao.model.cards.*;
-import makao.model.game.Game;
-import makao.model.game.Player;
-import makao.model.game.StateOfRound;
-import makao.model.game.WaitListener;
+import makao.model.game.*;
+import makao.server.Client;
+import makao.server.ServerMessage;
 
 
 import java.net.URL;
@@ -47,17 +46,17 @@ public class HelloController implements Initializable, AceListener, JackListener
     private Button playCardsButton;
     private Timer timer;
     @FXML
-    Label cardsToDrawLabel;
+    private Label cardsToDrawLabel;
     @FXML
-    Label chosenColorLabel;
+    private Label chosenColorLabel;
     @FXML
-    Label requestedValueLabel;
+    private Label requestedValueLabel;
     @FXML
-    Label roundsToWaitLabel;
+    private Label roundsToWaitLabel;
     @FXML
-    Button waitRoundsButton;
+    private Button waitRoundsButton;
     @FXML
-    Label timerLabel;
+    private Label timerLabel;
     private Alert drawCardAlert;
     private ChoiceDialog choiceDialog;
     private int selectedCardsIndex;
@@ -66,11 +65,14 @@ public class HelloController implements Initializable, AceListener, JackListener
     private boolean isThisPlayerRound = true;
     private int[] playerCardsIndexes = new int[2];
     private boolean wasSelectedCardFromBottomRow = true;
+    private Client client;
 
 
 
 
-    public HelloController(){
+    public HelloController(Client client){
+        this.client = client;
+        this.client.setController(this);
         Player maciej = new Player("Maciej");
         Player agata = new Player("Agata");
         Player kuba = new Player("Kuba");
@@ -83,22 +85,45 @@ public class HelloController implements Initializable, AceListener, JackListener
         player = maciej;
 
     }
+    public HelloController(){
+        Player maciej = new Player("Maciej");
+        Player agata = new Player("Agata");
+        Player kuba = new Player("Kuba");
+        ArrayList<Player> players = new ArrayList<>();
+        players.add(maciej);
+        players.add(agata);
+        players.add(kuba);
+        game = new Game(players);
+        game.initializeGame();
+        player = maciej;
+    }
     public static void main(String []arg){
 
 
     }
 
-
+    public void setClient(Client client) {
+        this.client = client;
+        client.setController(this);
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        player.setListener(this);
+        initSelectedCardHBox();
         waitRoundsButton.setVisible(false);
-        updateStateOfRoundLabels(game.getStateOfRound());
         initCardsInHandHBox(bottomRowCardsHBox);
         initCardsInHandHBox(upRowCardsHBox);
-        initSelectedCardHBox();
-        showCards();
+        deckView.setOnMouseClicked((mouseEvent) -> {
+            if(isThisPlayerRound){
+                drawCard();
+            }
+        });
+    }
+
+    public void init(ServerMessage msgFromServer, String name){
+        player = new Player(name);
+        player.setHand(msgFromServer.getNewHand());
+        player.setListener(this);
         for(Card card: player.getCardsInHand()){
             if(card.getCardValue() == CardValue.ACE){
                 AceCard cardCasted = (AceCard) card;
@@ -109,24 +134,24 @@ public class HelloController implements Initializable, AceListener, JackListener
                 cardCasted.setListener(this);
             }
         }
-        playerCardsIndexes[0] = 0;
-        playerCardsIndexes[1] = 4;
-        Image image = new Image(getClass().getResource(game.getStack().getLastCard().getImagePath()).toExternalForm());
-        stackCardImageView.setImage(image);
-        deckView.setOnMouseClicked((mouseEvent) -> {
-            if(isThisPlayerRound){
-                drawCard();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                updateStateOfRoundLabels(msgFromServer.getStateOfRound());
+                showCards();
+                playerCardsIndexes[0] = 0;
+                playerCardsIndexes[1] = 4;
+                Image image = new Image(getClass().getResource(msgFromServer.getDeckOfCards().getStack().getLastCard().getImagePath()).toExternalForm());
+                stackCardImageView.setImage(image);
             }
-
-
         });
 
 
     }
 
-    public void nextPlayerMove(){
-        updateStateOfRoundLabels(game.getStateOfRound());
-        updateStackView(game.getStateOfRound());
+    public  void nextPlayerMove(ServerMessage msgFromServer){
+        updateStateOfRoundLabels(msgFromServer.getStateOfRound());
+        updateStackView(msgFromServer.getStateOfRound());
     }
 
     public void nextThisPlayerMove(StateOfRound stateOfRound){

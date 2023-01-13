@@ -3,17 +3,19 @@ package makao.model.game;
 
 import makao.model.cards.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class DeckOfCards {
+public class DeckOfCards implements Serializable {
     public ArrayList<Card> deckOfCards;
-    public Stack stack = new Stack();
+    public Stack stack;
 
     public DeckOfCards(){
+        this.stack = new Stack();
         this.deckOfCards = new ArrayList();
-        //"cards_images/2_of_clubs.png"
+
 
         for (int j = 1; j < 5; j++) {
             String imagePath = "cards_images/ace_of_" + CardColour.values()[j].toString() + ".png";
@@ -97,5 +99,9 @@ public class DeckOfCards {
         Card card = deckOfCards.get(deckOfCards.size()-1);
         deckOfCards.remove(deckOfCards.size()-1);
         return card;
+    }
+
+    public Stack getStack() {
+        return stack;
     }
 }

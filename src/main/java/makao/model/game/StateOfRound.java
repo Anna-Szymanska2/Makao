@@ -4,9 +4,10 @@ import  makao.model.cards.Card;
 import  makao.model.cards.CardColour;
 import  makao.model.cards.CardValue;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class StateOfRound {
+public class StateOfRound implements Serializable {
 
 
 

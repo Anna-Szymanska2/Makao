@@ -2,13 +2,19 @@ package makao.model.game;
 
 import makao.model.cards.Card;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
-public class Hand {
-    ArrayList<Card> cardsInHand = new ArrayList<>();
+public class Hand implements Serializable {
+    ArrayList<Card> cardsInHand  = new ArrayList<>();
+    public Hand(){};
+    public Hand(ArrayList<Card> cards){
+        cardsInHand = cards;
+    }
+
 
     public void addCard(Card c) {
         cardsInHand.add(c);
@@ -25,6 +31,11 @@ public class Hand {
     public int getCardCount() {
         return cardsInHand.size();
     }
+
+    public ArrayList<Card> getCardsInHand() {
+        return cardsInHand;
+    }
+
     public void displayCardsInHand(){
         for(Card card:cardsInHand)
             System.out.println((cardsInHand.indexOf(card)+1) + ". " + card.toString());

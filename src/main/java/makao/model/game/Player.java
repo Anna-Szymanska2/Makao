@@ -17,6 +17,10 @@ public class Player {
         this.nick = nick;
     }
 
+    public void setHand(Hand hand) {
+        this.hand = hand;
+    }
+
     public void setListener(WaitListener listener) {
         this.listener = listener;
     }

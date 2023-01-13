@@ -3,9 +3,11 @@ package makao.model.cards;
 import  makao.model.game.Stack;
 import  makao.model.game.StateOfRound;
 
+import java.io.Serializable;
+import java.nio.file.SecureDirectoryStream;
 import java.util.ArrayList;
 
-public class Card {
+public class Card implements Serializable {
     private CardValue cardValue;
     private CardColour cardColour;
     private String imagePath;
