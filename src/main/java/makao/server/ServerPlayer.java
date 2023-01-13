@@ -31,7 +31,7 @@ public class ServerPlayer implements Runnable{
             this.in = new ObjectInputStream(socket.getInputStream());
             ClientMessage clientMessage;
             clientMessage = (ClientMessage) in.readObject();
-            this.clientName = clientMessage.playerName;
+            this.clientName = clientMessage.getPlayerName();
         }catch  (IOException | ClassNotFoundException e) {
             closeEverything(socket, in, out);
         }
@@ -57,68 +57,22 @@ public class ServerPlayer implements Runnable{
 
     private void playMakao() throws IOException {
         if (!serverGame.isGameIsOn()) {
-            ServerMessage serverMessage = new ServerMessage("END", serverGame.getWhoseTurn(), serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound());
+            ServerMessage serverMessage = new ServerMessage("END", serverGame.getWhoseTurn(), serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound(), serverGame.getDeckOfCards());
             out.writeObject(serverMessage);
         } else {
             if(turnIsOn) {
                 String whoseTurn = serverGame.getWhoseTurn();
-                ServerMessage serverMessage = new ServerMessage("DEFAULT", whoseTurn, serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound());
+                ServerMessage serverMessage = new ServerMessage("DEFAULT", whoseTurn, serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound(), serverGame.getDeckOfCards());
                 serverMessage.setNewHand(getHand());
                 out.writeObject(serverMessage);
                 if (whoseTurn.equals(this.clientName)) {
                     receivedMessage = false;
                     getClientMessage();
-                    switch (messageFromClient.actionID) {
-                        case "DRAW":
-                            drawCard();
-                            ServerMessage serverMessage2 = new ServerMessage("DEFAULT", whoseTurn, serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound());
-                            serverMessage2.setNewHand(hand);
-                            serverMessage2.setActionID("DRAW");
-                            sendServerMessage(serverMessage2);
-                            receivedMessage = false;
-                            getClientMessage();
-                            switch (messageFromClient.actionID) {
-                                case "DRAW_MORE":
-                                    for (int i = 0; i < messageFromClient.numberOfCardsToDraw; i++)
-                                        drawCard();
-                                    ServerMessage serverMessage3 = new ServerMessage("DEFAULT", whoseTurn, serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound());
-                                    serverMessage3.setNewHand(hand);
-                                    sendServerMessage(serverMessage3);
-                                    break;
-                                case "END":
-                                    break;
-                                case "PLAY":
-                                    for (Card card : messageFromClient.cardsToPlay) {
-                                        hand.removeCard(card);
-                                        card.playCard(serverGame.getStateOfRound(), serverGame.getStack());
-                                    }
-                                    break;
-                            }
-                            break;
-                        case "WAIT":
-                            break;
-                        case "PLAY":
-                            Card lastCard = messageFromClient.cardsToPlay.get(messageFromClient.cardsToPlay.size() - 1);
-                            boolean isJackOrAce = false;
-                            if (lastCard.getCardValue() == CardValue.JACK || lastCard.getCardValue() == CardValue.ACE)
-                                isJackOrAce = true;
-
-                            if (isJackOrAce) {
-                                for (Card card : messageFromClient.cardsToPlay) {
-                                    if (!card.equals(lastCard))
-                                        serverGame.getDeckOfCards().stack.addCard(card);
-                                    hand.removeCard(card);
-                                }
-                                lastCard.playCard(serverGame.getStateOfRound(), serverGame.getStack());
-                            } else {
-                                for (Card card : messageFromClient.cardsToPlay) {
-                                    card.playCard(serverGame.getStateOfRound(), serverGame.getStack());
-                                    hand.removeCard(card);
-                                }
-                            }
-                            messageFromClient.cardsToPlay.clear();
-                            break;
+                    if(messageFromClient.getActionID().equals("END")){
+                        serverGame.setStateOfRound(messageFromClient.getStateOfRound());
+                        serverGame.setDeckOfCards(messageFromClient.getDeckOfCards());
                     }
+
                 }
             }
             turnIsOn = false;
@@ -132,7 +86,7 @@ public class ServerPlayer implements Runnable{
                 if ((clientMessage = (ClientMessage) in.readObject()) != null) {
                     messageFromClient = clientMessage;
                     receivedMessage = true;
-                    serverGame.setStateOfRound(clientMessage.stateOfRound);
+                    serverGame.setStateOfRound(clientMessage.getStateOfRound());
                 }
             }
         } catch (IOException | ClassNotFoundException e) {

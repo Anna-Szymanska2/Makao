@@ -1,6 +1,7 @@
 package makao.server;
 
 import makao.model.cards.Card;
+import makao.model.game.DeckOfCards;
 import makao.model.game.Hand;
 import makao.model.game.StateOfRound;
 
@@ -12,6 +13,7 @@ public class ServerMessage implements Serializable {
     private String whoseTurn;
     private Card cardOnTopOfTheStack;
     private StateOfRound stateOfRound;
+    private DeckOfCards deckOfCards;
     private Hand newHand;
    //private ArrayList<Card> cardsToDraw = new ArrayList<>();
 
@@ -23,11 +25,12 @@ public class ServerMessage implements Serializable {
     ServerMessage(String actionID){
         this.actionID = actionID;
     }
-    ServerMessage(String actionID,String whoseTurn, Card cardOnTopOfTheStack, StateOfRound stateOfRound){
+    ServerMessage(String actionID,String whoseTurn, Card cardOnTopOfTheStack, StateOfRound stateOfRound, DeckOfCards deckOfCards){
         this.actionID = actionID;
         this.whoseTurn = whoseTurn;
         this.cardOnTopOfTheStack = cardOnTopOfTheStack;
         this.stateOfRound = stateOfRound;
+        this.deckOfCards = deckOfCards;
     }
 
 //    public void setCardsToDraw(ArrayList<Card> cardsToDraw) {
@@ -64,4 +67,7 @@ public class ServerMessage implements Serializable {
         return newHand;
     }
 
+    public DeckOfCards getDeckOfCards() {
+        return deckOfCards;
+    }
 }

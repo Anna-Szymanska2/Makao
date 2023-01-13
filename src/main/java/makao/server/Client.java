@@ -14,11 +14,11 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Client {
+public class Client implements Serializable{
 
-    private Socket socket;
-    private ObjectOutputStream out;
-    private ObjectInputStream in;
+    transient private Socket socket;
+    transient private ObjectOutputStream out;
+    transient private ObjectInputStream in;
     private String name;
     private boolean gameIsOn = false;
     private boolean turnIsOn = false;
@@ -69,28 +69,15 @@ public class Client {
                                     System.out.println("Congratulations, you have won the game!!!");
                                 gameIsOn = false;
                                 break;
-                            case "DRAW":
-                                hand = messageFromServer.getNewHand();
-                                drawCard(messageFromServer.getStateOfRound());
-                                break;
                             case "DEFAULT":
                                 System.out.println("Card on top of the stack: " + messageFromServer.getCardOnTopOfTheStack().toString());
-                                hand = messageFromServer.getNewHand();
+                                if(hand.getCardCount() == 0)
+                                    hand = messageFromServer.getNewHand();
                                 if(messageFromServer.getWhoseTurn().equals(name))
-                                    makeMove(messageFromServer.getStateOfRound());
+                                    makeMove(messageFromServer.getStateOfRound(),messageFromServer.getDeckOfCards());
                                 else
                                     System.out.println(messageFromServer.getWhoseTurn() + " is making their move");
                                 break;
-                            case "DRAW_MORE":
-                                hand = messageFromServer.getNewHand();
-                                messageFromServer.getStateOfRound().setCardsToDraw(0);
-                                messageFromServer.getStateOfRound().setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
-                                ClientMessage clientMessage = new ClientMessage(name,messageFromServer.getStateOfRound(),"END");
-                                try {
-                                    out.writeObject(clientMessage);
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
-                                }
                         }
                     }catch (IOException e){
                         closeEverything(socket, in, out);
@@ -121,7 +108,7 @@ public class Client {
     public void readMessageFromServer(ServerMessage serverMessage){
 
     }
-    public void makeMove(StateOfRound stateOfRound){
+    public void makeMove(StateOfRound stateOfRound, DeckOfCards deckOfCards){
         System.out.println("Its your turn");
         hand.displayCardsInHand();
         if(stateOfRound.getRoundsOfRequest() > 0)
@@ -130,6 +117,8 @@ public class Client {
         if(getRoundsToStay() > 0){
             setRoundsToStay(getRoundsToStay() - 1);
             System.out.println("This player waits in this round");
+            ClientMessage clientMessage = new ClientMessage(name,stateOfRound,"END", deckOfCards);
+            sendMessage(clientMessage);
             return;
         }
         Scanner scanner = new Scanner(System.in);
@@ -139,9 +128,9 @@ public class Client {
                 System.out.println("Choose action 1-play card(s), 2-wait round(s)");
                 int chosenNumber = scanner.nextInt();
                 if(chosenNumber == 1){
-                    isChoosingCardsInProgress = isChoosingCardsInProgress(stateOfRound);
+                    isChoosingCardsInProgress = isChoosingCardsInProgress(stateOfRound,deckOfCards);
                 }else{
-                    waitRounds(stateOfRound);
+                    waitRounds(stateOfRound,deckOfCards);
                     break;
                 }
             }
@@ -150,79 +139,51 @@ public class Client {
                 System.out.println("Choose action 1-play card(s), 2-draw card(s)");
                 int chosenNumber = scanner.nextInt();
                 if(chosenNumber == 1){
-                    isChoosingCardsInProgress = isChoosingCardsInProgress(stateOfRound);
+                    isChoosingCardsInProgress = isChoosingCardsInProgress(stateOfRound,deckOfCards);
                 }else{
-                    ClientMessage clientMessage = new ClientMessage(name,stateOfRound,"DRAW");
-                    try {
-                        out.writeObject(clientMessage);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    //drawCard(stateOfRound, deckOfCards);
+
+                    drawCard(stateOfRound, deckOfCards);
+                    ClientMessage clientMessage = new ClientMessage(name,stateOfRound,"END", deckOfCards);
+                    sendMessage(clientMessage);
                     break;
                 }
             }
         }
 
     }
-    public void drawCard(StateOfRound stateOfRound){
+  public void drawCard(StateOfRound stateOfRound, DeckOfCards deckOfCards){
         Scanner scanner = new Scanner(System.in);
-        Card firstCard = hand.getCard(hand.getCardCount()-1);
+        Card firstCard = deckOfCards.drawLastCard();
         System.out.println(firstCard.toString());
         System.out.println("Choose action 1-play this card, 2-don't play this card");
         int chosenNumber = scanner.nextInt();
         int cardsToDraw = stateOfRound.getCardsToDraw();
         if(chosenNumber == 1){
             if(firstCard.isPossibleToPlayCard(stateOfRound)) {
-                chosenCards.clear();
-                chosenCards.add(firstCard);
-                hand.removeCard(firstCard);
-                ClientMessage clientMessage = new ClientMessage(name,stateOfRound,"PLAY",0,chosenCards);
-                try {
-                    out.writeObject(clientMessage);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                chosenCards.clear();
+                firstCard.playCard(stateOfRound, deckOfCards.stack);
             }
             else{
                 System.out.println("you can't use this card");
-                if(cardsToDraw - 1 <= 0){
-                    stateOfRound.setCardsToDraw(0);
-                    stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
-                    ClientMessage clientMessage = new ClientMessage(name,stateOfRound,"END");
-                    try {
-                        out.writeObject(clientMessage);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }else {
-                    stateOfRound.setCardsToDraw(cardsToDraw-1);
-                    stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
-                    ClientMessage clientMessage = new ClientMessage(name, stateOfRound, "DRAW_MORE");
-                    try {
-                        out.writeObject(clientMessage);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-//                for(int i = 0; i < cardsToDraw -1; i++)
-//                    hand.addCard(deckOfCards.drawLastCard());
-//                stateOfRound.setCardsToDraw(0);
-//                stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
+                hand.addCard(firstCard);
+                for(int i = 0; i < cardsToDraw -1; i++)
+                    hand.addCard(deckOfCards.drawLastCard());
+                stateOfRound.setCardsToDraw(0);
+                stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
+
+                /*if(lastCard.getClass() == FightingKing.class)
+                    stateOfRound.setPossibleNextColour(new ArrayList<>() {{add(lastCard.getCardColour());}});*/
             }
 
         }
         else{
-            {
-                stateOfRound.setCardsToDraw(cardsToDraw-1);
-                ClientMessage clientMessage = new ClientMessage(name, stateOfRound, "DRAW_MORE");
-                try {
-                    out.writeObject(clientMessage);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+            hand.addCard(firstCard);
+            for(int i = 0; i < cardsToDraw -1; i++)
+                hand.addCard(deckOfCards.drawLastCard());
+            stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
+            /*if(lastCard.getClass() == FightingKing.class)
+                stateOfRound.setPossibleNextColour(new ArrayList<>() {{add(lastCard.getCardColour());}});*/
+            stateOfRound.setCardsToDraw(0);
+
         }
 
 
@@ -251,23 +212,41 @@ public class Client {
         }
     }
 
-    public void playChosenCards(StateOfRound stateOfRound){
-        for (Card card : chosenCards) {
-            hand.removeCard(card);
+//    public void displayCardsInHand(){
+//        for(int i = 0; i < cardsInHand.size(); i++){
+//            System.out.println((i+1) + ". " + cardsInHand.get(i).toString());
+//        }
+//    }
+
+    public void playChosenCards(StateOfRound stateOfRound, DeckOfCards deckOfCards){
+        Card lastCard = chosenCards.get(chosenCards.size() - 1);
+        boolean isJackOrAce = false;
+        if(lastCard.getCardValue() == CardValue.JACK || lastCard.getCardValue() == CardValue.ACE)
+            isJackOrAce = true;
+
+        if(isJackOrAce) {
+            for (Card card : chosenCards) {
+                if(!card.equals(lastCard))
+                    deckOfCards.stack.addCard(card);
+                hand.removeCard(card);
+            }
+            lastCard.playCard(stateOfRound, deckOfCards.stack);
         }
-        ClientMessage clientMessage = new ClientMessage(name,stateOfRound,"PLAY",0,chosenCards);
-        try {
-            out.writeObject(clientMessage);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        else{
+            for (Card card : chosenCards) {
+                card.playCard(stateOfRound, deckOfCards.stack);
+                hand.removeCard(card);
+            }
         }
         chosenCards.clear();
+        ClientMessage clientMessage = new ClientMessage(name,stateOfRound,"END", deckOfCards);
+        sendMessage(clientMessage);
     }
 
-    public boolean isChoosingCardsInProgress(StateOfRound stateOfRound){
+    public boolean isChoosingCardsInProgress(StateOfRound stateOfRound, DeckOfCards deckOfCards){
         chooseCards();
         if(areChosenCardsCorrect(stateOfRound)){
-            playChosenCards(stateOfRound);
+            playChosenCards(stateOfRound,deckOfCards);
             return false;
         }
         else{
@@ -277,16 +256,12 @@ public class Client {
         return true;
     }
 
-    public void waitRounds(StateOfRound stateOfRound){
+    public void waitRounds(StateOfRound stateOfRound, DeckOfCards deckOfCards){
         setRoundsToStay(stateOfRound.getRoundsToStay() - 1);
         stateOfRound.setRoundsToStay(0);
         stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
-        ClientMessage clientMessage = new ClientMessage(name,stateOfRound,"WAIT");
-        try {
-            out.writeObject(clientMessage);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        ClientMessage clientMessage = new ClientMessage(name,stateOfRound,"END", deckOfCards);
+        sendMessage(clientMessage);
 
     }
 

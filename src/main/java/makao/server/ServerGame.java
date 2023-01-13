@@ -116,4 +116,8 @@ public class ServerGame implements Runnable{
     public boolean isGameIsOn() {
         return gameIsOn;
     }
+
+    public void setDeckOfCards(DeckOfCards deckOfCards) {
+        this.deckOfCards = deckOfCards;
+    }
 }

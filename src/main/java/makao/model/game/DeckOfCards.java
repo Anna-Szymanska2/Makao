@@ -3,11 +3,12 @@ package makao.model.game;
 
 import makao.model.cards.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class DeckOfCards {
+public class DeckOfCards implements Serializable {
     public ArrayList<Card> deckOfCards;
     public Stack stack = new Stack();
 

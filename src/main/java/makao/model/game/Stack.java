@@ -2,9 +2,10 @@ package makao.model.game;
 
 import  makao.model.cards.Card;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Stack {
+public class Stack implements Serializable {
     public ArrayList<Card> stack = new ArrayList<>();
 
     public void addCard(Card c) {
