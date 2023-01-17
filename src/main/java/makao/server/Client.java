@@ -77,12 +77,16 @@ public class Client implements Serializable{
                                 break;
                             case "DEFAULT":
                                 System.out.println("Card on top of the stack: " + messageFromServer.getCardOnTopOfTheStack().toString());
-                                if(hand.getCardCount() == 0)
-                                    hand = messageFromServer.getNewHand();
+                                /*if(hand.getCardCount() == 0)
+                                    hand = messageFromServer.getNewHand();*/
                                 if(messageFromServer.getWhoseTurn().equals(name))
-                                    makeMove(messageFromServer.getStateOfRound(),messageFromServer.getDeckOfCards());
-                                else
+                                    controller.nextThisPlayerMove(messageFromServer);
+                                else{
                                     System.out.println(messageFromServer.getWhoseTurn() + " is making their move");
+                                    controller.nextPlayerMove(messageFromServer);
+                                }
+
+
                                 break;
                         }
                     }catch (IOException e){

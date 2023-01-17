@@ -21,7 +21,10 @@ public class ServerGame implements Runnable{
     public void run() {
         initializeGame();
         gameIsOn = true;
-        for (ServerPlayer serverPlayer:serverPlayers){
+        ServerPlayer [] players = new ServerPlayer[serverPlayers.size()];
+        players = serverPlayers.toArray(players);
+
+        for (ServerPlayer serverPlayer:players){
             /*ServerMessage serverMessage = new ServerMessage("INIT", null, getStateOfRound(),getDeckOfCards(), serverPlayer.getHand());
             serverPlayer.sendServerMessage(serverMessage);*/
             serverPlayer.setGameIsOn(true);
@@ -31,20 +34,27 @@ public class ServerGame implements Runnable{
 //        whoseTurn = serverPlayers.get(0).getClientName();
 //        serverPlayers.get(0).setTurnIsOn(true);
         do{
-            playMakao();
+            playMakao(players);
         }while(gameIsOn);
         System.out.println("Game has ended");
     }
 
-    public void playMakao(){
+    public void playMakao(ServerPlayer [] players){
         nextTurn = true;
-        for (ServerPlayer serverPlayer : serverPlayers) {
+        /*for (ServerPlayer serverPlayer : serverPlayers) {
+            if(serverPlayer.getTurnIsOn())
+                nextTurn = false;
+        }*/
+        for (ServerPlayer serverPlayer : players) {
             if(serverPlayer.getTurnIsOn())
                 nextTurn = false;
         }
         if(nextTurn) {
             whoseTurn = serverPlayers.get(index).getClientName();
-            for (ServerPlayer serverPlayer : serverPlayers) {
+            /*for (ServerPlayer serverPlayer : serverPlayers) {
+                serverPlayer.setTurnIsOn(true);
+            }*/
+            for (ServerPlayer serverPlayer : players) {
                 serverPlayer.setTurnIsOn(true);
             }
             if (serverPlayers.get(index).hasPlayerWon()) {

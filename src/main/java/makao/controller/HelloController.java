@@ -18,59 +18,63 @@ import javafx.scene.paint.Paint;
 import makao.model.cards.*;
 import makao.model.game.*;
 import makao.server.Client;
+import makao.server.ClientMessage;
 import makao.server.ServerMessage;
 
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.*;
 
-public class HelloController implements Initializable, AceListener, JackListener, WaitListener {
-    private Game game;
+public class HelloController implements Initializable, AceListener, JackListener, WaitListener, Serializable {
+    //private Game game;
+    private DeckOfCards deckOfCards;
+    private StateOfRound stateOfRound;
     private Player player;
     private final int maxNumberOfCardsInRow = 25;
     private final int maxNumberOfSelectedCards = 4;
     @FXML
-    private HBox bottomRowCardsHBox;
+    transient private HBox bottomRowCardsHBox;
     @FXML
-    private HBox upRowCardsHBox;
+    transient private HBox upRowCardsHBox;
     @FXML
-    private HBox selectedCardsHBox;
+    transient private HBox selectedCardsHBox;
 
     @FXML
-    private ImageView stackCardImageView;
+    transient private ImageView stackCardImageView;
     @FXML
-    private ImageView deckView;
+    transient private ImageView deckView;
     @FXML
-    private ImageView drewCardView;
+    transient private ImageView drewCardView;
     @FXML
-    private Button playCardsButton;
-    private Timer timer;
+    transient private Button playCardsButton;
+    transient private Timer timer;
     @FXML
-    private Label cardsToDrawLabel;
+    transient private Label cardsToDrawLabel;
     @FXML
-    private Label chosenColorLabel;
+    transient private Label chosenColorLabel;
     @FXML
-    private Label requestedValueLabel;
+    transient private Label requestedValueLabel;
     @FXML
-    private Label roundsToWaitLabel;
+    transient private Label roundsToWaitLabel;
     @FXML
-    private Button waitRoundsButton;
+    transient private Button waitRoundsButton;
     @FXML
-    private Label timerLabel;
-    private Alert drawCardAlert;
-    private ChoiceDialog choiceDialog;
+    transient private Label timerLabel;
+    transient private Alert drawCardAlert;
+    transient private ChoiceDialog choiceDialog;
     private int selectedCardsIndex;
     private int lastSelectedCardIndex;
-    private ImageView chosenCardView;
-    private boolean isThisPlayerRound = true;
+    transient private ImageView chosenCardView;
+    private boolean isThisPlayerRound;
     private int[] playerCardsIndexes = new int[2];
     private boolean wasSelectedCardFromBottomRow = true;
-    private Client client;
+    transient private Client client;
 
 
 
 
-    public HelloController(Client client){
+    /*public HelloController(Client client){
         this.client = client;
         this.client.setController(this);
         Player maciej = new Player("Maciej");
@@ -82,11 +86,11 @@ public class HelloController implements Initializable, AceListener, JackListener
         players.add(kuba);
         game = new Game(players);
         game.initializeGame();
-        player = maciej;
+        player = maciej;*/
 
-    }
+    //}
     public HelloController(){
-        Player maciej = new Player("Maciej");
+        /*Player maciej = new Player("Maciej");
         Player agata = new Player("Agata");
         Player kuba = new Player("Kuba");
         ArrayList<Player> players = new ArrayList<>();
@@ -95,7 +99,7 @@ public class HelloController implements Initializable, AceListener, JackListener
         players.add(kuba);
         game = new Game(players);
         game.initializeGame();
-        player = maciej;
+        player = maciej;*/
     }
     public static void main(String []arg){
 
@@ -109,6 +113,7 @@ public class HelloController implements Initializable, AceListener, JackListener
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        isThisPlayerRound = false;
         initSelectedCardHBox();
         waitRoundsButton.setVisible(false);
         initCardsInHandHBox(bottomRowCardsHBox);
@@ -124,6 +129,8 @@ public class HelloController implements Initializable, AceListener, JackListener
         player = new Player(name);
         player.setHand(msgFromServer.getNewHand());
         player.setListener(this);
+        stateOfRound = msgFromServer.getStateOfRound();
+        deckOfCards = msgFromServer.getDeckOfCards();
         for(Card card: player.getCardsInHand()){
             if(card.getCardValue() == CardValue.ACE){
                 AceCard cardCasted = (AceCard) card;
@@ -137,11 +144,11 @@ public class HelloController implements Initializable, AceListener, JackListener
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                updateStateOfRoundLabels(msgFromServer.getStateOfRound());
+                updateStateOfRoundLabels(stateOfRound);
                 showCards();
                 playerCardsIndexes[0] = 0;
                 playerCardsIndexes[1] = 4;
-                Image image = new Image(getClass().getResource(msgFromServer.getDeckOfCards().getStack().getLastCard().getImagePath()).toExternalForm());
+                Image image = new Image(getClass().getResource(deckOfCards.getStack().getLastCard().getImagePath()).toExternalForm());
                 stackCardImageView.setImage(image);
             }
         });
@@ -154,82 +161,99 @@ public class HelloController implements Initializable, AceListener, JackListener
         updateStackView(msgFromServer.getStateOfRound());
     }
 
-    public void nextThisPlayerMove(StateOfRound stateOfRound){
+    public void nextThisPlayerMove(ServerMessage msgFromServer){
+    //nwm czy to ptzrebne
         if(timer != null)
             timer.cancel();
-        updateStateOfRoundLabels(game.getStateOfRound());
+        isThisPlayerRound = true;
+        deckOfCards = msgFromServer.getDeckOfCards();
+        stateOfRound = msgFromServer.getStateOfRound();
         player.checkStateOfRound(stateOfRound);
-        if(stateOfRound.getRoundsToStay() > 0){
-            waitRoundsButton.setVisible(true);
-            deckView.setVisible(false);
-        }
-        timer = new Timer();
-        timerLabel.setStyle(("-fx-text-fill: black"));
+        updateStateOfRoundLabels(stateOfRound);
+        updateStackView(stateOfRound);
 
-        TimerTask task = new TimerTask() {
-            int timeLeft = 120000;
-
-
+        Platform.runLater(new Runnable() {
             @Override
             public void run() {
+                if(stateOfRound.getRoundsToStay() > 0){
+                    waitRoundsButton.setVisible(true);
+                    deckView.setVisible(false);
+                }
+                timer = new Timer();
+                timerLabel.setStyle(("-fx-text-fill: black"));
 
-                Platform.runLater(()->{
-                    timeLeft=timeLeft-1000;
-                    int minutes = (timeLeft/60000);
-                    int seconds = (timeLeft/1000) % 60;
-                    String seconds_string = String.format("%02d", seconds);
-                    String minutes_string = String.format("%02d", minutes);
-                    if(timeLeft == 10000){
-                        timerLabel.setStyle(("-fx-text-fill: red"));
+                TimerTask task = new TimerTask() {
+                    int timeLeft = 120000;
+
+
+                    @Override
+                    public void run() {
+
+                        Platform.runLater(()->{
+                            timeLeft=timeLeft-1000;
+                            int minutes = (timeLeft/60000);
+                            int seconds = (timeLeft/1000) % 60;
+                            String seconds_string = String.format("%02d", seconds);
+                            String minutes_string = String.format("%02d", minutes);
+                            if(timeLeft == 10000){
+                                timerLabel.setStyle(("-fx-text-fill: red"));
+
+                            }
+                            timerLabel.setText(minutes_string+":"+seconds_string);
+
+                            if(timeLeft == 0){
+                                timer.cancel();
+                                if(choiceDialog!= null) {
+                                    choiceDialog.close();
+                                }
+                                else if(drawCardAlert != null){
+                                    drawCardAlert.setResult(new ButtonType("Take it"));
+                                    drawCardAlert.close();
+                                } else if (stateOfRound.getRoundsToStay() > 0) {
+                                    waitRounds();
+                                } else{
+                                    Card firstCard = drawFirstCard();
+                                    player.addToHand(firstCard);
+                                }
+                                //end of round
+                                endOfThisPlayerRound();
+
+
+
+                            }
+
+                        });
+
 
                     }
-                    timerLabel.setText(minutes_string+":"+seconds_string);
-
-                    if(timeLeft == 0){
-                        timer.cancel();
-                        if(choiceDialog!= null) {
-                            choiceDialog.close();
-                        }
-                        else if(drawCardAlert != null){
-                            drawCardAlert.setResult(new ButtonType("Take it"));
-                            drawCardAlert.close();
-                        } else if (stateOfRound.getRoundsToStay() > 0) {
-                            waitRounds();
-                        } else{
-                            Card firstCard = drawFirstCard();
-                            player.addToHand(firstCard);
-                        }
-                        //end of round
-                        showCards();
-                        showSelectedCards();
-                        nextThisPlayerMove(game.getStateOfRound());
-
-
-
-                    }
-
-                });
-
-
+                };
+                timer.scheduleAtFixedRate(task, 0, 1000);
             }
-        };
-        timer.scheduleAtFixedRate(task, 0, 1000);
+        });
+
+
 
 
 
     }
 
     public void updateStateOfRoundLabels(StateOfRound stateOfRound){
-        cardsToDrawLabel.setText("Cards to draw - " + stateOfRound.getCardsToDraw());
-        if(stateOfRound.getChosenColor() == null)
-            chosenColorLabel.setText("Chosen color - None");
-        else
-            chosenColorLabel.setText("Chosen color - " + stateOfRound.getChosenColor());
-        if(stateOfRound.getRoundsOfRequest() > 1)
-            requestedValueLabel.setText("Requested value - " + stateOfRound.getRequestedValue());
-        else
-            requestedValueLabel.setText("Requested value - None");
-        roundsToWaitLabel.setText("Rounds to wait - " + stateOfRound.getRoundsToStay());
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                cardsToDrawLabel.setText("Cards to draw - " + stateOfRound.getCardsToDraw());
+                if(stateOfRound.getChosenColor() == null)
+                    chosenColorLabel.setText("Chosen color - None");
+                else
+                    chosenColorLabel.setText("Chosen color - " + stateOfRound.getChosenColor());
+                if(stateOfRound.getRoundsOfRequest() > 1)
+                    requestedValueLabel.setText("Requested value - " + stateOfRound.getRequestedValue());
+                else
+                    requestedValueLabel.setText("Requested value - None");
+                roundsToWaitLabel.setText("Rounds to wait - " + stateOfRound.getRoundsToStay());
+            }
+        });
+
 
     }
 
@@ -311,7 +335,7 @@ public class HelloController implements Initializable, AceListener, JackListener
         player.putBackChosenCards();
         showCards();
         showSelectedCards();
-        Card firstCard = game.getDeckOfCards().drawLastCard();
+        Card firstCard = deckOfCards.drawLastCard();
         if(firstCard.getCardValue() == CardValue.ACE){
             AceCard firstCardCasted = (AceCard) firstCard;
             firstCardCasted.setListener(this);
@@ -325,46 +349,53 @@ public class HelloController implements Initializable, AceListener, JackListener
 
 
     public void drawCard(){
-        Card firstCard = drawFirstCard();
-        Image image = new Image(getClass().getResource(firstCard.getImagePath()).toExternalForm());
-        drewCardView.setImage(image);
-        drewCardView.setVisible(true);
+        HelloController controller = this;
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Card firstCard = drawFirstCard();
+                Image image = new Image(getClass().getResource(firstCard.getImagePath()).toExternalForm());
+                drewCardView.setImage(image);
+                drewCardView.setVisible(true);
 
-        drawCardAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        drawCardAlert.setTitle(null);
-        drawCardAlert.setHeaderText(null);
-        drawCardAlert.setContentText("You drew " + firstCard + ". What do you want to do?");
+                drawCardAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                drawCardAlert.setTitle(null);
+                drawCardAlert.setHeaderText(null);
+                drawCardAlert.setContentText("You drew " + firstCard + ". What do you want to do?");
 
-        ButtonType buttonTypeOne = new ButtonType("Try to play it");
-        ButtonType buttonTypeTwo = new ButtonType("Take it");
+                ButtonType buttonTypeOne = new ButtonType("Try to play it");
+                ButtonType buttonTypeTwo = new ButtonType("Take it");
 
-        drawCardAlert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo);
+                drawCardAlert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo);
 
-        Optional<ButtonType> result = drawCardAlert.showAndWait();
-        drawCardAlert = null;
-        if (result.get() == buttonTypeOne){
-            player.getChosenCards().add(firstCard);
-            tryToPlayCards();
-            if(!firstCard.isPossibleToPlayCard(game.getStateOfRound())){
-                player.getChosenCards().remove(firstCard);
-                player.takeDrewCards(null, game.getStateOfRound(), game.getDeckOfCards(), this, this);
-                showCards();
-                updateStateOfRoundLabels(game.getStateOfRound());
-                // end of round
-                //endOfThisPlayerRound();
-                nextThisPlayerMove(game.getStateOfRound());
+                Optional<ButtonType> result = drawCardAlert.showAndWait();
+                drawCardAlert = null;
+                if (result.get() == buttonTypeOne){
+                    player.getChosenCards().add(firstCard);
+                    tryToPlayCards();
+                    if(!firstCard.isPossibleToPlayCard(stateOfRound)){
+                        player.getChosenCards().remove(firstCard);
+                        player.takeDrewCards(null, stateOfRound, deckOfCards, controller, controller);
+                        showCards();
+                        updateStateOfRoundLabels(stateOfRound);
+                        // end of round
+                        //endOfThisPlayerRound();
+                        endOfThisPlayerRound();
 
 
+                    }
+                } else {
+                    player.takeDrewCards(firstCard, stateOfRound, deckOfCards, controller, controller);
+                    showCards();
+                    updateStateOfRoundLabels(stateOfRound);
+                    // end of round
+                    //endOfThisPlayerRound();
+                    endOfThisPlayerRound();
+                }
+                drewCardView.setImage(null);
             }
-        } else {
-            player.takeDrewCards(firstCard, game.getStateOfRound(), game.getDeckOfCards(), this, this);
-            showCards();
-            updateStateOfRoundLabels(game.getStateOfRound());
-            // end of round
-            //endOfThisPlayerRound();
-            nextThisPlayerMove(game.getStateOfRound());
-        }
-        drewCardView.setImage(null);
+        });
+
 
 
     }
@@ -373,17 +404,19 @@ public class HelloController implements Initializable, AceListener, JackListener
         timer.cancel();
         showSelectedCards();;
         showCards();
+        ClientMessage clientMessage = new ClientMessage(client.getName(),stateOfRound,"END", deckOfCards);
+        client.sendMessage(clientMessage);
     }
     public void tryToPlayCards(){
-        if(player.areChosenCardsCorrect(game.getStateOfRound())){
-            player.playChosenCards(game.getStateOfRound(), game.getDeckOfCards());
+        if(player.areChosenCardsCorrect(stateOfRound)){
+            player.playChosenCards(stateOfRound, deckOfCards);
             showCards();;
             showSelectedCards();
-            updateStackView(game.getStateOfRound());
-            updateStateOfRoundLabels(game.getStateOfRound());
+            updateStackView(stateOfRound);
+            updateStateOfRoundLabels(stateOfRound);
             //end of round, send message
             //endOfThisPlayerRound();
-            nextThisPlayerMove(game.getStateOfRound());
+            endOfThisPlayerRound();
 
         }
 
@@ -402,20 +435,33 @@ public class HelloController implements Initializable, AceListener, JackListener
     }
 
     public void updateStackView(StateOfRound stateOfRound){
-        Card card = stateOfRound.getLastCard();
-        Image image = new Image(getClass().getResource(card.getImagePath()).toExternalForm());
-        stackCardImageView.setImage(image);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Card card = stateOfRound.getLastCard();
+                Image image = new Image(getClass().getResource(card.getImagePath()).toExternalForm());
+                stackCardImageView.setImage(image);
+            }
+        });
+
     }
 
     public void showSelectedCards(){
-        int chosenCardsNumber = player.getChosenCards().size();
-        ArrayList<Card> cards = player.getChosenCards();
-        for (int i = 0; i < chosenCardsNumber; i++) {
-            Card card = cards.get(i);
-            setView(card, selectedCardsHBox, i);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                int chosenCardsNumber = player.getChosenCards().size();
+                ArrayList<Card> cards = player.getChosenCards();
+                for (int i = 0; i < chosenCardsNumber; i++) {
+                    Card card = cards.get(i);
+                    setView(card, selectedCardsHBox, i);
 
-        }
-        clearViews(chosenCardsNumber, maxNumberOfSelectedCards, selectedCardsHBox);
+                }
+                clearViews(chosenCardsNumber, maxNumberOfSelectedCards, selectedCardsHBox);
+            }
+        });
+
+
     }
 
     public void clearViews(int firstView, int lastView, HBox viewsHBox){
@@ -434,35 +480,49 @@ public class HelloController implements Initializable, AceListener, JackListener
     }
 
     public void showCards(){
-        ArrayList<Card> cards = player.getCardsInHand();
-        int numberOfCardsInBottomRow = 0;
-        clearViews(0, maxNumberOfCardsInRow, upRowCardsHBox);
-        if(player.getNumberOfCards() > maxNumberOfCardsInRow){
-            numberOfCardsInBottomRow = maxNumberOfCardsInRow;
-            for(int i = 0; i < player.getNumberOfCards() - maxNumberOfCardsInRow; i++){
-                Card card = cards.get(i + maxNumberOfCardsInRow);
-                setView(card, upRowCardsHBox, i);
-            }
-        }
-        else
-            numberOfCardsInBottomRow = player.getNumberOfCards();
-        for (int i = 0; i < numberOfCardsInBottomRow; i++) {
-            Card card = cards.get(i);
-            setView(card, bottomRowCardsHBox, i);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<Card> cards = player.getCardsInHand();
+                int numberOfCardsInBottomRow = 0;
+                clearViews(0, maxNumberOfCardsInRow, upRowCardsHBox);
+                if(player.getNumberOfCards() > maxNumberOfCardsInRow){
+                    numberOfCardsInBottomRow = maxNumberOfCardsInRow;
+                    for(int i = 0; i < player.getNumberOfCards() - maxNumberOfCardsInRow; i++){
+                        Card card = cards.get(i + maxNumberOfCardsInRow);
+                        setView(card, upRowCardsHBox, i);
+                    }
+                }
+                else
+                    numberOfCardsInBottomRow = player.getNumberOfCards();
+                for (int i = 0; i < numberOfCardsInBottomRow; i++) {
+                    Card card = cards.get(i);
+                    setView(card, bottomRowCardsHBox, i);
 
-        }
-        clearViews(numberOfCardsInBottomRow, maxNumberOfCardsInRow, bottomRowCardsHBox);
+                }
+                clearViews(numberOfCardsInBottomRow, maxNumberOfCardsInRow, bottomRowCardsHBox);
+            }
+        });
+
     }
     public void waitRounds(){
-        player.waitRounds(game.getStateOfRound());
-        waitRoundsButton.setVisible(false);
-        deckView.setVisible(true);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                player.waitRounds(stateOfRound);
+                waitRoundsButton.setVisible(false);
+                deckView.setVisible(true);
+                endOfThisPlayerRound();
+            }
+        });
+
         // end of round
-        nextThisPlayerMove(game.getStateOfRound());
+
     }
 
     @Override
     public CardColour aceWasPlayed(ActionEvent event) {
+
         CardColour[]  colors= { CardColour.HEARTS, CardColour.SPADES, CardColour.CLUBS, CardColour.DIAMONDS};
         choiceDialog = new ChoiceDialog(colors[0], colors);
         choiceDialog.getDialogPane().getButtonTypes().remove(1,2 );
@@ -499,6 +559,6 @@ public class HelloController implements Initializable, AceListener, JackListener
         alert.setContentText("You wait in this round. Rounds to wait left: " + roundsToStay);
         alert.show();
         //end of round
-        nextThisPlayerMove(game.getStateOfRound());
+        endOfThisPlayerRound();
     }
 }

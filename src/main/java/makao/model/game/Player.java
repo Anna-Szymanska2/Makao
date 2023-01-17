@@ -2,16 +2,17 @@ package makao.model.game;
 
 import makao.model.cards.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Player {
+public class Player implements Serializable {
     Hand hand = new Hand();
     //ArrayList<makao.model.cards.Card> cardsInHand = new ArrayList<>();
     ArrayList<Card> chosenCards = new ArrayList<>();
     int roundsToStay = 0;
     String nick;
-    private WaitListener listener;
+    transient private WaitListener listener;
 
     public Player(String nick){
         this.nick = nick;
