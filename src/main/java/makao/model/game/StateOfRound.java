@@ -29,6 +29,18 @@ public class StateOfRound implements Serializable {
         this.players = players;
     }
 
+    public StateOfRound (StateOfRound stateOfRound){
+        this.possibleNextCards = new ArrayList<>(stateOfRound.getPossibleNextCards());
+        this.possibleNextColour = stateOfRound.getPossibleNextColour();
+        this.lastCard =  stateOfRound.getLastCard();
+        this.cardsToDraw = stateOfRound.getCardsToDraw();
+        this.roundsToStay = stateOfRound.getRoundsToStay();
+        this.players = stateOfRound.getPlayers();
+        this.roundsOfRequest = stateOfRound.getRoundsOfRequest();
+        this.requestedValue = stateOfRound.requestedValue;
+        this.chosenColor = stateOfRound.getChosenColor();
+    }
+
     public StateOfRound(int players) {
         this.players = players;
     }

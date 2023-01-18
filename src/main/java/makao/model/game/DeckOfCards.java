@@ -71,6 +71,15 @@ public class DeckOfCards implements Serializable {
 
     }
 
+    public DeckOfCards (DeckOfCards deckOfCards){
+        this.stack = new Stack(deckOfCards.getStack());
+        this.deckOfCards = new ArrayList<>(deckOfCards.getDeckOfCards());
+    }
+
+    public ArrayList<Card> getDeckOfCards() {
+        return deckOfCards;
+    }
+
     public void printDeckOfCards(){
         for(Card card:deckOfCards)
             System.out.println(card.toString());

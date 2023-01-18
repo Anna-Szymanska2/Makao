@@ -246,11 +246,22 @@ public class HelloController implements Initializable, AceListener, JackListener
                     chosenColorLabel.setText("Chosen color - None");
                 else
                     chosenColorLabel.setText("Chosen color - " + stateOfRound.getChosenColor());
-                if(stateOfRound.getRoundsOfRequest() > 1)
+                if(stateOfRound.getRoundsOfRequest() > 0)
                     requestedValueLabel.setText("Requested value - " + stateOfRound.getRequestedValue());
                 else
                     requestedValueLabel.setText("Requested value - None");
                 roundsToWaitLabel.setText("Rounds to wait - " + stateOfRound.getRoundsToStay());
+            }
+        });
+
+
+    }
+    public void updateDeckView(){
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                deckView.setVisible(true);
+                waitRoundsButton.setVisible(false);
             }
         });
 
@@ -414,6 +425,7 @@ public class HelloController implements Initializable, AceListener, JackListener
             showSelectedCards();
             updateStackView(stateOfRound);
             updateStateOfRoundLabels(stateOfRound);
+            updateDeckView();
             //end of round, send message
             //endOfThisPlayerRound();
             endOfThisPlayerRound();
@@ -510,8 +522,7 @@ public class HelloController implements Initializable, AceListener, JackListener
             @Override
             public void run() {
                 player.waitRounds(stateOfRound);
-                waitRoundsButton.setVisible(false);
-                deckView.setVisible(true);
+                updateDeckView();
                 endOfThisPlayerRound();
             }
         });
@@ -553,12 +564,18 @@ public class HelloController implements Initializable, AceListener, JackListener
 
     @Override
     public void playerWaitsInThisRound(int roundsToStay) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(null);
-        alert.setHeaderText(null);
-        alert.setContentText("You wait in this round. Rounds to wait left: " + roundsToStay);
-        alert.show();
-        //end of round
-        endOfThisPlayerRound();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle(null);
+                alert.setHeaderText(null);
+                alert.setContentText("You wait in this round. Rounds to wait left: " + roundsToStay);
+                alert.show();
+                //end of round
+                endOfThisPlayerRound();
+            }
+        });
+
     }
 }

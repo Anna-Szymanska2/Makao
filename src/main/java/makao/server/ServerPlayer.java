@@ -3,7 +3,9 @@ package makao.server;
 
 import makao.model.cards.Card;
 import makao.model.cards.CardValue;
+import makao.model.game.DeckOfCards;
 import makao.model.game.Hand;
+import makao.model.game.StateOfRound;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -39,23 +41,29 @@ public class ServerPlayer implements Runnable{
 
     @Override
     public void run(){
-        ServerMessage serverMessage = new ServerMessage("WELCOME", null, serverGame.getStateOfRound(), serverGame.getDeckOfCards(), getHand());
+        ServerMessage serverMessage = new ServerMessage("WELCOME", null, null, null, getHand());
         //serverMessage.setNewHand(getHand());
         boolean isTheFirstTime = true;
         try {
             sendServerMessage(serverMessage);
-        while (socket.isConnected()) {
-            System.out.println(clientName + "connected");
-                while(gameIsOn){
-                    if(isTheFirstTime){
-                        ServerMessage serverMessage2 = new ServerMessage("INIT", null, serverGame.getStateOfRound(), serverGame.getDeckOfCards(), getHand());
-                        sendServerMessage(serverMessage2);
-                        isTheFirstTime = false;
+            //synchronized (serverGame.getDeckOfCards()){
+                while (socket.isConnected()) {
+                    System.out.println(clientName + "connected");
+                    while(gameIsOn){
+                        if(isTheFirstTime){
+                            StateOfRound stateOfRound = new StateOfRound(serverGame.getStateOfRound());
+                            DeckOfCards deckOfCards = new DeckOfCards(serverGame.getDeckOfCards());
+                            ServerMessage serverMessage2 = new ServerMessage("INIT", null, stateOfRound,deckOfCards,getHand());
+                            sendServerMessage(serverMessage2);
+                            isTheFirstTime = false;
+                        }
+                        System.out.println(clientName + "playing");
+                        playMakao();
                     }
-                    System.out.println(clientName + "playing");
-                    playMakao();
                 }
-        }
+
+           // }
+
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -107,9 +115,15 @@ public class ServerPlayer implements Runnable{
         try {
             out.writeObject(serverMessage);
             out.reset();
+            //serverGame.getDeckOfCards().wait();
+            //serverGame.getDeckOfCards().notifyAll();
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
+        } /*catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalMonitorStateException e){
+            System.out.println("Wątek nie jest włascicielem monitora");
+        }*/
     }
 
     public boolean isTurnIsOn() {
