@@ -13,6 +13,7 @@ public class ServerGame implements Runnable{
     private StateOfRound stateOfRound = new StateOfRound(2);
     private DeckOfCards deckOfCards = new DeckOfCards();
     private String whoseTurn;
+    private String winner;
     private boolean gameIsOn = false;
     private boolean nextTurn = false;
     int index = 0;
@@ -50,6 +51,11 @@ public class ServerGame implements Runnable{
                 nextTurn = false;
         }
         if(nextTurn) {
+            Card lastCard = stateOfRound.getLastCard();
+            if (lastCard.getCardValue() == CardValue.KING && lastCard.getCardColour() == CardColour.SPADES && stateOfRound.getCardsToDraw() > 0)
+                index = (index + serverPlayers.size() - 1) % serverPlayers.size();
+            else
+                index = (index + 1) % serverPlayers.size();
             whoseTurn = serverPlayers.get(index).getClientName();
             /*for (ServerPlayer serverPlayer : serverPlayers) {
                 serverPlayer.setTurnIsOn(true);
@@ -64,14 +70,22 @@ public class ServerGame implements Runnable{
 //            }
                 gameIsOn = false;
             }
-            Card lastCard = stateOfRound.getLastCard();
-            if (lastCard.getCardValue() == CardValue.KING && lastCard.getCardColour() == CardColour.SPADES && stateOfRound.getCardsToDraw() > 0)
-                index = (index + serverPlayers.size() - 1) % serverPlayers.size();
-            else
-                index = (index + 1) % serverPlayers.size();
+
             nextTurn = false;
         }
 
+    }
+
+    public void setGameIsOn(boolean gameIsOn) {
+        this.gameIsOn = gameIsOn;
+    }
+
+    public void setWinner(String winner) {
+        this.winner = winner;
+    }
+
+    public String getWinner() {
+        return winner;
     }
 
     public StateOfRound getStateOfRound() {

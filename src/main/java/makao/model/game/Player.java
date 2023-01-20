@@ -22,9 +22,9 @@ public class Player implements Serializable {
         this.hand = hand;
     }
 
-    public void setListener(WaitListener listener) {
+   /* public void setListener(WaitListener listener) {
         this.listener = listener;
-    }
+    }*/
 
     public void setRoundsToStay(int roundsToStay) {
         this.roundsToStay = roundsToStay;
@@ -63,14 +63,15 @@ public class Player implements Serializable {
     public void displayCards(){
         hand.displayCardsInHand();
     }
-    public void checkStateOfRound(StateOfRound stateOfRound){
-        if(stateOfRound.getRoundsOfRequest() > 0)
-            stateOfRound.setRoundsOfRequest(stateOfRound.getRoundsOfRequest() - 1);
-
+    public void checkStateOfWaiting(StateOfRound stateOfRound){
         if(getRoundsToStay() > 0){
             setRoundsToStay(getRoundsToStay() - 1);
-            listener.playerWaitsInThisRound(getRoundsToStay());
         }
+    }
+
+    public void checkStateOfRequests(StateOfRound stateOfRound){
+        if(stateOfRound.getRoundsOfRequest() > 0)
+            stateOfRound.setRoundsOfRequest(stateOfRound.getRoundsOfRequest() - 1);
     }
 
     public void makeMove(StateOfRound stateOfRound, DeckOfCards deckOfCards){
@@ -282,6 +283,10 @@ public class Player implements Serializable {
     }
     public boolean hasPlayerWon(){
         return hand.getCardCount() == 0;
+    }
+
+    public String getNick() {
+        return nick;
     }
 
     public void greetPlayer(){

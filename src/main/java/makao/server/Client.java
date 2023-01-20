@@ -69,7 +69,9 @@ public class Client implements Serializable{
                                 controller.init(messageFromServer, name);
                                 break;
                             case "END":
-                                if(name != messageFromServer.getWhoseTurn())
+                                //controller.endOfGame(messageFromServer);
+                                //zakomentowane bo poki działa w petli jest dosyć mordercze
+                                if(!name.equals(messageFromServer.getWhoseTurn()))
                                     System.out.println(messageFromServer.getWhoseTurn() + " has won the game");
                                 else
                                     System.out.println("Congratulations, you have won the game!!!");

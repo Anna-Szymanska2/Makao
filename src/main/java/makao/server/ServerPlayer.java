@@ -51,9 +51,10 @@ public class ServerPlayer implements Runnable{
                     System.out.println(clientName + "connected");
                     while(gameIsOn){
                         if(isTheFirstTime){
-                            StateOfRound stateOfRound = new StateOfRound(serverGame.getStateOfRound());
-                            DeckOfCards deckOfCards = new DeckOfCards(serverGame.getDeckOfCards());
-                            ServerMessage serverMessage2 = new ServerMessage("INIT", null, stateOfRound,deckOfCards,getHand());
+                            /*StateOfRound stateOfRound = new StateOfRound(serverGame.getStateOfRound());
+                            DeckOfCards deckOfCards = new DeckOfCards(serverGame.getDeckOfCards());*/
+                            ServerMessage serverMessage2 = new ServerMessage("INIT", null, serverGame.getCardOnTopOfTheStack(), null,null);
+                            serverMessage2.setNewHand(getHand());
                             sendServerMessage(serverMessage2);
                             isTheFirstTime = false;
                         }
@@ -72,7 +73,7 @@ public class ServerPlayer implements Runnable{
 
     private void playMakao() throws IOException {
         if (!serverGame.isGameIsOn()) {
-            ServerMessage serverMessage = new ServerMessage("END", serverGame.getWhoseTurn(), serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound(), serverGame.getDeckOfCards());
+            ServerMessage serverMessage = new ServerMessage("END", serverGame.getWinner(), serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound(), serverGame.getDeckOfCards());
             sendServerMessage(serverMessage);
         } else {
             if(turnIsOn) {
@@ -86,6 +87,13 @@ public class ServerPlayer implements Runnable{
                     if(messageFromClient.getActionID().equals("END")){
                         serverGame.setStateOfRound(messageFromClient.getStateOfRound());
                         serverGame.setDeckOfCards(messageFromClient.getDeckOfCards());
+
+                    }
+                    if(messageFromClient.getActionID().equals("WIN")){
+                        serverGame.setStateOfRound(messageFromClient.getStateOfRound());
+                        serverGame.setDeckOfCards(messageFromClient.getDeckOfCards());
+                        serverGame.setGameIsOn(false);
+                        serverGame.setWinner(messageFromClient.getPlayerName());
                     }
 
                 }

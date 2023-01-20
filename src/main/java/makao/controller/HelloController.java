@@ -2,19 +2,15 @@ package makao.controller;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.TilePane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
+import javafx.stage.Modality;
 import makao.model.cards.*;
 import makao.model.game.*;
 import makao.server.Client;
@@ -26,7 +22,7 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.*;
 
-public class HelloController implements Initializable, AceListener, JackListener, WaitListener, Serializable {
+public class HelloController implements Initializable, AceListener, JackListener, Serializable {
     //private Game game;
     private DeckOfCards deckOfCards;
     private StateOfRound stateOfRound;
@@ -118,6 +114,11 @@ public class HelloController implements Initializable, AceListener, JackListener
         waitRoundsButton.setVisible(false);
         initCardsInHandHBox(bottomRowCardsHBox);
         initCardsInHandHBox(upRowCardsHBox);
+        playCardsButton.setOnAction((event -> {
+            if(isThisPlayerRound){
+                tryToPlayCards();
+            }
+        }));
         deckView.setOnMouseClicked((mouseEvent) -> {
             if(isThisPlayerRound){
                 drawCard();
@@ -128,9 +129,9 @@ public class HelloController implements Initializable, AceListener, JackListener
     public void init(ServerMessage msgFromServer, String name){
         player = new Player(name);
         player.setHand(msgFromServer.getNewHand());
-        player.setListener(this);
-        stateOfRound = msgFromServer.getStateOfRound();
-        deckOfCards = msgFromServer.getDeckOfCards();
+       // player.setListener(this);
+        //stateOfRound = msgFromServer.getStateOfRound();
+       // deckOfCards = msgFromServer.getDeckOfCards();
         for(Card card: player.getCardsInHand()){
             if(card.getCardValue() == CardValue.ACE){
                 AceCard cardCasted = (AceCard) card;
@@ -144,11 +145,11 @@ public class HelloController implements Initializable, AceListener, JackListener
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                updateStateOfRoundLabels(stateOfRound);
+                //updateStateOfRoundLabels(stateOfRound);
                 showCards();
                 playerCardsIndexes[0] = 0;
                 playerCardsIndexes[1] = 4;
-                Image image = new Image(getClass().getResource(deckOfCards.getStack().getLastCard().getImagePath()).toExternalForm());
+                Image image = new Image(getClass().getResource(msgFromServer.getCardOnTopOfTheStack().getImagePath()).toExternalForm());
                 stackCardImageView.setImage(image);
             }
         });
@@ -168,7 +169,13 @@ public class HelloController implements Initializable, AceListener, JackListener
         isThisPlayerRound = true;
         deckOfCards = msgFromServer.getDeckOfCards();
         stateOfRound = msgFromServer.getStateOfRound();
-        player.checkStateOfRound(stateOfRound);
+        player.checkStateOfRequests(stateOfRound);
+        if(player.getRoundsToStay() > 0){
+            player.checkStateOfWaiting(stateOfRound);
+            playerWaitsInThisRound(player.getRoundsToStay());
+            return;
+        }
+
         updateStateOfRoundLabels(stateOfRound);
         updateStackView(stateOfRound);
 
@@ -215,7 +222,6 @@ public class HelloController implements Initializable, AceListener, JackListener
                                     Card firstCard = drawFirstCard();
                                     player.addToHand(firstCard);
                                 }
-                                //end of round
                                 endOfThisPlayerRound();
 
 
@@ -389,8 +395,6 @@ public class HelloController implements Initializable, AceListener, JackListener
                         player.takeDrewCards(null, stateOfRound, deckOfCards, controller, controller);
                         showCards();
                         updateStateOfRoundLabels(stateOfRound);
-                        // end of round
-                        //endOfThisPlayerRound();
                         endOfThisPlayerRound();
 
 
@@ -399,8 +403,6 @@ public class HelloController implements Initializable, AceListener, JackListener
                     player.takeDrewCards(firstCard, stateOfRound, deckOfCards, controller, controller);
                     showCards();
                     updateStateOfRoundLabels(stateOfRound);
-                    // end of round
-                    //endOfThisPlayerRound();
                     endOfThisPlayerRound();
                 }
                 drewCardView.setImage(null);
@@ -410,12 +412,36 @@ public class HelloController implements Initializable, AceListener, JackListener
 
 
     }
+
+    public void endOfGame(ServerMessage msgFromServer){
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle(null);
+                alert.setHeaderText(null);
+                if(msgFromServer.getWhoseTurn().equals(player.getNick()))
+                    alert.setContentText("Congratulations, you have won the game!!!");
+                else
+                    alert.setContentText(msgFromServer.getWhoseTurn() + " has won the game");
+                alert.showAndWait();
+            }
+        });
+
+
+    }
     public void endOfThisPlayerRound(){
         isThisPlayerRound = false;
         timer.cancel();
         showSelectedCards();;
         showCards();
-        ClientMessage clientMessage = new ClientMessage(client.getName(),stateOfRound,"END", deckOfCards);
+        ClientMessage clientMessage;
+        if(player.hasPlayerWon()){
+             clientMessage = new ClientMessage(client.getName(),stateOfRound,"WIN", deckOfCards);
+        }
+        else {
+             clientMessage = new ClientMessage(client.getName(),stateOfRound,"END", deckOfCards);
+        }
         client.sendMessage(clientMessage);
     }
     public void tryToPlayCards(){
@@ -562,8 +588,9 @@ public class HelloController implements Initializable, AceListener, JackListener
         return chosenValue;
     }
 
-    @Override
+
     public void playerWaitsInThisRound(int roundsToStay) {
+        HelloController controller = this;
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -571,7 +598,10 @@ public class HelloController implements Initializable, AceListener, JackListener
                 alert.setTitle(null);
                 alert.setHeaderText(null);
                 alert.setContentText("You wait in this round. Rounds to wait left: " + roundsToStay);
+                alert.initModality(Modality.APPLICATION_MODAL);
+                alert.initOwner(controller.stackCardImageView.getScene().getWindow());
                 alert.show();
+                //timer.cancel();
                 //end of round
                 endOfThisPlayerRound();
             }
