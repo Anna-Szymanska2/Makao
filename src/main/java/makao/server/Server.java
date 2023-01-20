@@ -8,6 +8,7 @@ public class Server {
     private ServerSocket serverSocket;
     private int port;
     private int numberOfPlayers;
+    private NamesAndPasswords namesAndPasswords;
     public Server(int port, int numberOfPlayers) {
         this.port = port;
         this.numberOfPlayers = numberOfPlayers;
@@ -20,17 +21,22 @@ public class Server {
 
     public void startServer(){
         try{
-            ServerGame serverGame = new ServerGame();
-            Thread gameThread = new Thread(serverGame);
-            for(int i = 0; i < numberOfPlayers; i++){
+            while(!serverSocket.isClosed()) {
                 Socket socket = serverSocket.accept();
-                ServerPlayer serverPlayer = new ServerPlayer(socket,serverGame);
-                System.out.println("A new client has connected: " + serverPlayer.getClientName());
-                serverGame.addServerPlayer(serverPlayer);
-                Thread clientThread = new Thread(serverPlayer);
-                clientThread.start();
+                new Thread(new ClientHandler(socket,namesAndPasswords)).start();
+
+                ServerGame serverGame = new ServerGame();
+                Thread gameThread = new Thread(serverGame);
+                for (int i = 0; i < numberOfPlayers; i++) {
+                    //Socket socket = serverSocket.accept();
+                    ServerPlayer serverPlayer = new ServerPlayer(socket, serverGame);
+                    System.out.println("A new client has connected: " + serverPlayer.getClientName());
+                    serverGame.addServerPlayer(serverPlayer);
+                    Thread clientThread = new Thread(serverPlayer);
+                    clientThread.start();
+                }
+                gameThread.start();
             }
-            gameThread.start();
         }catch (IOException e) {
             e.printStackTrace();
         }

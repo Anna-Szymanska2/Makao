@@ -1,11 +1,9 @@
 package makao.server;
 
-import makao.model.cards.Card;
 import makao.model.game.DeckOfCards;
 import makao.model.game.StateOfRound;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class ClientMessage implements Serializable {
 
@@ -15,6 +13,7 @@ public class ClientMessage implements Serializable {
     //private int numberOfCardsToDraw;
     private DeckOfCards deckOfCards;
     //ArrayList<Card> cardsToPlay = new ArrayList<>();
+    private String password;
 
     public ClientMessage(String playerName, StateOfRound stateOfRound, String actionID, DeckOfCards deckOfCards){
         this.playerName = playerName;
@@ -25,6 +24,11 @@ public class ClientMessage implements Serializable {
 
     public ClientMessage(String playerName){
         this.playerName = playerName;
+    }
+    public ClientMessage(String playerName, String password,String actionID){
+        this.playerName = playerName;
+        this.password = password;
+        this.actionID = actionID;
     }
 
     /*public ClientMessage(String playerName, StateOfRound stateOfRound, String actionID, int numberOfCardsToDraw, ArrayList<Card> cardsToPlay, DeckOfCards deckOfCards) {
@@ -59,4 +63,8 @@ public class ClientMessage implements Serializable {
     public DeckOfCards getDeckOfCards() {
         return deckOfCards;
     }
+    public String getPassword() {
+        return password;
+    }
+
 }
