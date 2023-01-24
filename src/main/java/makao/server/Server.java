@@ -1,5 +1,6 @@
 package makao.server;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -51,6 +52,11 @@ public class Server {
     }
 
     public static void main(String[] args) throws IOException{
+        NamesAndPasswords namesAndPasswords = new NamesAndPasswords();
+        File file = new File("namesAndPasswords.ser");
+        if (file.exists()) {
+            namesAndPasswords = SaveAndRestoreData.restore();
+        }
         Server server = new Server(4444,2);
         server.startServer();
     }

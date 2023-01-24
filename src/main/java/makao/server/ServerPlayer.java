@@ -43,6 +43,7 @@ public class ServerPlayer implements Runnable{
             this.in = new ObjectInputStream(socket.getInputStream());
             ClientMessage clientMessage;
             clientMessage = (ClientMessage) in.readObject();
+            this.messageFromClient = clientMessage;
             this.clientName = clientMessage.getPlayerName();
             this.namesAndPasswords = namesAndPasswords;
         }catch  (IOException | ClassNotFoundException e) {
@@ -60,6 +61,7 @@ public class ServerPlayer implements Runnable{
             //synchronized (serverGame.getDeckOfCards()){
                 while (socket.isConnected()) {
                     System.out.println(clientName + "connected");
+                    loginOrRegister();
                     while(gameIsOn){
                         if(isTheFirstTime){
                             /*StateOfRound stateOfRound = new StateOfRound(serverGame.getStateOfRound());
@@ -154,8 +156,6 @@ public class ServerPlayer implements Runnable{
     }
 
     public void loginOrRegister() throws IOException {
-        receivedMessage = false;
-        getClientMessage();
         String action = messageFromClient.getActionID();
         String username = messageFromClient.getPlayerName();
         String password = messageFromClient.getPassword();
