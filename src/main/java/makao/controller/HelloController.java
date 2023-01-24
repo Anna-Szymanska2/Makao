@@ -104,7 +104,7 @@ public class HelloController implements Initializable, AceListener, JackListener
 
     public void setClient(Client client) {
         this.client = client;
-        client.setController(this);
+        client.setGameController(this);
     }
 
     @Override

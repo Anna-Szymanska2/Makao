@@ -1,6 +1,6 @@
 package makao.server;
 
-import makao.controller.HelloController;
+import makao.controller.*;
 import makao.model.cards.Card;
 import makao.model.cards.CardValue;
 import makao.model.game.DeckOfCards;
@@ -20,14 +20,31 @@ public class Client implements Serializable{
     transient private Socket socket;
     transient private ObjectOutputStream out;
     transient private ObjectInputStream in;
-    transient private HelloController controller;
+    transient private HelloController gameController;
+    transient private RegisterController registerController;
+    transient private LoggingController loggingController;
+    transient private ChoosingRoomController choosingRoomController;
+    transient private RoomController roomController;
     private String name;
+    private String password;
     private boolean gameIsOn = false;
     private boolean turnIsOn = false;
     Hand hand = new Hand();
     ArrayList<Card> chosenCards = new ArrayList<>();
     int roundsToStay = 0;
 
+    public Client(Socket socket, String name, String password) {
+        this.socket = socket;
+        this.name = name;
+        this.password = password;
+        try{
+            this.out = new ObjectOutputStream(socket.getOutputStream());
+            this.in = new ObjectInputStream(socket.getInputStream());
+        }catch  (IOException e) {
+        closeEverything(socket, in, out);
+    }
+
+    }
 
     public Client(Socket socket, String name){
         try{
@@ -39,6 +56,22 @@ public class Client implements Serializable{
     }catch  (IOException e) {
         closeEverything(socket, in, out);
     }
+    }
+
+    public void setChoosingRoomController(ChoosingRoomController choosingRoomController) {
+        this.choosingRoomController = choosingRoomController;
+    }
+
+    public void setLoggingController(LoggingController loggingController) {
+        this.loggingController = loggingController;
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void sendMessage(ClientMessage clientMessage) {
@@ -66,7 +99,7 @@ public class Client implements Serializable{
                                 break;
                             case "INIT":
                                 System.out.println("INIT");
-                                controller.init(messageFromServer, name);
+                                gameController.init(messageFromServer, name);
                                 break;
                             case "END":
                                 //controller.endOfGame(messageFromServer);
@@ -78,22 +111,26 @@ public class Client implements Serializable{
                                 gameIsOn = false;
                                 break;
                             case "REGISTER_OK":
+                                registerController.registerOK();
                                 break;
                             case "REGISTER_WRONG":
+                                registerController.registerFailed();
                                 break;
                             case "LOGIN_OK":
+                                loggingController.loginCorrect();
                                 break;
                             case "LOGIN_WRONG":
+                                loggingController.loginFailed();
                                 break;
                             case "DEFAULT":
                                 System.out.println("Card on top of the stack: " + messageFromServer.getCardOnTopOfTheStack().toString());
                                 /*if(hand.getCardCount() == 0)
                                     hand = messageFromServer.getNewHand();*/
                                 if(messageFromServer.getWhoseTurn().equals(name))
-                                    controller.nextThisPlayerMove(messageFromServer);
+                                    gameController.nextThisPlayerMove(messageFromServer);
                                 else{
                                     System.out.println(messageFromServer.getWhoseTurn() + " is making their move");
-                                    controller.nextPlayerMove(messageFromServer);
+                                    gameController.nextPlayerMove(messageFromServer);
                                 }
 
 
@@ -297,6 +334,14 @@ public class Client implements Serializable{
         this.roundsToStay = roundsToStay;
     }
 
+    public void setRegisterController(RegisterController registerController) {
+        this.registerController = registerController;
+    }
+
+    public void setRoomController(RoomController roomController) {
+        this.roomController = roomController;
+    }
+
     public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter your username: ");
@@ -308,7 +353,7 @@ public class Client implements Serializable{
         client.listenForMessage();
     }
 
-    public void setController(HelloController controller) {
-        this.controller = controller;
+    public void setGameController(HelloController gameController) {
+        this.gameController = gameController;
     }
 }

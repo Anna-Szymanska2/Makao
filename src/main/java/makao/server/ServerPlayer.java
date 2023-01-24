@@ -13,6 +13,7 @@ public class ServerPlayer implements Runnable{
     private Socket socket;
     private ObjectOutputStream out;
     private ObjectInputStream in;
+    private Server server;
     private ServerGame serverGame;
     private boolean gameIsOn = false;
     private boolean turnIsOn = false;
@@ -36,16 +37,17 @@ public class ServerPlayer implements Runnable{
             closeEverything(socket, in, out);
         }
     }
-    public ServerPlayer(Socket socket, NamesAndPasswords namesAndPasswords){
+    public ServerPlayer(Socket socket, Server server){
         try{
             this.socket = socket;
             this.out = new ObjectOutputStream(socket.getOutputStream());
             this.in = new ObjectInputStream(socket.getInputStream());
+            this.server = server;
             ClientMessage clientMessage;
             clientMessage = (ClientMessage) in.readObject();
             this.messageFromClient = clientMessage;
             this.clientName = clientMessage.getPlayerName();
-            this.namesAndPasswords = namesAndPasswords;
+            this.namesAndPasswords = server.getNamesAndPasswords();
         }catch  (IOException | ClassNotFoundException e) {
             closeEverything(socket, in, out);
         }
@@ -58,10 +60,25 @@ public class ServerPlayer implements Runnable{
         boolean isTheFirstTime = true;
         try {
             sendServerMessage(serverMessage);
+            loginOrRegister();
+            if(!socket.isClosed()){
+                receivedMessage = false;
+                getClientMessage();
+                if(messageFromClient.getActionID().equals("START_ROOM")){
+                    int code = gameCodeGenerator();
+                    ServerGame serverGame = new ServerGame(code);
+                    Thread gameThread = new Thread(serverGame);
+                    serverGame.addServerPlayer(this);
+                    setServerGame(serverGame);
+                    ServerMessage serverMessage2 = new ServerMessage("ROOM_STARTED");
+                    sendServerMessage(serverMessage2);
+                }else if(messageFromClient.getActionID().equals("JOIN_ROOM")) {
+
+                }
+            }
             //synchronized (serverGame.getDeckOfCards()){
-                while (socket.isConnected()) {
+                while (!socket.isClosed()) {
                     System.out.println(clientName + "connected");
-                    loginOrRegister();
                     while(gameIsOn){
                         if(isTheFirstTime){
                             /*StateOfRound stateOfRound = new StateOfRound(serverGame.getStateOfRound());
@@ -163,18 +180,23 @@ public class ServerPlayer implements Runnable{
             if(namesAndPasswords.register(username, password)){
                 ServerMessage serverMessage = new ServerMessage("REGISTER_OK");
                 sendServerMessage(serverMessage);
+                System.out.println("Registration went ok");
+                out.flush();
+                socket.close();
             }else {
                 ServerMessage serverMessage = new ServerMessage("REGISTER_WRONG");
                 sendServerMessage(serverMessage);
+                out.flush();
                 socket.close();
             }
-        } else if (action.equals("login")) {
+        } else if (action.equals("LOGIN")) {
             if(namesAndPasswords.checkLogin(username, password)){
                 ServerMessage serverMessage = new ServerMessage("LOGIN_OK");
                 sendServerMessage(serverMessage);
             }else {
                 ServerMessage serverMessage = new ServerMessage("LOGIN_WRONG");
                 sendServerMessage(serverMessage);
+                out.flush();
                 socket.close();
             }
         }
@@ -182,7 +204,7 @@ public class ServerPlayer implements Runnable{
 
     public int gameCodeGenerator(){
         Random rnd = new Random();
-        int code = 10000000 + rnd.nextInt(90000000);
+        int code = 100000 + rnd.nextInt(900000);
         return code;
     }
 
@@ -221,6 +243,10 @@ public class ServerPlayer implements Runnable{
         }catch (IOException e){
             e.printStackTrace();
         }
+    }
+
+    public void setServerGame(ServerGame serverGame) {
+        this.serverGame = serverGame;
     }
 
     public void setGameIsOn(boolean gameIsOn) {

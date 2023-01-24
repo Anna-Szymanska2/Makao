@@ -54,7 +54,7 @@
             <Label text="Label" />
          </children>
       </VBox>
-      <Label layoutX="279.0" layoutY="115.0" text="Entry code" />
-      <Button layoutX="279.0" layoutY="215.0" mnemonicParsing="false" onAction="#startGame" text="Start game" />
+      <Label fx:id="codeLabel" layoutX="279.0" layoutY="115.0" text="Entry code" />
+      <Button fx:id="startButton" layoutX="279.0" layoutY="215.0" mnemonicParsing="false" onAction="#startGame" text="Start game" />
    </children>
 </AnchorPane>

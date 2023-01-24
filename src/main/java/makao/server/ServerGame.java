@@ -10,13 +10,18 @@ import java.util.ArrayList;
 public class ServerGame implements Runnable{
 
     private ArrayList<ServerPlayer> serverPlayers = new ArrayList<>();
-    private StateOfRound stateOfRound = new StateOfRound(2);
+    private StateOfRound stateOfRound = new StateOfRound(4);
     private DeckOfCards deckOfCards = new DeckOfCards();
     private String whoseTurn;
     private String winner;
     private boolean gameIsOn = false;
     private boolean nextTurn = false;
     int index = 0;
+    int code;
+
+    public ServerGame(int code) {
+        this.code = code;
+    }
 
     @Override
     public void run() {
