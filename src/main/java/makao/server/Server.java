@@ -23,17 +23,16 @@ public class Server {
         try{
             while(!serverSocket.isClosed()) {
                 Socket socket = serverSocket.accept();
-                new Thread(new ClientHandler(socket,namesAndPasswords)).start();
+                ServerPlayer serverPlayer = new ServerPlayer(socket, namesAndPasswords);
+                System.out.println("A new client has connected: " + serverPlayer.getClientName());
+                Thread clientThread = new Thread(serverPlayer);
+                clientThread.start();
 
                 ServerGame serverGame = new ServerGame();
                 Thread gameThread = new Thread(serverGame);
                 for (int i = 0; i < numberOfPlayers; i++) {
                     //Socket socket = serverSocket.accept();
-                    ServerPlayer serverPlayer = new ServerPlayer(socket, serverGame);
-                    System.out.println("A new client has connected: " + serverPlayer.getClientName());
                     serverGame.addServerPlayer(serverPlayer);
-                    Thread clientThread = new Thread(serverPlayer);
-                    clientThread.start();
                 }
                 gameThread.start();
             }

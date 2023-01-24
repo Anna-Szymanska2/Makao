@@ -77,6 +77,14 @@ public class Client implements Serializable{
                                     System.out.println("Congratulations, you have won the game!!!");
                                 gameIsOn = false;
                                 break;
+                            case "REGISTER_OK":
+                                break;
+                            case "REGISTER_WRONG":
+                                break;
+                            case "LOGIN_OK":
+                                break;
+                            case "LOGIN_WRONG":
+                                break;
                             case "DEFAULT":
                                 System.out.println("Card on top of the stack: " + messageFromServer.getCardOnTopOfTheStack().toString());
                                 /*if(hand.getCardCount() == 0)

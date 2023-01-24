@@ -1,16 +1,13 @@
 package makao.server;
 
 
-import makao.model.cards.Card;
-import makao.model.cards.CardValue;
-import makao.model.game.DeckOfCards;
 import makao.model.game.Hand;
-import makao.model.game.StateOfRound;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Random;
 
 public class ServerPlayer implements Runnable{
     private Socket socket;
@@ -23,6 +20,7 @@ public class ServerPlayer implements Runnable{
     private ClientMessage messageFromClient;
     private String clientName;
     private Hand hand = new Hand();
+    private NamesAndPasswords namesAndPasswords;
 
 
     public ServerPlayer(Socket socket, ServerGame serverGame){
@@ -34,6 +32,19 @@ public class ServerPlayer implements Runnable{
             ClientMessage clientMessage;
             clientMessage = (ClientMessage) in.readObject();
             this.clientName = clientMessage.getPlayerName();
+        }catch  (IOException | ClassNotFoundException e) {
+            closeEverything(socket, in, out);
+        }
+    }
+    public ServerPlayer(Socket socket, NamesAndPasswords namesAndPasswords){
+        try{
+            this.socket = socket;
+            this.out = new ObjectOutputStream(socket.getOutputStream());
+            this.in = new ObjectInputStream(socket.getInputStream());
+            ClientMessage clientMessage;
+            clientMessage = (ClientMessage) in.readObject();
+            this.clientName = clientMessage.getPlayerName();
+            this.namesAndPasswords = namesAndPasswords;
         }catch  (IOException | ClassNotFoundException e) {
             closeEverything(socket, in, out);
         }
@@ -140,6 +151,39 @@ public class ServerPlayer implements Runnable{
 
     public void setTurnIsOn(boolean turnIsOn) {
         this.turnIsOn = turnIsOn;
+    }
+
+    public void loginOrRegister() throws IOException {
+        receivedMessage = false;
+        getClientMessage();
+        String action = messageFromClient.getActionID();
+        String username = messageFromClient.getPlayerName();
+        String password = messageFromClient.getPassword();
+        if (action.equals("REGISTER")) {
+            if(namesAndPasswords.register(username, password)){
+                ServerMessage serverMessage = new ServerMessage("REGISTER_OK");
+                sendServerMessage(serverMessage);
+            }else {
+                ServerMessage serverMessage = new ServerMessage("REGISTER_WRONG");
+                sendServerMessage(serverMessage);
+                socket.close();
+            }
+        } else if (action.equals("login")) {
+            if(namesAndPasswords.checkLogin(username, password)){
+                ServerMessage serverMessage = new ServerMessage("LOGIN_OK");
+                sendServerMessage(serverMessage);
+            }else {
+                ServerMessage serverMessage = new ServerMessage("LOGIN_WRONG");
+                sendServerMessage(serverMessage);
+                socket.close();
+            }
+        }
+    }
+
+    public int gameCodeGenerator(){
+        Random rnd = new Random();
+        int code = 10000000 + rnd.nextInt(90000000);
+        return code;
     }
 
 
