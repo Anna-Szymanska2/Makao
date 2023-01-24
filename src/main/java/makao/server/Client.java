@@ -122,6 +122,12 @@ public class Client implements Serializable{
                             case "LOGIN_WRONG":
                                 loggingController.loginFailed();
                                 break;
+                            case "ROOM_STARTED":
+                                break;
+                            case "ROOM_JOINED":
+                                break;
+                            case "GAME_ALREADY_STATED":
+                                break;
                             case "DEFAULT":
                                 System.out.println("Card on top of the stack: " + messageFromServer.getCardOnTopOfTheStack().toString());
                                 /*if(hand.getCardCount() == 0)

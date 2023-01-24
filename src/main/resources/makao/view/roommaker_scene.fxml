@@ -10,7 +10,7 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="makao.controller.RoomController">
    <children>
-      <VBox layoutX="35.0" layoutY="50.0" prefHeight="202.0" prefWidth="25.0">
+      <VBox fx:id="avatarsVBox" layoutX="35.0" layoutY="50.0" prefHeight="202.0" prefWidth="25.0">
          <children>
             <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -34,7 +34,7 @@
             </ImageView>
          </children>
       </VBox>
-      <VBox layoutX="110.0" layoutY="82.0" prefHeight="227.0" prefWidth="100.0">
+      <VBox fx:id="namesVBox" layoutX="110.0" layoutY="82.0" prefHeight="227.0" prefWidth="100.0">
          <children>
             <Label text="Label">
                <VBox.margin>

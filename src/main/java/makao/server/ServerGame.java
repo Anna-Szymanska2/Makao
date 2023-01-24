@@ -16,33 +16,41 @@ public class ServerGame implements Runnable{
     private String winner;
     private boolean gameIsOn = false;
     private boolean nextTurn = false;
+    private boolean gameExists = false;
     int index = 0;
     int code;
 
-    public ServerGame(int code) {
+    public ServerGame(int code, int numberOfPlayers) {
+        this.stateOfRound.setPlayers(numberOfPlayers);
         this.code = code;
     }
 
     @Override
     public void run() {
-        initializeGame();
-        gameIsOn = true;
-        ServerPlayer [] players = new ServerPlayer[serverPlayers.size()];
-        players = serverPlayers.toArray(players);
+        gameExists = true;
+        while (gameExists) {
+            if (serverPlayers.size() == stateOfRound.getPlayers()) {
+                initializeGame();
+                gameIsOn = true;
+                ServerPlayer[] players = new ServerPlayer[serverPlayers.size()];
+                players = serverPlayers.toArray(players);
 
-        for (ServerPlayer serverPlayer:players){
+                for (ServerPlayer serverPlayer : players) {
             /*ServerMessage serverMessage = new ServerMessage("INIT", null, getStateOfRound(),getDeckOfCards(), serverPlayer.getHand());
             serverPlayer.sendServerMessage(serverMessage);*/
-            serverPlayer.setGameIsOn(true);
-        }
+                    serverPlayer.setGameIsOn(true);
+                }
 
 
 //        whoseTurn = serverPlayers.get(0).getClientName();
 //        serverPlayers.get(0).setTurnIsOn(true);
-        do{
-            playMakao(players);
-        }while(gameIsOn);
-        System.out.println("Game has ended");
+                do {
+                    playMakao(players);
+                } while (gameIsOn);
+                System.out.println("Game has ended");
+                gameExists = false;
+            }
+        }
     }
 
     public void playMakao(ServerPlayer [] players){
@@ -85,6 +93,7 @@ public class ServerGame implements Runnable{
         this.gameIsOn = gameIsOn;
     }
 
+
     public void setWinner(String winner) {
         this.winner = winner;
     }
@@ -105,6 +114,10 @@ public class ServerGame implements Runnable{
     }
     public Card drawCard(){
         return deckOfCards.drawLastCard();
+    }
+
+    public int getCode() {
+        return code;
     }
 
     public String getWhoseTurn() {

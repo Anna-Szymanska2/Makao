@@ -2,9 +2,11 @@ package makao.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -13,8 +15,10 @@ import makao.server.ClientMessage;
 import makao.view.Main;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class ChoosingRoomController {
+public class ChoosingRoomController implements Initializable {
     @FXML
     private Button createRoomButton;
     @FXML
@@ -23,6 +27,9 @@ public class ChoosingRoomController {
     private Button enterButton;
     @FXML
     private AnchorPane choosingRoomPane;
+    @FXML
+    private ChoiceBox<Integer> numberOfPlayersComboBox;
+    private Integer[] numberOfPlayers = {2,3,4};
     private Client client;
 
 
@@ -53,7 +60,7 @@ public class ChoosingRoomController {
         stage.show();
     }
     public void createNewRoom(){
-        ClientMessage clientMessage = new ClientMessage(client.getName(),client.getPassword(),"START_ROOM");
+        ClientMessage clientMessage = new ClientMessage(client.getName(),"START_ROOM",client.getPassword(),numberOfPlayersComboBox.getValue());
         client.sendMessage(clientMessage);
     }
 
@@ -67,5 +74,10 @@ public class ChoosingRoomController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        numberOfPlayersComboBox.getItems().addAll(numberOfPlayers);
     }
 }

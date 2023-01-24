@@ -14,12 +14,27 @@ public class ClientMessage implements Serializable {
     private DeckOfCards deckOfCards;
     //ArrayList<Card> cardsToPlay = new ArrayList<>();
     private String password;
+    private int code;
+    private int numberOfPlayers;
 
     public ClientMessage(String playerName, StateOfRound stateOfRound, String actionID, DeckOfCards deckOfCards){
         this.playerName = playerName;
         this.stateOfRound = stateOfRound;
         this.actionID = actionID;
         this.deckOfCards = deckOfCards;
+    }
+
+    public ClientMessage(String playerName, String actionID, int code) {
+        this.playerName = playerName;
+        this.actionID = actionID;
+        this.code = code;
+    }
+
+    public ClientMessage(String playerName, String actionID, String password, int numberOfPlayers) {
+        this.playerName = playerName;
+        this.actionID = actionID;
+        this.password = password;
+        this.numberOfPlayers = numberOfPlayers;
     }
 
     public ClientMessage(String playerName){
@@ -67,4 +82,11 @@ public class ClientMessage implements Serializable {
         return password;
     }
 
+    public int getNumberOfPlayers() {
+        return numberOfPlayers;
+    }
+
+    public int getCode() {
+        return code;
+    }
 }
