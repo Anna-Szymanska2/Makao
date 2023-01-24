@@ -71,10 +71,11 @@ public class ServerPlayer implements Runnable{
                     serverGame.addServerPlayer(this);
                     setServerGame(serverGame);
                     gameThread.start();
-                    ServerMessage serverMessage2 = new ServerMessage("ROOM_STARTED");
+                    ServerMessage serverMessage2 = new ServerMessage("ROOM_STARTED", code);
                     sendServerMessage(serverMessage2);
                 }else if(messageFromClient.getActionID().equals("JOIN_ROOM")) {
                     int code = messageFromClient.getCode();
+                    boolean gameExists = false;
                     for(ServerGame serverGame: server.getGames()){
                         if(serverGame.getCode() == code){
                             if(!serverGame.isGameIsOn()) {
@@ -82,11 +83,17 @@ public class ServerPlayer implements Runnable{
                                 setServerGame(serverGame);
                                 ServerMessage serverMessage2 = new ServerMessage("ROOM_JOINED");
                                 sendServerMessage(serverMessage2);
+                                gameExists = true;
                             }else{
                                 ServerMessage serverMessage2 = new ServerMessage("GAME_ALREADY_STARTED");
                                 sendServerMessage(serverMessage2);
+                                gameExists = true;
                             }
                         }
+                    }
+                    if(!gameExists){
+                        ServerMessage serverMessage2 = new ServerMessage("GAME_NOT_EXISTS");
+                        sendServerMessage(serverMessage2);
                     }
                 }
             }

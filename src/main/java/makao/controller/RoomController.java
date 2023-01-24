@@ -7,12 +7,15 @@ import makao.server.Client;
 public class RoomController {
 
     @FXML
-    private Label waitingLabel;
+    private Label codeLabel;
 
     private Client client;
 
     public void startGame(){
 
+    }
+    public void setCodeOnLabel(int code){
+        codeLabel.setText(String.valueOf(code));
     }
 
     public void setClient(Client client) {

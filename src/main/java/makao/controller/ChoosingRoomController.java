@@ -48,7 +48,8 @@ public class ChoosingRoomController implements Initializable {
             codeTextField.clear();
             return;
         }
-        Stage stage = (Stage) choosingRoomPane.getScene().getWindow();
+        changeToWaitingScene(codeInt);
+        /*Stage stage = (Stage) choosingRoomPane.getScene().getWindow();
         stage.close();
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("roommaker_scene.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
@@ -56,12 +57,25 @@ public class ChoosingRoomController implements Initializable {
         RoomController roomController = fxmlLoader.<RoomController>getController();
         roomController.setClient(client);
         client.setRoomController(roomController);
-        roomController.getStartButton().setVisible(false);
-        stage.show();
+        stage.show();*/
     }
     public void createNewRoom(){
         ClientMessage clientMessage = new ClientMessage(client.getName(),"START_ROOM",client.getPassword(),numberOfPlayersComboBox.getValue());
         client.sendMessage(clientMessage);
+        client.listenForMessage();
+    }
+
+    public void changeToWaitingScene(int code) throws IOException {
+        Stage stage = (Stage) choosingRoomPane.getScene().getWindow();
+        stage.close();
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("waiting_scene.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setScene(scene);
+        RoomController roomController = fxmlLoader.<RoomController>getController();
+        roomController.setClient(client);
+        roomController.setCodeOnLabel(code);
+        client.setRoomController(roomController);
+        stage.show();
     }
 
 

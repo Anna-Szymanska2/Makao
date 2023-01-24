@@ -16,6 +16,7 @@ public class ServerMessage implements Serializable {
     private DeckOfCards deckOfCards;
     private Hand newHand;
     private ArrayList<Card> cardsInHand;
+    private int code;
    //private ArrayList<Card> cardsToDraw = new ArrayList<>();
 
     ServerMessage(String whoseTurn, Card cardOnTopOfTheStack, StateOfRound stateOfRound){
@@ -25,6 +26,10 @@ public class ServerMessage implements Serializable {
     }
     ServerMessage(String actionID){
         this.actionID = actionID;
+    }
+    ServerMessage(String actionID, int code){
+        this.actionID = actionID;
+        this.code = code;
     }
     ServerMessage(String actionID,String whoseTurn, Card cardOnTopOfTheStack, StateOfRound stateOfRound, DeckOfCards deckOfCards){
         this.actionID = actionID;
@@ -63,6 +68,9 @@ public class ServerMessage implements Serializable {
         return actionID;
     }
 
+    public int getCode() {
+        return code;
+    }
 
     public String getWhoseTurn() {
         return whoseTurn;

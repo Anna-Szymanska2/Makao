@@ -4,13 +4,13 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="150.0" prefWidth="346.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="makao.view.WaitingScene">
+<AnchorPane prefHeight="150.0" prefWidth="346.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="makao.controller.RoomController">
    <children>
-      <Label fx:id="waitingLabel" layoutX="83.0" layoutY="42.0" text="Waiting...">
+      <Label fx:id="waitingLabel" layoutX="83.0" layoutY="14.0" text="Waiting...">
          <font>
             <Font size="44.0" />
          </font>
       </Label>
+      <Label fx:id="codeLabel" layoutX="145.0" layoutY="111.0" text="Enter code" />
    </children>
 </AnchorPane>
