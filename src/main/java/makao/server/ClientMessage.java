@@ -46,6 +46,11 @@ public class ClientMessage implements Serializable {
         this.actionID = actionID;
     }
 
+    public ClientMessage(String name, String actionID) {
+        this.playerName = name;
+        this.actionID = actionID;
+    }
+
     /*public ClientMessage(String playerName, StateOfRound stateOfRound, String actionID, int numberOfCardsToDraw, ArrayList<Card> cardsToPlay, DeckOfCards deckOfCards) {
         this.playerName = playerName;
         this.stateOfRound = stateOfRound;

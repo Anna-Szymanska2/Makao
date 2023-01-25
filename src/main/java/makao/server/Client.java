@@ -58,6 +58,8 @@ public class Client implements Serializable{
     }
     }
 
+
+
     public void setChoosingRoomController(ChoosingRoomController choosingRoomController) {
         this.choosingRoomController = choosingRoomController;
     }
@@ -89,7 +91,7 @@ public class Client implements Serializable{
             public void run(){
                 ServerMessage messageFromServer;
 
-                while (socket.isConnected()){
+                while (!socket.isClosed()){
                     try{
                         messageFromServer = (ServerMessage) in.readObject();
 
@@ -99,7 +101,8 @@ public class Client implements Serializable{
                                 break;
                             case "INIT":
                                 System.out.println("INIT");
-                                gameController.init(messageFromServer, name);
+                                roomController.changeScene(messageFromServer, name);
+                                //gameController.init(messageFromServer, name);
                                 break;
                             case "END":
                                 //controller.endOfGame(messageFromServer);
@@ -123,9 +126,8 @@ public class Client implements Serializable{
                                 loggingController.loginFailed();
                                 break;
                             case "ROOM_STARTED":
-                                choosingRoomController.changeToWaitingScene(messageFromServer.getCode());
-                                break;
                             case "ROOM_JOINED":
+                                choosingRoomController.changeToWaitingScene(messageFromServer.getCode());
                                 break;
                             case "GAME_ALREADY_STATED":
                                 break;

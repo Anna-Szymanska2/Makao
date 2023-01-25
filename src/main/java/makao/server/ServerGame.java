@@ -23,15 +23,23 @@ public class ServerGame implements Runnable{
     public ServerGame(int code, int numberOfPlayers) {
         this.stateOfRound.setPlayers(numberOfPlayers);
         this.code = code;
+
     }
 
     @Override
     public void run() {
         gameExists = true;
         while (gameExists) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            //System.out.println(serverPlayers.size());
             if (serverPlayers.size() == stateOfRound.getPlayers()) {
                 initializeGame();
                 gameIsOn = true;
+                System.out.println("Gra sie zaczela");
                 ServerPlayer[] players = new ServerPlayer[serverPlayers.size()];
                 players = serverPlayers.toArray(players);
 

@@ -63,13 +63,14 @@ public class ServerPlayer implements Runnable{
             loginOrRegister();
             if(!socket.isClosed()){
                 receivedMessage = false;
-                getClientMessage();
+                getClientMessage(false);
                 if(messageFromClient.getActionID().equals("START_ROOM")){
                     int code = gameCodeGenerator();
                     ServerGame serverGame = new ServerGame(code,messageFromClient.getNumberOfPlayers());
                     Thread gameThread = new Thread(serverGame);
                     serverGame.addServerPlayer(this);
                     setServerGame(serverGame);
+                    server.getGames().add(serverGame);
                     gameThread.start();
                     ServerMessage serverMessage2 = new ServerMessage("ROOM_STARTED", code);
                     sendServerMessage(serverMessage2);
@@ -81,7 +82,7 @@ public class ServerPlayer implements Runnable{
                             if(!serverGame.isGameIsOn()) {
                                 serverGame.addServerPlayer(this);
                                 setServerGame(serverGame);
-                                ServerMessage serverMessage2 = new ServerMessage("ROOM_JOINED");
+                                ServerMessage serverMessage2 = new ServerMessage("ROOM_JOINED", code);
                                 sendServerMessage(serverMessage2);
                                 gameExists = true;
                             }else{
@@ -99,15 +100,17 @@ public class ServerPlayer implements Runnable{
             }
             //synchronized (serverGame.getDeckOfCards()){
                 while (!socket.isClosed()) {
-                    System.out.println(clientName + "connected");
+                   // System.out.println(clientName + "connected");
                     while(gameIsOn){
                         if(isTheFirstTime){
                             /*StateOfRound stateOfRound = new StateOfRound(serverGame.getStateOfRound());
                             DeckOfCards deckOfCards = new DeckOfCards(serverGame.getDeckOfCards());*/
                             ServerMessage serverMessage2 = new ServerMessage("INIT", null, serverGame.getCardOnTopOfTheStack(), null,null);
+                            System.out.println("Server przesła init");
                             serverMessage2.setNewHand(getHand());
                             sendServerMessage(serverMessage2);
                             isTheFirstTime = false;
+                            Thread.sleep(1000);
                         }
                         System.out.println(clientName + "playing");
                         playMakao();
@@ -118,6 +121,10 @@ public class ServerPlayer implements Runnable{
 
 
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } /*catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }*/ catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
@@ -134,7 +141,7 @@ public class ServerPlayer implements Runnable{
                 sendServerMessage(serverMessage);
                 if (whoseTurn.equals(this.clientName)) {
                     receivedMessage = false;
-                    getClientMessage();
+                    getClientMessage(true);
                     if(messageFromClient.getActionID().equals("END")){
                         serverGame.setStateOfRound(messageFromClient.getStateOfRound());
                         serverGame.setDeckOfCards(messageFromClient.getDeckOfCards());
@@ -153,14 +160,15 @@ public class ServerPlayer implements Runnable{
         }
     }
 
-    public void getClientMessage(){
+    public void getClientMessage(boolean gameIsOn){
         try {
             while (!receivedMessage) {
                 ClientMessage clientMessage;
                 if ((clientMessage = (ClientMessage) in.readObject()) != null) {
                     messageFromClient = clientMessage;
                     receivedMessage = true;
-                    serverGame.setStateOfRound(clientMessage.getStateOfRound());
+                    if(gameIsOn)
+                        serverGame.setStateOfRound(clientMessage.getStateOfRound());
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
@@ -204,6 +212,7 @@ public class ServerPlayer implements Runnable{
                 System.out.println("Registration went ok");
                 out.flush();
                 socket.close();
+                SaveAndRestoreData.save(namesAndPasswords);
             }else {
                 ServerMessage serverMessage = new ServerMessage("REGISTER_WRONG");
                 sendServerMessage(serverMessage);
@@ -211,6 +220,7 @@ public class ServerPlayer implements Runnable{
                 socket.close();
             }
         } else if (action.equals("LOGIN")) {
+            namesAndPasswords = SaveAndRestoreData.restore();
             if(namesAndPasswords.checkLogin(username, password)){
                 ServerMessage serverMessage = new ServerMessage("LOGIN_OK");
                 sendServerMessage(serverMessage);

@@ -11,7 +11,7 @@ public class Server {
     private int port;
     private int numberOfPlayers;
     private NamesAndPasswords namesAndPasswords;
-    private ArrayList<ServerGame> games;
+    private ArrayList<ServerGame> games = new ArrayList<>();
     public Server(int port, int numberOfPlayers) {
         this.port = port;
         this.numberOfPlayers = numberOfPlayers;

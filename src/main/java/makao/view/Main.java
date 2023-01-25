@@ -14,7 +14,7 @@ public class Main extends Application {
         System.out.println("Enter your username: ");
         String name = scanner.nextLine();*/
 
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("register_scene.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("log_scene.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         //fxmlLoader.<HelloController>getController().setClient(client);
 
