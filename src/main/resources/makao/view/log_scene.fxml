@@ -6,13 +6,13 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="loggingPane" prefHeight="200.0" prefWidth="330.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="makao.controller.LoggingController">
+<AnchorPane fx:id="loggingPane" prefHeight="179.0" prefWidth="267.0" style="-fx-background-color: BLACK;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="makao.controller.LoggingController">
    <children>
-      <Button fx:id="registerButton" layoutX="60.0" layoutY="170.0" mnemonicParsing="false" onAction="#changeViewToRegister" prefHeight="26.0" prefWidth="105.0" text="Zarejestruj" />
-      <Button fx:id="logInButton" layoutX="192.0" layoutY="170.0" mnemonicParsing="false" onAction="#tryToLogIn" prefHeight="26.0" prefWidth="106.0" text="Zaloguj" />
-      <TextField fx:id="nickTextField" layoutX="151.0" layoutY="60.0" />
-      <Label layoutX="60.0" layoutY="64.0" prefWidth="25.0" text="nick" />
-      <Label layoutX="60.0" layoutY="103.0" text="password" />
-      <PasswordField fx:id="passwordField" layoutX="151.0" layoutY="99.0" />
+      <Button fx:id="registerButton" layoutX="32.0" layoutY="128.0" mnemonicParsing="false" onAction="#changeViewToRegister" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: #3f3f3f; -fx-text-fill: WHITE; -fx-font-family: consolas;" text="Register" />
+      <Button fx:id="logInButton" layoutX="141.0" layoutY="128.0" mnemonicParsing="false" onAction="#tryToLogIn" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: #3f3f3f; -fx-text-fill: WHITE; -fx-font-family: consolas;" text="Login" />
+      <TextField fx:id="nickTextField" layoutX="118.0" layoutY="27.0" prefHeight="22.0" prefWidth="122.0" style="-fx-background-color: #8e8e8e; -fx-font-family: Consolas;" />
+      <Label layoutX="43.0" layoutY="30.0" prefHeight="18.0" prefWidth="30.0" style="-fx-font-family: Consolas;" text="NICK" textFill="WHITE" />
+      <Label layoutX="32.0" layoutY="78.0" style="-fx-font-family: Consolas;" text="PASSWORD" textFill="WHITE" />
+      <PasswordField fx:id="passwordField" layoutX="118.0" layoutY="73.0" prefHeight="22.0" prefWidth="122.0" style="-fx-background-color: #8e8e8e; -fx-font-family: consolas;" />
    </children>
 </AnchorPane>

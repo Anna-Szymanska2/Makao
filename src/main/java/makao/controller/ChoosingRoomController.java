@@ -30,6 +30,9 @@ public class ChoosingRoomController implements Initializable {
     private AnchorPane choosingRoomPane;
     @FXML
     private ChoiceBox<Integer> numberOfPlayersChoiceBox;
+    @FXML
+    private ChoiceBox<Integer>  timeOfRoundChoiceBox;
+
     private Integer[] numberOfPlayers = {2,3,4};
     private Client client;
 
