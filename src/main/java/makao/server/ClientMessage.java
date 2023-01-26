@@ -14,6 +14,7 @@ public class ClientMessage implements Serializable {
     private DeckOfCards deckOfCards;
     //ArrayList<Card> cardsToPlay = new ArrayList<>();
     private String password;
+    private String path;
     private int code;
     private int numberOfPlayers;
 
@@ -35,6 +36,12 @@ public class ClientMessage implements Serializable {
         this.actionID = actionID;
         this.password = password;
         this.numberOfPlayers = numberOfPlayers;
+    }
+    public ClientMessage(String playerName, String actionID, String password, String path) {
+        this.playerName = playerName;
+        this.actionID = actionID;
+        this.password = password;
+        this.path = path;
     }
 
     public ClientMessage(String playerName){
@@ -59,6 +66,10 @@ public class ClientMessage implements Serializable {
         //this.cardsToPlay = cardsToPlay;
         this.deckOfCards = deckOfCards;
     }*/
+
+    public String getPath() {
+        return path;
+    }
 
     public String getPlayerName() {
         return playerName;

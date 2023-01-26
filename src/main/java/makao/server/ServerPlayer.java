@@ -20,8 +20,9 @@ public class ServerPlayer implements Runnable{
     private boolean receivedMessage = false;
     private ClientMessage messageFromClient;
     private String clientName;
+    private String clientAvatar;
     private Hand hand = new Hand();
-    private NamesAndPasswords namesAndPasswords;
+    private NamesAndStoredDetails namesAndStoredDetails;
 
 
     public ServerPlayer(Socket socket, ServerGame serverGame){
@@ -47,7 +48,8 @@ public class ServerPlayer implements Runnable{
             clientMessage = (ClientMessage) in.readObject();
             this.messageFromClient = clientMessage;
             this.clientName = clientMessage.getPlayerName();
-            this.namesAndPasswords = server.getNamesAndPasswords();
+            this.namesAndStoredDetails = server.getNamesAndPasswords();
+            this.clientAvatar = clientMessage.getPath();
         }catch  (IOException | ClassNotFoundException e) {
             closeEverything(socket, in, out);
         }
@@ -105,7 +107,7 @@ public class ServerPlayer implements Runnable{
                         if(isTheFirstTime){
                             /*StateOfRound stateOfRound = new StateOfRound(serverGame.getStateOfRound());
                             DeckOfCards deckOfCards = new DeckOfCards(serverGame.getDeckOfCards());*/
-                            ServerMessage serverMessage2 = new ServerMessage("INIT", null, serverGame.getCardOnTopOfTheStack(), null,null);
+                            ServerMessage serverMessage2 = new ServerMessage("INIT", serverGame.getCardOnTopOfTheStack(), serverGame.getPlayersNames(),serverGame.getPlayersAvatars());
                             System.out.println("Server przesła init");
                             serverMessage2.setNewHand(getHand());
                             sendServerMessage(serverMessage2);
@@ -197,6 +199,10 @@ public class ServerPlayer implements Runnable{
         return turnIsOn;
     }
 
+    public String getClientAvatar() {
+        return clientAvatar;
+    }
+
     public void setTurnIsOn(boolean turnIsOn) {
         this.turnIsOn = turnIsOn;
     }
@@ -206,13 +212,13 @@ public class ServerPlayer implements Runnable{
         String username = messageFromClient.getPlayerName();
         String password = messageFromClient.getPassword();
         if (action.equals("REGISTER")) {
-            if(namesAndPasswords.register(username, password)){
+            if(namesAndStoredDetails.register(username, password, messageFromClient.getPath())){
                 ServerMessage serverMessage = new ServerMessage("REGISTER_OK");
                 sendServerMessage(serverMessage);
                 System.out.println("Registration went ok");
                 out.flush();
                 socket.close();
-                SaveAndRestoreData.save(namesAndPasswords);
+                SaveAndRestoreData.save(namesAndStoredDetails);
             }else {
                 ServerMessage serverMessage = new ServerMessage("REGISTER_WRONG");
                 sendServerMessage(serverMessage);
@@ -220,10 +226,11 @@ public class ServerPlayer implements Runnable{
                 socket.close();
             }
         } else if (action.equals("LOGIN")) {
-            namesAndPasswords = SaveAndRestoreData.restore();
-            if(namesAndPasswords.checkLogin(username, password)){
+            namesAndStoredDetails = SaveAndRestoreData.restore();
+            if(namesAndStoredDetails.checkLogin(username, password)){
                 ServerMessage serverMessage = new ServerMessage("LOGIN_OK");
                 sendServerMessage(serverMessage);
+                clientAvatar = namesAndStoredDetails.returnAvatar(username);
             }else {
                 ServerMessage serverMessage = new ServerMessage("LOGIN_WRONG");
                 sendServerMessage(serverMessage);

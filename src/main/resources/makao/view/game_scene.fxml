@@ -313,10 +313,43 @@
          </children>
       </VBox>
       <Button fx:id="waitRoundsButton" layoutX="725.0" layoutY="364.0" mnemonicParsing="false" onAction="#waitRounds" text="Wait rounds" />
-      <Label fx:id="timerLabel" layoutX="97.0" layoutY="513.0" prefHeight="50.0" prefWidth="62.0" text="00:00">
+      <Label fx:id="timerLabel" layoutX="111.0" layoutY="484.0" prefHeight="50.0" prefWidth="62.0" text="00:00">
          <font>
             <Font size="25.0" />
          </font>
       </Label>
+      <Label fx:id="nickLabel" layoutX="397.0" layoutY="60.0" text="Label" />
+      <VBox fx:id="avatarsVBox" layoutX="8.0" layoutY="141.0" prefHeight="202.0" prefWidth="25.0">
+         <children>
+            <ImageView fx:id="playerView3" fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/avatars/1.jpg" />
+               </image>
+            </ImageView>
+            <Label fx:id="playerNick3" text="nick1" />
+            <Label fx:id="playerTurnLabel3" text="is playing" />
+            <ImageView fx:id="playerView2" fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/avatars/1.jpg" />
+               </image>
+            </ImageView>
+            <Label fx:id="playerNick2" text="nick2" />
+            <Label fx:id="playerTurnLabel2" text="is playing" />
+            <ImageView fx:id="playerView1" fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/avatars/1.jpg" />
+               </image>
+            </ImageView>
+            <Label fx:id="playerNick1" text="nick3" />
+            <Label fx:id="playerTurnLabel1" text="is playing" />
+            <ImageView fx:id="thisPlayerView" fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../controller/avatars/1.jpg" />
+               </image>
+            </ImageView>
+            <Label fx:id="thisPlayerNick" text="playerNick"/>
+            <Label fx:id="thisPlayerTurnLabel" layoutX="10.0" layoutY="85.0" text="your turn" />
+         </children>
+      </VBox>
    </children>
 </AnchorPane>

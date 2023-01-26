@@ -14,6 +14,8 @@ public class ServerGame implements Runnable{
     private DeckOfCards deckOfCards = new DeckOfCards();
     private String whoseTurn;
     private String winner;
+    private ArrayList<String> playersNames = new ArrayList<>();
+    private ArrayList<String> playersAvatars = new ArrayList<>();
     private boolean gameIsOn = false;
     private boolean nextTurn = false;
     private boolean gameExists = false;
@@ -97,6 +99,14 @@ public class ServerGame implements Runnable{
 
     }
 
+    public ArrayList<String> getPlayersNames() {
+        return playersNames;
+    }
+
+    public ArrayList<String> getPlayersAvatars() {
+        return playersAvatars;
+    }
+
     public void setGameIsOn(boolean gameIsOn) {
         this.gameIsOn = gameIsOn;
     }
@@ -132,7 +142,10 @@ public class ServerGame implements Runnable{
         return whoseTurn;
     }
     public void addServerPlayer(ServerPlayer serverPlayer){
+
         serverPlayers.add(serverPlayer);
+        playersNames.add(serverPlayer.getClientName());
+        playersAvatars.add(serverPlayer.getClientAvatar());
     }
 
     public void removeServerPlayer(ServerPlayer serverPlayer){

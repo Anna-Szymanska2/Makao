@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import makao.model.cards.*;
 import makao.model.game.*;
@@ -23,6 +24,32 @@ import java.net.URL;
 import java.util.*;
 
 public class HelloController implements Initializable, AceListener, JackListener, Serializable {
+    @FXML
+    private transient ImageView thisPlayerView;
+    @FXML
+    private transient Label playerTurnLabel1;
+    @FXML
+    private transient Label thisPlayerNick;
+    @FXML
+    private transient Label playerNick1;
+    @FXML
+    private transient ImageView playerView1;
+    @FXML
+    private transient Label playerTurnLabel2;
+    @FXML
+    private transient Label playerNick2;
+    @FXML
+    private transient ImageView playerView2;
+    @FXML
+    private transient Label playerTurnLabel3;
+    @FXML
+    private transient Label playerNick3;
+    @FXML
+    private transient ImageView playerView3;
+    @FXML
+    private transient VBox avatarsVBox;
+    @FXML
+    private transient Label thisPlayerTurnLabel;
     //private Game game;
     private DeckOfCards deckOfCards;
     private StateOfRound stateOfRound;
@@ -58,6 +85,9 @@ public class HelloController implements Initializable, AceListener, JackListener
     @FXML
     transient private Label timerLabel;
     transient private Alert drawCardAlert;
+    @FXML
+    transient private Label nickLabel;
+
     transient private ChoiceDialog choiceDialog;
     private int selectedCardsIndex;
     private int lastSelectedCardIndex;
@@ -146,11 +176,18 @@ public class HelloController implements Initializable, AceListener, JackListener
             @Override
             public void run() {
                 //updateStateOfRoundLabels(stateOfRound);
+                for(int i = 0; i < 12; i++){
+                    avatarsVBox.getChildren().get(i).setVisible(false);
+                }
                 showCards();
                 playerCardsIndexes[0] = 0;
                 playerCardsIndexes[1] = 4;
-                Image image = new Image(getClass().getResource(msgFromServer.getCardOnTopOfTheStack().getImagePath()).toExternalForm());
-                stackCardImageView.setImage(image);
+                nickLabel.setText(name);
+                Image stackImage = new Image(getClass().getResource(msgFromServer.getCardOnTopOfTheStack().getImagePath()).toExternalForm());
+                /*thisPlayerNick.setText(name);
+                Image thisPlayerAvatar = new Image(getClass().getResource(client.getPath()).toExternalForm());
+                thisPlayerView.setImage(thisPlayerAvatar);*/
+                stackCardImageView.setImage(stackImage);
             }
         });
 

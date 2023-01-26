@@ -10,7 +10,7 @@ public class Server {
     private ServerSocket serverSocket;
     private int port;
     private int numberOfPlayers;
-    private NamesAndPasswords namesAndPasswords;
+    private NamesAndStoredDetails namesAndStoredDetails;
     private ArrayList<ServerGame> games = new ArrayList<>();
     public Server(int port, int numberOfPlayers) {
         this.port = port;
@@ -21,10 +21,10 @@ public class Server {
             e.printStackTrace();
         }
     }
-    public Server(int port, int numberOfPlayers, NamesAndPasswords namesAndPasswords) {
+    public Server(int port, int numberOfPlayers, NamesAndStoredDetails namesAndStoredDetails) {
         this.port = port;
         this.numberOfPlayers = numberOfPlayers;
-        this.namesAndPasswords = namesAndPasswords;
+        this.namesAndStoredDetails = namesAndStoredDetails;
         try {
             serverSocket = new ServerSocket(port);
         }catch(IOException e) {
@@ -63,8 +63,8 @@ public class Server {
         }
     }
 
-    public NamesAndPasswords getNamesAndPasswords() {
-        return namesAndPasswords;
+    public NamesAndStoredDetails getNamesAndPasswords() {
+        return namesAndStoredDetails;
     }
 
     public ArrayList<ServerGame> getGames() {
@@ -72,12 +72,12 @@ public class Server {
     }
 
     public static void main(String[] args) throws IOException{
-        NamesAndPasswords namesAndPasswords = new NamesAndPasswords();
+        NamesAndStoredDetails namesAndStoredDetails = new NamesAndStoredDetails();
         File file = new File("namesAndPasswords.ser");
         if (file.exists()) {
-            namesAndPasswords = SaveAndRestoreData.restore();
+            namesAndStoredDetails = SaveAndRestoreData.restore();
         }
-        Server server = new Server(4444,2, namesAndPasswords);
+        Server server = new Server(4444,2, namesAndStoredDetails);
         server.startServer();
     }
 }

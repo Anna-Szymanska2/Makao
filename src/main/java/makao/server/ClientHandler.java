@@ -1,3 +1,4 @@
+/*
 package makao.server;
 
 import java.io.IOException;
@@ -59,3 +60,4 @@ public class ClientHandler implements Runnable {
         }
     }
 }
+*/

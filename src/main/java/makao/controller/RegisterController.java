@@ -48,6 +48,7 @@ public class RegisterController implements Initializable {
     private HBox fourthHBox;
     @FXML
     private AnchorPane registerPane;
+    private String chosenAvatarPath;
 
     private final int numberOfAvatarsInRow = 5;
     private Client client;
@@ -98,10 +99,12 @@ public class RegisterController implements Initializable {
         }
 
         Socket socket = new Socket("localhost", 4444);
-        client = new Client(socket, nick, password);
+        int index = chosenAvatarView.getImage().getUrl().indexOf("avatars");
+        chosenAvatarPath = chosenAvatarView.getImage().getUrl().substring(index);
+        client = new Client(socket, nick, password, chosenAvatarPath);
         client.setRegisterController(this);
         client.listenForMessage();
-        ClientMessage clientMessage = new ClientMessage(client.getName(), client.getPassword(), "REGISTER");
+        ClientMessage clientMessage = new ClientMessage(client.getName(), "REGISTER", client.getPassword(),  chosenAvatarPath);
         client.sendMessage(clientMessage);
 
     }

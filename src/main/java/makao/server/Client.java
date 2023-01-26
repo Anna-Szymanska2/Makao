@@ -26,6 +26,7 @@ public class Client implements Serializable{
     transient private ChoosingRoomController choosingRoomController;
     transient private RoomController roomController;
     private String name;
+    private String path;
     private String password;
     private boolean gameIsOn = false;
     private boolean turnIsOn = false;
@@ -46,6 +47,20 @@ public class Client implements Serializable{
 
     }
 
+    public Client(Socket socket, String name, String password, String path) {
+        this.socket = socket;
+        this.name = name;
+        this.password = password;
+        this.path = path;
+        try{
+            this.out = new ObjectOutputStream(socket.getOutputStream());
+            this.in = new ObjectInputStream(socket.getInputStream());
+        }catch  (IOException e) {
+            closeEverything(socket, in, out);
+        }
+
+    }
+
     public Client(Socket socket, String name){
         try{
         this.socket = socket;
@@ -58,7 +73,9 @@ public class Client implements Serializable{
     }
     }
 
-
+    public String getPath() {
+        return path;
+    }
 
     public void setChoosingRoomController(ChoosingRoomController choosingRoomController) {
         this.choosingRoomController = choosingRoomController;
