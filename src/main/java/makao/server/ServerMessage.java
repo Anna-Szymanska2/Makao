@@ -61,7 +61,15 @@ public class ServerMessage implements Serializable {
         this.deckOfCards = deckOfCards;
     }
 
-//    public void setCardsToDraw(ArrayList<Card> cardsToDraw) {
+    public ArrayList<String> getPlayersNames() {
+        return playersNames;
+    }
+
+    public ArrayList<String> getPlayersAvatars() {
+        return playersAvatars;
+    }
+
+    //    public void setCardsToDraw(ArrayList<Card> cardsToDraw) {
 //        this.cardsToDraw = cardsToDraw;
 //    }
     public void setNewHand(Hand newHand) {

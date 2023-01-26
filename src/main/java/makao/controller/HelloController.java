@@ -96,6 +96,9 @@ public class HelloController implements Initializable, AceListener, JackListener
     private int[] playerCardsIndexes = new int[2];
     private boolean wasSelectedCardFromBottomRow = true;
     transient private Client client;
+    transient private Label[] turnLabels;
+    transient private ArrayList<String> playersNames = new ArrayList<>();
+    transient private Label[] nickLabels;
 
 
 
@@ -139,6 +142,8 @@ public class HelloController implements Initializable, AceListener, JackListener
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        nickLabels = new Label[]{playerNick1, playerNick2, playerNick3};
+        turnLabels = new Label[]{playerTurnLabel1, playerTurnLabel2, playerTurnLabel3};
         isThisPlayerRound = false;
         initSelectedCardHBox();
         waitRoundsButton.setVisible(false);
@@ -159,7 +164,8 @@ public class HelloController implements Initializable, AceListener, JackListener
     public void init(ServerMessage msgFromServer, String name){
         player = new Player(name);
         player.setHand(msgFromServer.getNewHand());
-       // player.setListener(this);
+
+        // player.setListener(this);
         //stateOfRound = msgFromServer.getStateOfRound();
        // deckOfCards = msgFromServer.getDeckOfCards();
         for(Card card: player.getCardsInHand()){
@@ -184,19 +190,82 @@ public class HelloController implements Initializable, AceListener, JackListener
                 playerCardsIndexes[1] = 4;
                 nickLabel.setText(name);
                 Image stackImage = new Image(getClass().getResource(msgFromServer.getCardOnTopOfTheStack().getImagePath()).toExternalForm());
-                /*thisPlayerNick.setText(name);
-                Image thisPlayerAvatar = new Image(getClass().getResource(client.getPath()).toExternalForm());
-                thisPlayerView.setImage(thisPlayerAvatar);*/
                 stackCardImageView.setImage(stackImage);
+                initAvatarsHBox(msgFromServer, name);
             }
         });
 
 
     }
+    public void updateThisPlayerTurnLabel(){
+        for(Label turnLabel: turnLabels){
+            turnLabel.setVisible(false);
+        }
+        thisPlayerTurnLabel.setText("Your turn");
+        thisPlayerTurnLabel.setVisible(true);
+    }
+    
+    public int returnPlayerIndex(String name, ArrayList<String> names){
+        int thisPlayerIndex;
+        for(thisPlayerIndex = 0; thisPlayerIndex <  names.size(); thisPlayerIndex++){
+            if(names.get(thisPlayerIndex).equals(name))
+                break;
+        }
+        return thisPlayerIndex;
+    }
+
+    public void updateTurnLabels(String name){
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                int index = returnPlayerIndex(name, playersNames);
+                for(Label turnLabel: turnLabels){
+                    turnLabel.setVisible(false);
+                }
+                turnLabels[index].setText("is playing");
+                turnLabels[index].setVisible(true);
+                thisPlayerTurnLabel.setVisible(false);
+            }
+        });
+
+    }
+    
+    public void initAvatarsHBox(ServerMessage msgFromServer, String name){
+        thisPlayerNick.setText(name);
+        thisPlayerNick.setVisible(true);
+        ImageView[] avatarViews = {playerView1, playerView2, playerView3};
+        ArrayList<String> avatars = new ArrayList<>();
+        int thisPlayerIndex = returnPlayerIndex(name, msgFromServer.getPlayersNames());
+        for(thisPlayerIndex = 0; thisPlayerIndex <  msgFromServer.getPlayersNames().size(); thisPlayerIndex++){
+            if(msgFromServer.getPlayersNames().get(thisPlayerIndex).equals(name))
+                break;
+        }
+        for(int i = thisPlayerIndex + 1;  i <  msgFromServer.getPlayersNames().size(); i++){
+            playersNames.add(msgFromServer.getPlayersNames().get(i));
+            avatars.add(msgFromServer.getPlayersAvatars().get(i));
+        }
+        for(int i = 0; i < thisPlayerIndex; i++){
+            playersNames.add(msgFromServer.getPlayersNames().get(i));
+            avatars.add(msgFromServer.getPlayersAvatars().get(i));
+        }
+        Collections.reverse(avatars);
+        Collections.reverse(playersNames);
+        for(int i = 0; i < avatars.size(); i++){
+            Image avatar = new Image(getClass().getResource(avatars.get(i)).toExternalForm());
+            avatarViews[i].setImage(avatar);
+            avatarViews[i].setVisible(true);
+            nickLabels[i].setText(playersNames.get(i));
+            nickLabels[i].setVisible(true);
+        }
+        Image thisPlayerAvatar = new Image(getClass().getResource(msgFromServer.getPlayersAvatars().get(thisPlayerIndex)).toExternalForm());
+        thisPlayerView.setImage(thisPlayerAvatar);
+        thisPlayerView.setVisible(true);
+    }
 
     public  void nextPlayerMove(ServerMessage msgFromServer){
         updateStateOfRoundLabels(msgFromServer.getStateOfRound());
         updateStackView(msgFromServer.getStateOfRound());
+        updateTurnLabels(msgFromServer.getWhoseTurn());
     }
 
     public void nextThisPlayerMove(ServerMessage msgFromServer){
@@ -219,6 +288,7 @@ public class HelloController implements Initializable, AceListener, JackListener
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
+                updateThisPlayerTurnLabel();
                 if(stateOfRound.getRoundsToStay() > 0){
                     waitRoundsButton.setVisible(true);
                     deckView.setVisible(false);
