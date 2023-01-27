@@ -219,7 +219,16 @@ public class ServerPlayer implements Runnable{
             }
         } else if (action.equals("LOGIN")) {
             namesAndStoredDetails = SaveAndRestoreData.restore();
-            if(namesAndStoredDetails.checkLogin(username, password)){
+            boolean alreadyLogged = false;
+            int i = 0;
+            for(ServerPlayer serverPlayer:users){
+                if(serverPlayer.getClientName().equals(username))
+                    i++;
+                if(i>1)
+                    alreadyLogged = true;
+            }
+
+            if(!alreadyLogged && namesAndStoredDetails.checkLogin(username, password)){
                 ServerMessage serverMessage = new ServerMessage("LOGIN_OK");
                 sendServerMessage(serverMessage);
                 clientAvatar = namesAndStoredDetails.returnAvatar(username);
