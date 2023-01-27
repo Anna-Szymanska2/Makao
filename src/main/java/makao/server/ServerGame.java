@@ -22,8 +22,9 @@ public class ServerGame implements Runnable{
     int index = 0;
     int code;
 
-    public ServerGame(int code, int numberOfPlayers) {
+    public ServerGame(int code, int numberOfPlayers, int timeOfRound) {
         this.stateOfRound.setPlayers(numberOfPlayers);
+        this.stateOfRound.setTimeOfRound(timeOfRound*1000);
         this.code = code;
 
     }

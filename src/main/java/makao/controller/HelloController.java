@@ -93,6 +93,7 @@ public class HelloController implements Initializable, AceListener, JackListener
     private int lastSelectedCardIndex;
     transient private ImageView chosenCardView;
     private boolean isThisPlayerRound;
+    private int timeOfRound;
     private int[] playerCardsIndexes = new int[2];
     private boolean wasSelectedCardFromBottomRow = true;
     transient private Client client;
@@ -166,6 +167,8 @@ public class HelloController implements Initializable, AceListener, JackListener
         player.setHand(msgFromServer.getNewHand());
 
         // player.setListener(this);
+        timeOfRound = msgFromServer.getStateOfRound().getTimeOfRound();
+       // player.setListener(this);
         //stateOfRound = msgFromServer.getStateOfRound();
        // deckOfCards = msgFromServer.getDeckOfCards();
         for(Card card: player.getCardsInHand()){
@@ -204,7 +207,7 @@ public class HelloController implements Initializable, AceListener, JackListener
         thisPlayerTurnLabel.setText("Your turn");
         thisPlayerTurnLabel.setVisible(true);
     }
-    
+
     public int returnPlayerIndex(String name, ArrayList<String> names){
         int thisPlayerIndex;
         for(thisPlayerIndex = 0; thisPlayerIndex <  names.size(); thisPlayerIndex++){
@@ -229,7 +232,7 @@ public class HelloController implements Initializable, AceListener, JackListener
         });
 
     }
-    
+
     public void initAvatarsHBox(ServerMessage msgFromServer, String name){
         thisPlayerNick.setText(name);
         thisPlayerNick.setVisible(true);
@@ -297,7 +300,7 @@ public class HelloController implements Initializable, AceListener, JackListener
                 timerLabel.setStyle(("-fx-text-fill: black"));
 
                 TimerTask task = new TimerTask() {
-                    int timeLeft = 120000;
+                    int timeLeft = timeOfRound;
 
 
                     @Override
