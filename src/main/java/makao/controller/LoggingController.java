@@ -48,6 +48,21 @@ public class LoggingController {
 
     public void changeScene(String sceneName) throws IOException {
         Stage stage = (Stage) loggingPane.getScene().getWindow();
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>()
+        {
+            public void handle(WindowEvent e){
+                System.out.print("logging");
+                ClientMessage clientMessage = new ClientMessage(client.getName(),"DISCONNECTED");
+                client.sendMessage(clientMessage);
+                client.closeEverything(client.getSocket(),client.getIn(),client.getOut());
+                try {
+                    Platform.exit();
+                }
+                catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
         stage.close();
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource(sceneName));
         Scene scene = new Scene(fxmlLoader.load());
@@ -59,19 +74,6 @@ public class LoggingController {
         stage.show();
     }
     public void tryToLogIn() throws IOException {
-        Stage stage = (Stage) loggingPane.getScene().getWindow();
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>()
-        {
-            public void handle(WindowEvent e){
-                client.setGameClosed(true);
-                try {
-                    Platform.exit();
-                }
-                catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-            }
-        });
         String nick = nickTextField.getText();
         String password = passwordField.getText();
         if(nick.length() <= 3|| password.length() <= 3){

@@ -1,6 +1,7 @@
 package makao.controller;
 
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -11,6 +12,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import makao.server.Client;
 import makao.server.ClientMessage;
 import makao.view.Main;
@@ -81,6 +83,21 @@ public class ChoosingRoomController implements Initializable {
             public void run() {
                 try {
                     Stage stage = (Stage) choosingRoomPane.getScene().getWindow();
+                    stage.setOnCloseRequest(new EventHandler<WindowEvent>()
+                    {
+                        public void handle(WindowEvent e){
+                            System.out.print("choosing");
+                            ClientMessage clientMessage = new ClientMessage(client.getName(),"DISCONNECTED");
+                            client.sendMessage(clientMessage);
+                            client.closeEverything(client.getSocket(),client.getIn(),client.getOut());
+                            try {
+                                Platform.exit();
+                            }
+                            catch (Exception e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                    });
                     stage.close();
                     FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("waiting_scene.fxml"));
                     Scene scene = new Scene(fxmlLoader.load());

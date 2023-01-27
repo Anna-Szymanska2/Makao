@@ -7,12 +7,14 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class ServerPlayer implements Runnable{
     private Socket socket;
     private ObjectOutputStream out;
     private ObjectInputStream in;
+    private static ArrayList<ServerPlayer> users = new ArrayList<>();
     private Server server;
     private ServerGame serverGame;
     private boolean gameIsOn = false;
@@ -50,6 +52,8 @@ public class ServerPlayer implements Runnable{
             this.clientName = clientMessage.getPlayerName();
             this.namesAndStoredDetails = server.getNamesAndPasswords();
             this.clientAvatar = clientMessage.getPath();
+            users.add(this);
+            listenForMessage();
         }catch  (IOException | ClassNotFoundException e) {
             closeEverything(socket, in, out);
         }
@@ -161,22 +165,6 @@ public class ServerPlayer implements Runnable{
             turnIsOn = false;
         }
     }
-
-    public void getClientMessage(boolean gameIsOn){
-        try {
-            while (!receivedMessage) {
-                ClientMessage clientMessage;
-                if ((clientMessage = (ClientMessage) in.readObject()) != null) {
-                    messageFromClient = clientMessage;
-                    receivedMessage = true;
-                    if(gameIsOn)
-                        serverGame.setStateOfRound(clientMessage.getStateOfRound());
-                }
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
     public void drawCard(){
         hand.addCard(serverGame.drawCard());
     }
@@ -216,12 +204,14 @@ public class ServerPlayer implements Runnable{
                 ServerMessage serverMessage = new ServerMessage("REGISTER_OK");
                 sendServerMessage(serverMessage);
                 System.out.println("Registration went ok");
+                users.remove(this);
                 out.flush();
                 socket.close();
                 SaveAndRestoreData.save(namesAndStoredDetails);
             }else {
                 ServerMessage serverMessage = new ServerMessage("REGISTER_WRONG");
                 sendServerMessage(serverMessage);
+                users.remove(this);
                 out.flush();
                 socket.close();
             }
@@ -233,6 +223,7 @@ public class ServerPlayer implements Runnable{
                 clientAvatar = namesAndStoredDetails.returnAvatar(username);
             }else {
                 ServerMessage serverMessage = new ServerMessage("LOGIN_WRONG");
+                users.remove(this);
                 sendServerMessage(serverMessage);
                 out.flush();
                 socket.close();
@@ -267,7 +258,9 @@ public class ServerPlayer implements Runnable{
 //    }
 //
     public void closeEverything(Socket socket, ObjectInputStream in, ObjectOutputStream out){
-        serverGame.removeServerPlayer(this);
+        if(serverGame!=null)
+            serverGame.removeServerPlayer(this);
+        users.remove(this);
         try{
             if(in != null){
                 in.close();
@@ -281,6 +274,58 @@ public class ServerPlayer implements Runnable{
         }catch (IOException e){
             e.printStackTrace();
         }
+    }
+    public void getClientMessage(boolean gameIsOn){
+        //try {
+            while (!receivedMessage) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+               /* ClientMessage clientMessage;
+                if ((clientMessage = (ClientMessage) in.readObject()) != null) {
+                    messageFromClient = clientMessage;
+                    receivedMessage = true;
+                    if(gameIsOn)
+                        serverGame.setStateOfRound(clientMessage.getStateOfRound());
+                }*/
+            }
+/*        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }*/
+    }
+    public void listenForMessage(){
+        new Thread(new Runnable(){
+            @Override
+            public void run(){
+                ClientMessage messageClient;
+
+                while (!socket.isClosed()){
+                    try {
+                        messageClient = (ClientMessage) in.readObject();
+                        //if (messageClient != null) {
+                            messageFromClient = messageClient;
+                            receivedMessage = true;
+                            if(gameIsOn)
+                                serverGame.setStateOfRound(messageClient.getStateOfRound());
+
+
+                        if(messageClient.getActionID().equals("DISCONNECTED")&&messageClient.getPlayerName().equals(clientName)){
+                            System.out.println("discon");
+                            if(gameIsOn){
+
+                            }
+                            closeEverything(socket,in,out);
+                        }
+                    }catch (IOException e){
+                        closeEverything(socket, in, out);
+                    } catch (ClassNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }).start();
     }
 
     public void setServerGame(ServerGame serverGame) {
