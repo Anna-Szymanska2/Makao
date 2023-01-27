@@ -25,6 +25,7 @@ public class Client implements Serializable{
     transient private LoggingController loggingController;
     transient private ChoosingRoomController choosingRoomController;
     transient private RoomController roomController;
+    transient private GameEndingController gameEndingController;
     private String name;
     private String path;
     private String password;
@@ -78,6 +79,10 @@ public class Client implements Serializable{
         return path;
     }
 
+    public void setGameEndingController(GameEndingController gameEndingController) {
+        this.gameEndingController = gameEndingController;
+    }
+
     public void setChoosingRoomController(ChoosingRoomController choosingRoomController) {
         this.choosingRoomController = choosingRoomController;
     }
@@ -129,6 +134,7 @@ public class Client implements Serializable{
                                 break;
                             case "END":
                                 //controller.endOfGame(messageFromServer);
+                                gameController.changeSceneToRanking(messageFromServer);
                                 //zakomentowane bo poki działa w petli jest dosyć mordercze
                                 if(!name.equals(messageFromServer.getWhoseTurn()))
                                     System.out.println(messageFromServer.getWhoseTurn() + " has won the game");

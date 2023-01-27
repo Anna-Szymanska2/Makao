@@ -12,15 +12,7 @@ public class Server {
     private int numberOfPlayers;
     private NamesAndStoredDetails namesAndStoredDetails;
     private ArrayList<ServerGame> games = new ArrayList<>();
-    public Server(int port, int numberOfPlayers) {
-        this.port = port;
-        this.numberOfPlayers = numberOfPlayers;
-        try {
-            serverSocket = new ServerSocket(port);
-        }catch(IOException e) {
-            e.printStackTrace();
-        }
-    }
+
     public Server(int port, int numberOfPlayers, NamesAndStoredDetails namesAndStoredDetails) {
         this.port = port;
         this.numberOfPlayers = numberOfPlayers;

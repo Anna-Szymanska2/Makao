@@ -3,10 +3,12 @@ package makao.server;
 
 import makao.model.game.Hand;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class ServerPlayer implements Runnable{
@@ -22,7 +24,9 @@ public class ServerPlayer implements Runnable{
     private String clientName;
     private String clientAvatar;
     private Hand hand = new Hand();
-    private NamesAndStoredDetails namesAndStoredDetails;
+    private  NamesAndStoredDetails namesAndStoredDetails;
+    private boolean isWinner;
+
 
 
     public ServerPlayer(Socket socket, ServerGame serverGame){
@@ -132,10 +136,7 @@ public class ServerPlayer implements Runnable{
     }
 
     private void playMakao() throws IOException {
-        if (!serverGame.isGameIsOn()) {
-            ServerMessage serverMessage = new ServerMessage("END", serverGame.getWinner(), serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound(), serverGame.getDeckOfCards());
-            sendServerMessage(serverMessage);
-        } else {
+        if (serverGame.isGameIsOn()) {
             if(turnIsOn) {
                 String whoseTurn = serverGame.getWhoseTurn();
                 ServerMessage serverMessage = new ServerMessage("DEFAULT", whoseTurn, serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound(), serverGame.getDeckOfCards());
@@ -152,8 +153,12 @@ public class ServerPlayer implements Runnable{
                     if(messageFromClient.getActionID().equals("WIN")){
                         serverGame.setStateOfRound(messageFromClient.getStateOfRound());
                         serverGame.setDeckOfCards(messageFromClient.getDeckOfCards());
+                        isWinner = true;
+                        gameIsOn = false;
                         serverGame.setGameIsOn(false);
                         serverGame.setWinner(messageFromClient.getPlayerName());
+                        serverGame.endGameForAllPlayers();
+
                     }
 
                 }
@@ -177,6 +182,13 @@ public class ServerPlayer implements Runnable{
             e.printStackTrace();
         }
     }
+
+    public void endGame(){
+        ArrayList<String> ranking = returnUpdatedRanking(serverGame.getWinner());
+        ServerMessage serverMessage = new ServerMessage("END", serverGame.getWinner(), serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound(), serverGame.getDeckOfCards());
+        serverMessage.setRanking(ranking);
+        sendServerMessage(serverMessage);
+    }
     public void drawCard(){
         hand.addCard(serverGame.drawCard());
     }
@@ -195,6 +207,8 @@ public class ServerPlayer implements Runnable{
         }*/
     }
 
+
+
     public boolean isTurnIsOn() {
         return turnIsOn;
     }
@@ -203,8 +217,18 @@ public class ServerPlayer implements Runnable{
         return clientAvatar;
     }
 
+    public boolean isWinner() {
+        return isWinner;
+    }
+
     public void setTurnIsOn(boolean turnIsOn) {
         this.turnIsOn = turnIsOn;
+    }
+
+    public ArrayList<String> returnUpdatedRanking(String name){
+        namesAndStoredDetails = SaveAndRestoreData.restore();
+        namesAndStoredDetails.addVictory(name);
+        return namesAndStoredDetails.sortVictories();
     }
 
     public void loginOrRegister() throws IOException {
@@ -226,7 +250,10 @@ public class ServerPlayer implements Runnable{
                 socket.close();
             }
         } else if (action.equals("LOGIN")) {
-            namesAndStoredDetails = SaveAndRestoreData.restore();
+            File file = new File("namesAndStoredDetails.ser");
+            if (file.exists()) {
+                namesAndStoredDetails = SaveAndRestoreData.restore();
+            }
             if(namesAndStoredDetails.checkLogin(username, password)){
                 ServerMessage serverMessage = new ServerMessage("LOGIN_OK");
                 sendServerMessage(serverMessage);

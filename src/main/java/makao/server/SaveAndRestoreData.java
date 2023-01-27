@@ -6,7 +6,7 @@ public class SaveAndRestoreData {
     public static void save(NamesAndStoredDetails namesAndStoredDetails){
         FileOutputStream fileOut;
         try {
-            fileOut = new FileOutputStream("namesAndPasswords.ser");
+            fileOut = new FileOutputStream("namesAndStoredDetails.ser");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(namesAndStoredDetails);
             out.close(); fileOut.close();
@@ -19,7 +19,7 @@ public class SaveAndRestoreData {
         NamesAndStoredDetails namesAndStoredDetails;
         FileInputStream fileIn;
         try {
-            fileIn = new FileInputStream("namesAndPasswords.ser");
+            fileIn = new FileInputStream("namesAndStoredDetails.ser");
             ObjectInputStream in = new ObjectInputStream(fileIn);
             namesAndStoredDetails = (NamesAndStoredDetails) in.readObject();
             in.close(); fileIn.close();

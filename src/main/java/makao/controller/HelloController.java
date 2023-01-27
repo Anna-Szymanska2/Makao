@@ -3,22 +3,28 @@ package makao.controller;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
+import javafx.stage.Stage;
 import makao.model.cards.*;
 import makao.model.game.*;
 import makao.server.Client;
 import makao.server.ClientMessage;
 import makao.server.ServerMessage;
+import makao.view.Main;
 
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.*;
@@ -100,6 +106,8 @@ public class HelloController implements Initializable, AceListener, JackListener
     transient private Label[] turnLabels;
     transient private ArrayList<String> playersNames = new ArrayList<>();
     transient private Label[] nickLabels;
+    @FXML
+    transient private AnchorPane gamePane;
 
 
 
@@ -524,7 +532,8 @@ public class HelloController implements Initializable, AceListener, JackListener
     }
 
     public void endOfGame(ServerMessage msgFromServer){
-        Platform.runLater(new Runnable() {
+
+        /*Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -536,8 +545,30 @@ public class HelloController implements Initializable, AceListener, JackListener
                     alert.setContentText(msgFromServer.getWhoseTurn() + " has won the game");
                 alert.showAndWait();
             }
-        });
+        });*/
+    }
 
+    public void changeSceneToRanking(ServerMessage msgFromServer) throws IOException {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Stage stage = (Stage) gamePane.getScene().getWindow();
+                stage.close();
+                FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("game_ending_scene.fxml"));
+                Scene scene = null;
+                try {
+                    scene = new Scene(fxmlLoader.load());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                stage.setScene(scene);
+                GameEndingController gameEndingController = fxmlLoader.<GameEndingController>getController();
+                gameEndingController.setClient(client);
+                client.setGameEndingController(gameEndingController);
+                gameEndingController.setWinnerLabel(msgFromServer.getWhoseTurn());
+                stage.show();
+            }
+        });
 
     }
     public void endOfThisPlayerRound(){

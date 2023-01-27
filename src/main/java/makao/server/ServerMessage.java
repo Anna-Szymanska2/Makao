@@ -19,6 +19,7 @@ public class ServerMessage implements Serializable {
     private int code;
     private ArrayList<String> playersNames;
     private ArrayList<String> playersAvatars;
+    private ArrayList<String> ranking;
    //private ArrayList<Card> cardsToDraw = new ArrayList<>();
 
     ServerMessage(String whoseTurn, Card cardOnTopOfTheStack, StateOfRound stateOfRound){
@@ -67,6 +68,14 @@ public class ServerMessage implements Serializable {
 
     public ArrayList<String> getPlayersAvatars() {
         return playersAvatars;
+    }
+
+    public ArrayList<String> getRanking() {
+        return ranking;
+    }
+
+    public void setRanking(ArrayList<String> ranking) {
+        this.ranking = ranking;
     }
 
     //    public void setCardsToDraw(ArrayList<Card> cardsToDraw) {

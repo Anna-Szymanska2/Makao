@@ -87,11 +87,11 @@ public class ServerGame implements Runnable{
             for (ServerPlayer serverPlayer : players) {
                 serverPlayer.setTurnIsOn(true);
             }
-            if (serverPlayers.get(index).hasPlayerWon()) {
+            if (serverPlayers.get(index).isWinner()) {
                 System.out.println("Game is finished");
-//            for(ServerPlayer serverPlayer : serverPlayers){
-//                serverPlayer.setGameIsOn(false);
-//            }
+            for(ServerPlayer serverPlayer : serverPlayers){
+                serverPlayer.setGameIsOn(false);
+            }
                 gameIsOn = false;
             }
 
@@ -181,6 +181,13 @@ public class ServerGame implements Runnable{
     }
     public boolean isGameIsOn() {
         return gameIsOn;
+    }
+
+    public void endGameForAllPlayers(){
+        for(ServerPlayer serverPlayer : serverPlayers){
+            serverPlayer.setGameIsOn(false);
+            serverPlayer.endGame();
+        }
     }
 
     public void setDeckOfCards(DeckOfCards deckOfCards) {
