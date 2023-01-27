@@ -105,4 +105,8 @@ public class ServerMessage implements Serializable {
     public ArrayList<Card> getCardsInHand() {
         return cardsInHand;
     }
+
+    public void setStateOfRound(StateOfRound stateOfRound) {
+        this.stateOfRound = stateOfRound;
+    }
 }

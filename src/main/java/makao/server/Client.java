@@ -30,6 +30,7 @@ public class Client implements Serializable{
     private String password;
     private boolean gameIsOn = false;
     private boolean turnIsOn = false;
+    private boolean gameClosed = false;
     Hand hand = new Hand();
     ArrayList<Card> chosenCards = new ArrayList<>();
     int roundsToStay = 0;
@@ -110,6 +111,11 @@ public class Client implements Serializable{
 
                 while (!socket.isClosed()){
                     try{
+                        if(gameClosed){
+                            System.out.println("test");
+                            closeEverything(socket, in, out);
+                            return;
+                        }
                         messageFromServer = (ServerMessage) in.readObject();
 
                         switch(messageFromServer.getActionID()){
@@ -370,7 +376,7 @@ public class Client implements Serializable{
         this.roomController = roomController;
     }
 
-    public static void main(String[] args) throws IOException {
+   /* public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter your username: ");
         String name = scanner.nextLine();
@@ -379,9 +385,13 @@ public class Client implements Serializable{
         ClientMessage clientMessage = new ClientMessage(client.name);
         client.sendMessage(clientMessage);
         client.listenForMessage();
-    }
+    }*/
 
     public void setGameController(HelloController gameController) {
         this.gameController = gameController;
+    }
+
+    public void setGameClosed(boolean gameClosed) {
+        this.gameClosed = gameClosed;
     }
 }

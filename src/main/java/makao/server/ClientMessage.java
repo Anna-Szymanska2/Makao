@@ -17,6 +17,7 @@ public class ClientMessage implements Serializable {
     private String path;
     private int code;
     private int numberOfPlayers;
+    private int timeOfRound;
 
     public ClientMessage(String playerName, StateOfRound stateOfRound, String actionID, DeckOfCards deckOfCards){
         this.playerName = playerName;
@@ -31,11 +32,12 @@ public class ClientMessage implements Serializable {
         this.code = code;
     }
 
-    public ClientMessage(String playerName, String actionID, String password, int numberOfPlayers) {
+    public ClientMessage(String playerName, String actionID, String password, int numberOfPlayers, int timeOfRound) {
         this.playerName = playerName;
         this.actionID = actionID;
         this.password = password;
         this.numberOfPlayers = numberOfPlayers;
+        this.timeOfRound = timeOfRound;
     }
     public ClientMessage(String playerName, String actionID, String password, String path) {
         this.playerName = playerName;
@@ -100,6 +102,10 @@ public class ClientMessage implements Serializable {
 
     public int getNumberOfPlayers() {
         return numberOfPlayers;
+    }
+
+    public int getTimeOfRound() {
+        return timeOfRound;
     }
 
     public int getCode() {

@@ -1,6 +1,7 @@
 package makao.controller;
 
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -10,6 +11,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import makao.server.Client;
 import makao.server.ClientMessage;
 import makao.view.Main;
@@ -57,6 +59,19 @@ public class LoggingController {
         stage.show();
     }
     public void tryToLogIn() throws IOException {
+        Stage stage = (Stage) loggingPane.getScene().getWindow();
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>()
+        {
+            public void handle(WindowEvent e){
+                client.setGameClosed(true);
+                try {
+                    Platform.exit();
+                }
+                catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
         String nick = nickTextField.getText();
         String password = passwordField.getText();
         if(nick.length() <= 3|| password.length() <= 3){

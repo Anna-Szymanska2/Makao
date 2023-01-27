@@ -68,7 +68,7 @@ public class ServerPlayer implements Runnable{
                 getClientMessage(false);
                 if(messageFromClient.getActionID().equals("START_ROOM")){
                     int code = gameCodeGenerator();
-                    ServerGame serverGame = new ServerGame(code,messageFromClient.getNumberOfPlayers());
+                    ServerGame serverGame = new ServerGame(code,messageFromClient.getNumberOfPlayers(), messageFromClient.getTimeOfRound());
                     Thread gameThread = new Thread(serverGame);
                     serverGame.addServerPlayer(this);
                     setServerGame(serverGame);
@@ -86,12 +86,11 @@ public class ServerPlayer implements Runnable{
                                 setServerGame(serverGame);
                                 ServerMessage serverMessage2 = new ServerMessage("ROOM_JOINED", code);
                                 sendServerMessage(serverMessage2);
-                                gameExists = true;
                             }else{
                                 ServerMessage serverMessage2 = new ServerMessage("GAME_ALREADY_STARTED");
                                 sendServerMessage(serverMessage2);
-                                gameExists = true;
                             }
+                            gameExists = true;
                         }
                     }
                     if(!gameExists){
@@ -109,6 +108,7 @@ public class ServerPlayer implements Runnable{
                             DeckOfCards deckOfCards = new DeckOfCards(serverGame.getDeckOfCards());*/
                             ServerMessage serverMessage2 = new ServerMessage("INIT", serverGame.getCardOnTopOfTheStack(), serverGame.getPlayersNames(),serverGame.getPlayersAvatars());
                             System.out.println("Server przesła init");
+                            serverMessage2.setStateOfRound(serverGame.getStateOfRound());
                             serverMessage2.setNewHand(getHand());
                             sendServerMessage(serverMessage2);
                             isTheFirstTime = false;

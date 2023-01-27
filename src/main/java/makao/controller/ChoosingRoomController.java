@@ -34,6 +34,7 @@ public class ChoosingRoomController implements Initializable {
     private ChoiceBox<Integer>  timeOfRoundChoiceBox;
 
     private Integer[] numberOfPlayers = {2,3,4};
+    private Integer[] timeOfRound = {30, 45, 60, 90};
     private Client client;
 
 
@@ -68,7 +69,7 @@ public class ChoosingRoomController implements Initializable {
     }
     public void createNewRoom(){
         ClientMessage clientMessage = new ClientMessage(client.getName(),"START_ROOM",client.getPassword(),
-                numberOfPlayersChoiceBox.getValue());
+                numberOfPlayersChoiceBox.getValue(),timeOfRoundChoiceBox.getValue());
         //client.listenForMessage();
         client.sendMessage(clientMessage);
 
@@ -113,5 +114,7 @@ public class ChoosingRoomController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         numberOfPlayersChoiceBox.getItems().addAll(numberOfPlayers);
         numberOfPlayersChoiceBox.setValue(2);
+        timeOfRoundChoiceBox.getItems().addAll(timeOfRound);
+        timeOfRoundChoiceBox.setValue(60);
     }
 }

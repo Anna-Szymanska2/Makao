@@ -18,6 +18,7 @@ public class StateOfRound implements Serializable {
     private int roundsToStay;
     private int players;
     private int roundsOfRequest;
+    private int timeOfRound;
     private CardValue requestedValue = null;
     private CardColour chosenColor = null;
 
@@ -118,5 +119,11 @@ public class StateOfRound implements Serializable {
         this.cardsToDraw = cardsToDraw;
     }
 
+    public void setTimeOfRound(int timeOfRound) {
+        this.timeOfRound = timeOfRound;
+    }
 
+    public int getTimeOfRound() {
+        return timeOfRound;
+    }
 }

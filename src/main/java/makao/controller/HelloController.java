@@ -93,6 +93,7 @@ public class HelloController implements Initializable, AceListener, JackListener
     private int lastSelectedCardIndex;
     transient private ImageView chosenCardView;
     private boolean isThisPlayerRound;
+    private int timeOfRound;
     private int[] playerCardsIndexes = new int[2];
     private boolean wasSelectedCardFromBottomRow = true;
     transient private Client client;
@@ -159,6 +160,7 @@ public class HelloController implements Initializable, AceListener, JackListener
     public void init(ServerMessage msgFromServer, String name){
         player = new Player(name);
         player.setHand(msgFromServer.getNewHand());
+        timeOfRound = msgFromServer.getStateOfRound().getTimeOfRound();
        // player.setListener(this);
         //stateOfRound = msgFromServer.getStateOfRound();
        // deckOfCards = msgFromServer.getDeckOfCards();
@@ -227,7 +229,7 @@ public class HelloController implements Initializable, AceListener, JackListener
                 timerLabel.setStyle(("-fx-text-fill: black"));
 
                 TimerTask task = new TimerTask() {
-                    int timeLeft = 120000;
+                    int timeLeft = timeOfRound;
 
 
                     @Override
