@@ -33,6 +33,9 @@ public class ServerGame implements Runnable{
     public void run() {
         gameExists = true;
         while (gameExists) {
+            if(serverPlayers.size() == 0){
+                return;
+            }
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
@@ -56,6 +59,9 @@ public class ServerGame implements Runnable{
 //        whoseTurn = serverPlayers.get(0).getClientName();
 //        serverPlayers.get(0).setTurnIsOn(true);
                 do {
+                    if(serverPlayers.size() == 0){
+                        break;
+                    }
                     playMakao(players);
                 } while (gameIsOn);
                 System.out.println("Game has ended");
@@ -98,6 +104,16 @@ public class ServerGame implements Runnable{
             nextTurn = false;
         }
 
+    }
+
+    public void closeGame(){
+        for(ServerPlayer serverPlayer : serverPlayers){
+            ServerMessage serverMessage2 = new ServerMessage("GAME_EXITED");
+            serverPlayer.sendServerMessage(serverMessage2);
+            serverPlayer.setServerGame(null);
+            serverPlayer.setGameIsOn(false);
+           }
+        gameIsOn = false;
     }
 
     public ArrayList<String> getPlayersNames() {

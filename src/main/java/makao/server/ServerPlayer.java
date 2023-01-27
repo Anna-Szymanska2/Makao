@@ -136,33 +136,35 @@ public class ServerPlayer implements Runnable{
     }
 
     private void playMakao() throws IOException {
-        if (!serverGame.isGameIsOn()) {
-            ServerMessage serverMessage = new ServerMessage("END", serverGame.getWinner(), serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound(), serverGame.getDeckOfCards());
-            sendServerMessage(serverMessage);
-        } else {
-            if(turnIsOn) {
-                String whoseTurn = serverGame.getWhoseTurn();
-                ServerMessage serverMessage = new ServerMessage("DEFAULT", whoseTurn, serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound(), serverGame.getDeckOfCards());
-                serverMessage.setNewHand(getHand());
+        if(serverGame!=null) {
+            if (!serverGame.isGameIsOn()) {
+                ServerMessage serverMessage = new ServerMessage("END", serverGame.getWinner(), serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound(), serverGame.getDeckOfCards());
                 sendServerMessage(serverMessage);
-                if (whoseTurn.equals(this.clientName)) {
-                    receivedMessage = false;
-                    getClientMessage(true);
-                    if(messageFromClient.getActionID().equals("END")){
-                        serverGame.setStateOfRound(messageFromClient.getStateOfRound());
-                        serverGame.setDeckOfCards(messageFromClient.getDeckOfCards());
+            } else {
+                if (turnIsOn) {
+                    String whoseTurn = serverGame.getWhoseTurn();
+                    ServerMessage serverMessage = new ServerMessage("DEFAULT", whoseTurn, serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound(), serverGame.getDeckOfCards());
+                    serverMessage.setNewHand(getHand());
+                    sendServerMessage(serverMessage);
+                    if (whoseTurn.equals(this.clientName)) {
+                        receivedMessage = false;
+                        getClientMessage(true);
+                        if (messageFromClient.getActionID().equals("END")) {
+                            serverGame.setStateOfRound(messageFromClient.getStateOfRound());
+                            serverGame.setDeckOfCards(messageFromClient.getDeckOfCards());
+
+                        }
+                        if (messageFromClient.getActionID().equals("WIN")) {
+                            serverGame.setStateOfRound(messageFromClient.getStateOfRound());
+                            serverGame.setDeckOfCards(messageFromClient.getDeckOfCards());
+                            serverGame.setGameIsOn(false);
+                            serverGame.setWinner(messageFromClient.getPlayerName());
+                        }
 
                     }
-                    if(messageFromClient.getActionID().equals("WIN")){
-                        serverGame.setStateOfRound(messageFromClient.getStateOfRound());
-                        serverGame.setDeckOfCards(messageFromClient.getDeckOfCards());
-                        serverGame.setGameIsOn(false);
-                        serverGame.setWinner(messageFromClient.getPlayerName());
-                    }
-
                 }
+                turnIsOn = false;
             }
-            turnIsOn = false;
         }
     }
     public void drawCard(){
@@ -258,8 +260,6 @@ public class ServerPlayer implements Runnable{
 //    }
 //
     public void closeEverything(Socket socket, ObjectInputStream in, ObjectOutputStream out){
-        if(serverGame!=null)
-            serverGame.removeServerPlayer(this);
         users.remove(this);
         try{
             if(in != null){
@@ -314,8 +314,11 @@ public class ServerPlayer implements Runnable{
                         if(messageClient.getActionID().equals("DISCONNECTED")&&messageClient.getPlayerName().equals(clientName)){
                             System.out.println("discon");
                             if(gameIsOn){
-
+                                serverGame.closeGame();
+                                System.out.println("left");
                             }
+                            if(serverGame!=null)
+                                serverGame.removeServerPlayer(ServerPlayer.this);
                             closeEverything(socket,in,out);
                         }
                     }catch (IOException e){
