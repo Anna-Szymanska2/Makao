@@ -6,20 +6,20 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="466.0" prefWidth="336.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="makao.controller.GameEndingController">
+<AnchorPane fx:id="endingPane" prefHeight="466.0" prefWidth="336.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="makao.controller.GameEndingController">
    <children>
       <Label fx:id="winnerLabel" alignment="CENTER" layoutX="15.0" layoutY="14.0" prefHeight="98.0" prefWidth="310.0" style="-fx-font-family: consolas;" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
-      <ListView fx:id="rankingList" layoutX="14.0" layoutY="168.0" prefHeight="243.0" prefWidth="310.0" style="-fx-font-family: consolas; -fx-background-color: black;" />
+      <ListView fx:id="rankingList" layoutX="14.0" layoutY="168.0" prefHeight="243.0" prefWidth="310.0" style="-fx-font-family: consolas; -fx-background-color: black;" stylesheets="@../../../../../style.css" />
       <Label alignment="CENTER" layoutX="14.0" layoutY="112.0" prefHeight="56.0" prefWidth="310.0" style="-fx-font-family: consolas;" text="Current ranking" textFill="WHITE">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <Button fx:id="goBackButton" alignment="CENTER" layoutX="71.0" layoutY="424.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="197.0" style="-fx-font-family: consolas; -fx-background-color: #3f3f3f;" text="Back to join game room" textFill="WHITE">
+      <Button fx:id="goBackButton" alignment="CENTER" layoutX="71.0" layoutY="424.0" mnemonicParsing="false" onAction="#changeScene" prefHeight="27.0" prefWidth="197.0" style="-fx-font-family: consolas; -fx-background-color: #3f3f3f;" text="Back to join game room" textFill="WHITE">
          <font>
             <Font size="14.0" />
          </font>

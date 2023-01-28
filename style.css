@@ -1,0 +1,6 @@
+.list-cell{
+-fx-background-color: black;
+-fx-text-fill: white;
+-fx-font-family: Consolas;
+-fx-alignment: center;
+}

@@ -166,8 +166,7 @@ public class Client implements Serializable{
                                 choosingRoomController.wrongRoom();
                                 break;
                             case "GAME_EXITED":
-                                System.out.println("game exited");
-
+                                gameController.changeSceneToQuit();
                                 break;
                             case "DEFAULT":
                                 System.out.println("Card on top of the stack: " + messageFromServer.getCardOnTopOfTheStack().toString());
@@ -391,7 +390,10 @@ public class Client implements Serializable{
         this.roomController = roomController;
     }
 
-   /* public static void main(String[] args) throws IOException {
+    public void setGameQuitController(GameQuitController gameQuitController) {
+        this.gameQuitController = gameQuitController;
+    }
+    /* public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter your username: ");
         String name = scanner.nextLine();

@@ -52,5 +52,7 @@ public class GameQuitController {
         stage.show();
     }
 
-
+    public void setClient(Client client) {
+        this.client = client;
+    }
 }

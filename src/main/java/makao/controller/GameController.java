@@ -320,8 +320,9 @@ public class GameController implements Initializable, AceListener, JackListener,
                             int seconds = (timeLeft/1000) % 60;
                             String seconds_string = String.format("%02d", seconds);
                             String minutes_string = String.format("%02d", minutes);
-                            if(timeLeft == 10000){
-                                timerLabel.setStyle(("-fx-text-fill: red"));
+                            timerLabel.setStyle("-fx-font-family: Consolas");
+                            if(timeLeft <= 10000){
+                                timerLabel.setStyle(("-fx-text-fill: red; -fx-font-family: Consolas"));
 
                             }
                             timerLabel.setText(minutes_string+":"+seconds_string);
@@ -567,6 +568,29 @@ public class GameController implements Initializable, AceListener, JackListener,
                 client.setGameEndingController(gameEndingController);
                 gameEndingController.setWinnerLabel(msgFromServer.getWhoseTurn());
                 gameEndingController.addRanking(msgFromServer.getRanking());
+                stage.show();
+            }
+        });
+
+    }
+
+    public void changeSceneToQuit() throws IOException {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Stage stage = (Stage) gamePane.getScene().getWindow();
+                stage.close();
+                FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("game_quit_scene.fxml"));
+                Scene scene = null;
+                try {
+                    scene = new Scene(fxmlLoader.load());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                stage.setScene(scene);
+                GameQuitController gameQuitController = fxmlLoader.<GameQuitController>getController();
+                gameQuitController.setClient(client);
+                client.setGameQuitController(gameQuitController);
                 stage.show();
             }
         });
