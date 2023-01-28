@@ -25,6 +25,7 @@ public class Client implements Serializable{
     transient private LoggingController loggingController;
     transient private ChoosingRoomController choosingRoomController;
     transient private RoomController roomController;
+    transient private GameQuitController gameQuitController;
     private String name;
     private String path;
     private String password;
@@ -152,6 +153,7 @@ public class Client implements Serializable{
                                 break;
                             case "GAME_EXITED":
                                 System.out.println("game exited");
+
                                 break;
                             case "DEFAULT":
                                 System.out.println("Card on top of the stack: " + messageFromServer.getCardOnTopOfTheStack().toString());
