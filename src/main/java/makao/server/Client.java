@@ -158,6 +158,7 @@ public class Client implements Serializable{
                             case "ROOM_STARTED":
                             case "ROOM_JOINED":
                                 choosingRoomController.changeToWaitingScene(messageFromServer.getCode());
+                                Thread.sleep(100);
                                 break;
                             /*case "GAME_ALREADY_STATED":
                                 break;*/
@@ -185,6 +186,8 @@ public class Client implements Serializable{
                     }catch (IOException e){
                         closeEverything(socket, in, out);
                     } catch (ClassNotFoundException e) {
+                        throw new RuntimeException(e);
+                    } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
                 }

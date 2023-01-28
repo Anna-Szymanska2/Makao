@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="610.0" prefWidth="838.0" style="-fx-background-color: #50C878;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="makao.controller.HelloController">
+<AnchorPane fx:id="gamePane" prefHeight="610.0" prefWidth="838.0" style="-fx-background-color: #50C878;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="makao.controller.HelloController">
    <children>
       <HBox fx:id="upRowCardsHBox" layoutX="213.0" layoutY="420.0" prefHeight="100.0" prefWidth="200.0">
          <children>
@@ -324,34 +324,18 @@
          </font></Label>
       <VBox fx:id="avatarsVBox" layoutX="14.0" layoutY="113.0" prefHeight="202.0" prefWidth="25.0" style="-fx-font-family: consolas;">
          <children>
-            <ImageView fx:id="playerView3" fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../controller/avatars/1.jpg" />
-               </image>
-            </ImageView>
-            <Label fx:id="playerNick3" text="nick1" />
-            <Label fx:id="playerTurnLabel3" text="is playing" />
-            <ImageView fx:id="playerView2" fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../controller/avatars/1.jpg" />
-               </image>
-            </ImageView>
-            <Label fx:id="playerNick2" text="nick2" />
-            <Label fx:id="playerTurnLabel2" text="is playing" />
-            <ImageView fx:id="playerView1" fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../controller/avatars/1.jpg" />
-               </image>
-            </ImageView>
-            <Label fx:id="playerNick1" text="nick3" />
-            <Label fx:id="playerTurnLabel1" text="is playing" />
-            <ImageView fx:id="thisPlayerView" fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../controller/avatars/1.jpg" />
-               </image>
-            </ImageView>
-            <Label fx:id="thisPlayerNick" text="playerNick" />
-            <Label fx:id="thisPlayerTurnLabel" layoutX="10.0" layoutY="85.0" text="your turn" />
+            <ImageView fx:id="playerView3" fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
+            <Label fx:id="playerNick3" />
+            <Label fx:id="playerTurnLabel3" />
+            <ImageView fx:id="playerView2" fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
+            <Label fx:id="playerNick2" />
+            <Label fx:id="playerTurnLabel2" />
+            <ImageView fx:id="playerView1" fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
+            <Label fx:id="playerNick1" />
+            <Label fx:id="playerTurnLabel1" />
+            <ImageView fx:id="thisPlayerView" fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
+            <Label fx:id="thisPlayerNick" />
+            <Label fx:id="thisPlayerTurnLabel" layoutX="10.0" layoutY="85.0" />
          </children>
       </VBox>
    </children>

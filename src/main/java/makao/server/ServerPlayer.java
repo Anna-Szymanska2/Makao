@@ -146,30 +146,31 @@ public class ServerPlayer implements Runnable{
     }
 
     private void playMakao() throws IOException {
-        if (serverGame.isGameIsOn()) {
-            if(turnIsOn) {
-                String whoseTurn = serverGame.getWhoseTurn();
-                ServerMessage serverMessage = new ServerMessage("DEFAULT", whoseTurn, serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound(), serverGame.getDeckOfCards());
-                serverMessage.setNewHand(getHand());
-                sendServerMessage(serverMessage);
-                if (whoseTurn.equals(this.clientName)) {
-                    receivedMessage = false;
-                    getClientMessage(true);
-                    if(messageFromClient.getActionID().equals("END")){
-                        serverGame.setStateOfRound(messageFromClient.getStateOfRound());
-                        serverGame.setDeckOfCards(messageFromClient.getDeckOfCards());
+        if (serverGame != null) {
+            if (serverGame.isGameIsOn()) {
+                if (turnIsOn) {
+                    String whoseTurn = serverGame.getWhoseTurn();
+                    ServerMessage serverMessage = new ServerMessage("DEFAULT", whoseTurn, serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound(), serverGame.getDeckOfCards());
+                    serverMessage.setNewHand(getHand());
+                    sendServerMessage(serverMessage);
+                    if (whoseTurn.equals(this.clientName)) {
+                        receivedMessage = false;
+                        getClientMessage(true);
+                        if (messageFromClient.getActionID().equals("END")) {
+                            serverGame.setStateOfRound(messageFromClient.getStateOfRound());
+                            serverGame.setDeckOfCards(messageFromClient.getDeckOfCards());
 
-                    }
-                    if(messageFromClient.getActionID().equals("WIN")){
-                        serverGame.setStateOfRound(messageFromClient.getStateOfRound());
-                        serverGame.setDeckOfCards(messageFromClient.getDeckOfCards());
-                        isWinner = true;
-                        gameIsOn = false;
-                        serverGame.setGameIsOn(false);
-                        serverGame.setWinner(messageFromClient.getPlayerName());
-                        serverGame.endGameForAllPlayers();
+                        }
+                        if (messageFromClient.getActionID().equals("WIN")) {
+                            serverGame.setStateOfRound(messageFromClient.getStateOfRound());
+                            serverGame.setDeckOfCards(messageFromClient.getDeckOfCards());
+                            isWinner = true;
+                            gameIsOn = false;
+                            serverGame.setGameIsOn(false);
+                            serverGame.setWinner(messageFromClient.getPlayerName());
+                            serverGame.endGameForAllPlayers();
 
-                    }
+                        }
 
                     }
                 }
@@ -177,6 +178,7 @@ public class ServerPlayer implements Runnable{
             }
         }
     }
+
 
     public void endGame(){
         ArrayList<String> ranking = returnUpdatedRanking(serverGame.getWinner());
@@ -245,7 +247,10 @@ public class ServerPlayer implements Runnable{
                 socket.close();
             }
         } else if (action.equals("LOGIN")) {
-            namesAndStoredDetails = SaveAndRestoreData.restore();
+            File file = new File("namesAndStoredDetails.ser");
+            if (file.exists()) {
+                namesAndStoredDetails = SaveAndRestoreData.restore();
+            }
             boolean alreadyLogged = false;
             int i = 0;
             for(ServerPlayer serverPlayer:users){

@@ -65,7 +65,7 @@ public class Server {
 
     public static void main(String[] args) throws IOException{
         NamesAndStoredDetails namesAndStoredDetails = new NamesAndStoredDetails();
-        File file = new File("namesAndPasswords.ser");
+        File file = new File("namesAndStoredDetails.ser");
         if (file.exists()) {
             namesAndStoredDetails = SaveAndRestoreData.restore();
         }
