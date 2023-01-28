@@ -8,10 +8,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="gamePane" prefHeight="610.0" prefWidth="838.0" style="-fx-background-color: #50C878;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="makao.controller.GameController">
    <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" height="610.0" stroke="BLACK" strokeType="INSIDE" width="182.0" />
       <HBox fx:id="upRowCardsHBox" layoutX="213.0" layoutY="420.0" prefHeight="100.0" prefWidth="200.0">
          <children>
             <ImageView fitHeight="150.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
@@ -306,36 +308,36 @@
       </HBox>
       <VBox layoutX="14.0" layoutY="19.0" prefHeight="106.0" prefWidth="148.0" style="-fx-font-family: consolas;">
          <children>
-            <Label fx:id="cardsToDrawLabel" prefHeight="18.0" prefWidth="145.0" text="Cards to draw" />
-            <Label fx:id="chosenColorLabel" prefHeight="18.0" prefWidth="177.0" text="Chosen color" />
-            <Label fx:id="requestedValueLabel" prefHeight="18.0" prefWidth="195.0" text="Requested value " />
-            <Label fx:id="roundsToWaitLabel" prefHeight="18.0" prefWidth="173.0" text="Rounds to wait" />
+            <Label fx:id="cardsToDrawLabel" prefHeight="18.0" prefWidth="145.0" text="Cards to draw" textFill="WHITE" />
+            <Label fx:id="chosenColorLabel" prefHeight="18.0" prefWidth="177.0" text="Chosen color" textFill="WHITE" />
+            <Label fx:id="requestedValueLabel" prefHeight="18.0" prefWidth="195.0" text="Requested value " textFill="WHITE" />
+            <Label fx:id="roundsToWaitLabel" prefHeight="18.0" prefWidth="173.0" text="Rounds to wait" textFill="WHITE" />
          </children>
       </VBox>
       <Button fx:id="waitRoundsButton" layoutX="712.0" layoutY="362.0" mnemonicParsing="false" onAction="#waitRounds" style="-fx-background-color: #3f3f3f; -fx-font-family: consolas;" text="Wait rounds" textFill="WHITE" />
-      <Label fx:id="timerLabel" layoutX="14.0" layoutY="538.0" prefHeight="50.0" prefWidth="75.0" style="-fx-font-family: consolas;" text="00:00">
+      <Label fx:id="timerLabel" layoutX="53.0" layoutY="538.0" prefHeight="50.0" prefWidth="75.0" style="-fx-font-family: consolas;" text="00:00" textFill="WHITE">
          <font>
             <Font size="25.0" />
          </font>
       </Label>
-      <Label fx:id="nickLabel" layoutX="386.0" layoutY="58.0" style="-fx-font-family: consolas;" text="Label">
+      <Label fx:id="nickLabel" layoutX="454.0" layoutY="58.0" style="-fx-font-family: consolas;" text="Label">
          <font>
             <Font size="24.0" />
          </font></Label>
-      <VBox fx:id="avatarsVBox" layoutX="14.0" layoutY="113.0" prefHeight="202.0" prefWidth="25.0" style="-fx-font-family: consolas;">
+      <VBox fx:id="avatarsVBox" layoutX="50.0" layoutY="122.0" prefHeight="202.0" prefWidth="25.0" style="-fx-font-family: consolas;">
          <children>
             <ImageView fx:id="playerView3" fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
-            <Label fx:id="playerNick3" />
-            <Label fx:id="playerTurnLabel3" />
+            <Label fx:id="playerNick3" textFill="WHITE" />
+            <Label fx:id="playerTurnLabel3" textFill="WHITE" />
             <ImageView fx:id="playerView2" fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
-            <Label fx:id="playerNick2" />
-            <Label fx:id="playerTurnLabel2" />
+            <Label fx:id="playerNick2" textFill="WHITE" />
+            <Label fx:id="playerTurnLabel2" textFill="WHITE" />
             <ImageView fx:id="playerView1" fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
-            <Label fx:id="playerNick1" />
-            <Label fx:id="playerTurnLabel1" />
+            <Label fx:id="playerNick1" textFill="WHITE" />
+            <Label fx:id="playerTurnLabel1" textFill="WHITE" />
             <ImageView fx:id="thisPlayerView" fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
-            <Label fx:id="thisPlayerNick" />
-            <Label fx:id="thisPlayerTurnLabel" layoutX="10.0" layoutY="85.0" />
+            <Label fx:id="thisPlayerNick" textFill="WHITE" />
+            <Label fx:id="thisPlayerTurnLabel" layoutX="10.0" layoutY="85.0" textFill="WHITE" />
          </children>
       </VBox>
    </children>
