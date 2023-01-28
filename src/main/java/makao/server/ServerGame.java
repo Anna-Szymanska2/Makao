@@ -40,6 +40,7 @@ public class ServerGame implements Runnable{
             }
             //System.out.println(serverPlayers.size());
             if (serverPlayers.size() == stateOfRound.getPlayers()) {
+                code = 1;
                 initializeGame();
                 gameIsOn = true;
                 System.out.println("Gra sie zaczela");

@@ -158,9 +158,10 @@ public class Client implements Serializable{
                             case "ROOM_JOINED":
                                 choosingRoomController.changeToWaitingScene(messageFromServer.getCode());
                                 break;
-                            case "GAME_ALREADY_STATED":
-                                break;
-                            case "GAME_NOT_EXIST":
+                            /*case "GAME_ALREADY_STATED":
+                                break;*/
+                            case "GAME_NOT_EXISTS":
+                                choosingRoomController.wrongRoom();
                                 break;
                             case "DEFAULT":
                                 System.out.println("Card on top of the stack: " + messageFromServer.getCardOnTopOfTheStack().toString());

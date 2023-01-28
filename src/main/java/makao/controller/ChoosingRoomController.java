@@ -75,6 +75,18 @@ public class ChoosingRoomController implements Initializable {
 
     }
 
+    public void wrongRoom(){
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+             showMessage("There is not available room with such code", Alert.AlertType.ERROR);
+             codeTextField.clear();
+            }
+        });
+
+
+    }
+
     public void changeToWaitingScene(int code){
         Platform.runLater(new Runnable() {
             @Override

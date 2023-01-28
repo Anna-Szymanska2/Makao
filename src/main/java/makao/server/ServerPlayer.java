@@ -67,7 +67,7 @@ public class ServerPlayer implements Runnable{
         try {
             sendServerMessage(serverMessage);
             loginOrRegister();
-            if(!socket.isClosed()){
+            while(!socket.isClosed()){
                 receivedMessage = false;
                 getClientMessage(false);
                 if(messageFromClient.getActionID().equals("START_ROOM")){
@@ -80,26 +80,33 @@ public class ServerPlayer implements Runnable{
                     gameThread.start();
                     ServerMessage serverMessage2 = new ServerMessage("ROOM_STARTED", code);
                     sendServerMessage(serverMessage2);
+                    break;
                 }else if(messageFromClient.getActionID().equals("JOIN_ROOM")) {
                     int code = messageFromClient.getCode();
                     boolean gameExists = false;
                     for(ServerGame serverGame: server.getGames()){
-                        if(serverGame.getCode() == code){
-                            if(!serverGame.isGameIsOn()) {
-                                serverGame.addServerPlayer(this);
-                                setServerGame(serverGame);
-                                ServerMessage serverMessage2 = new ServerMessage("ROOM_JOINED", code);
-                                sendServerMessage(serverMessage2);
-                            }else{
-                                ServerMessage serverMessage2 = new ServerMessage("GAME_ALREADY_STARTED");
-                                sendServerMessage(serverMessage2);
-                            }
+                        if(serverGame.getCode() == code) {
+                            serverGame.addServerPlayer(this);
+                            setServerGame(serverGame);
+                            ServerMessage serverMessage2 = new ServerMessage("ROOM_JOINED", code);
+                            sendServerMessage(serverMessage2);
                             gameExists = true;
                         }
+                           /* if(!serverGame.isGameIsOn()) {
+
+                            }*/
+                            /*else{
+                                ServerMessage serverMessage2 = new ServerMessage("GAME_ALREADY_STARTED");
+                                sendServerMessage(serverMessage2);
+                            }*/
+
+
                     }
                     if(!gameExists){
                         ServerMessage serverMessage2 = new ServerMessage("GAME_NOT_EXISTS");
                         sendServerMessage(serverMessage2);
+                    }else{
+                        break;
                     }
                 }
             }
