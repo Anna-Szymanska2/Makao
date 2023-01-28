@@ -58,7 +58,7 @@ public class RoomController {
                     FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("game_scene.fxml"));
                     Scene scene = new Scene(fxmlLoader.load());
                     stage.setScene(scene);
-                    HelloController gameController = fxmlLoader.<HelloController>getController();
+                    GameController gameController = fxmlLoader.<GameController>getController();
                     client.setGameController(gameController);
                     gameController.setClient(client);
                     gameController.init(msgFromServer, name);

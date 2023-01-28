@@ -180,8 +180,7 @@ public class ServerPlayer implements Runnable{
     }
 
 
-    public void endGame(){
-        ArrayList<String> ranking = returnUpdatedRanking(serverGame.getWinner());
+    public void endGame(ArrayList<String> ranking){
         ServerMessage serverMessage = new ServerMessage("END", serverGame.getWinner(), serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound(), serverGame.getDeckOfCards());
         serverMessage.setRanking(ranking);
         sendServerMessage(serverMessage);
@@ -220,13 +219,7 @@ public class ServerPlayer implements Runnable{
         this.turnIsOn = turnIsOn;
     }
 
-    public ArrayList<String> returnUpdatedRanking(String name){
-        namesAndStoredDetails = SaveAndRestoreData.restore();
-        namesAndStoredDetails.addVictory(name);
-        return namesAndStoredDetails.sortVictories();
-    }
-
-    public void loginOrRegister() throws IOException {
+    public synchronized void loginOrRegister() throws IOException {
         String action = messageFromClient.getActionID();
         String username = messageFromClient.getPlayerName();
         String password = messageFromClient.getPassword();

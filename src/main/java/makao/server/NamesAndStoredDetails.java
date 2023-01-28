@@ -28,7 +28,7 @@ public class NamesAndStoredDetails implements Serializable {
     }
 
     public void addVictory(String name){
-        namesAndStoredDetails.get(name).numberWonGames=+1;
+        namesAndStoredDetails.get(name).numberWonGames+=1;
     }
     public ArrayList<String> sortVictories(){
         Set<Entry<String, PlayerStoredDetails>> entries = namesAndStoredDetails.entrySet();
@@ -36,7 +36,7 @@ public class NamesAndStoredDetails implements Serializable {
         {
             @Override public int compare(Entry<String, PlayerStoredDetails> e1, Entry<String, PlayerStoredDetails> e2) {
                 int v1 = e1.getValue().getNumberWonGames(); int v2 = e2.getValue().getNumberWonGames();
-                return v1 - v2;
+                return v2 - v1;
         }
         };
         List<Entry<String, PlayerStoredDetails>>  listOfEntries = new ArrayList<Entry<String, PlayerStoredDetails>> (entries);

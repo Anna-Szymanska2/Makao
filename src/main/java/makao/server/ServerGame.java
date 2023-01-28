@@ -201,10 +201,17 @@ public class ServerGame implements Runnable{
     }
 
     public void endGameForAllPlayers(){
+        ArrayList<String> ranking = returnUpdatedRanking(getWinner());
         for(ServerPlayer serverPlayer : serverPlayers){
             serverPlayer.setGameIsOn(false);
-            serverPlayer.endGame();
+            serverPlayer.endGame(ranking);
         }
+    }
+    public synchronized ArrayList<String> returnUpdatedRanking(String name){
+        NamesAndStoredDetails namesAndStoredDetails = SaveAndRestoreData.restore();
+        namesAndStoredDetails.addVictory(name);
+        SaveAndRestoreData.save(namesAndStoredDetails);
+        return namesAndStoredDetails.sortVictories();
     }
 
     public void setDeckOfCards(DeckOfCards deckOfCards) {

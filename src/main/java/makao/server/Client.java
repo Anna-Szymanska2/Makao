@@ -20,7 +20,7 @@ public class Client implements Serializable{
     transient private Socket socket;
     transient private ObjectOutputStream out;
     transient private ObjectInputStream in;
-    transient private HelloController gameController;
+    transient private GameController gameController;
     transient private RegisterController registerController;
     transient private LoggingController loggingController;
     transient private ChoosingRoomController choosingRoomController;
@@ -402,7 +402,7 @@ public class Client implements Serializable{
         client.listenForMessage();
     }*/
 
-    public void setGameController(HelloController gameController) {
+    public void setGameController(GameController gameController) {
         this.gameController = gameController;
     }
     public void setGameClosed(boolean gameClosed) {

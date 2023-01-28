@@ -29,7 +29,7 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.*;
 
-public class HelloController implements Initializable, AceListener, JackListener, Serializable {
+public class GameController implements Initializable, AceListener, JackListener, Serializable {
     @FXML
     private transient ImageView thisPlayerView;
     @FXML
@@ -127,7 +127,7 @@ public class HelloController implements Initializable, AceListener, JackListener
         player = maciej;*/
 
     //}
-    public HelloController(){
+    public GameController(){
         /*Player maciej = new Player("Maciej");
         Player agata = new Player("Agata");
         Player kuba = new Player("Kuba");
@@ -484,7 +484,7 @@ public class HelloController implements Initializable, AceListener, JackListener
 
 
     public void drawCard(){
-        HelloController controller = this;
+        GameController controller = this;
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -566,6 +566,7 @@ public class HelloController implements Initializable, AceListener, JackListener
                 gameEndingController.setClient(client);
                 client.setGameEndingController(gameEndingController);
                 gameEndingController.setWinnerLabel(msgFromServer.getWhoseTurn());
+                gameEndingController.addRanking(msgFromServer.getRanking());
                 stage.show();
             }
         });
@@ -731,7 +732,7 @@ public class HelloController implements Initializable, AceListener, JackListener
 
 
     public void playerWaitsInThisRound(int roundsToStay) {
-        HelloController controller = this;
+        GameController controller = this;
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
