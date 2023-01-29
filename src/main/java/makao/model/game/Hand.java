@@ -36,6 +36,10 @@ public class Hand implements Serializable {
         return cardsInHand;
     }
 
+    public void removeAllCards(){
+        cardsInHand.clear();
+    }
+
     public void displayCardsInHand(){
         for(Card card:cardsInHand)
             System.out.println((cardsInHand.indexOf(card)+1) + ". " + card.toString());

@@ -67,7 +67,6 @@ public class ServerPlayer implements Runnable{
     public void run(){
         ServerMessage serverMessage = new ServerMessage("WELCOME", null, null, null, getHand());
         //serverMessage.setNewHand(getHand());
-        boolean isTheFirstTime = true;
         try {
             sendServerMessage(serverMessage);
             loginOrRegister();
@@ -118,6 +117,7 @@ public class ServerPlayer implements Runnable{
                 gameEnded = false;
                 //synchronized (serverGame.getDeckOfCards()){
                 while (!socket.isClosed() && !gameEnded) {
+                    boolean isTheFirstTime = true;
                     // System.out.println(clientName + "connected");
                     while (gameIsOn) {
                         if (isTheFirstTime) {
@@ -152,6 +152,7 @@ public class ServerPlayer implements Runnable{
     private void playMakao() throws IOException {
         if (serverGame != null) {
             if (serverGame.isGameIsOn()) {
+                System.out.println("Działaj");
                 if (turnIsOn) {
                     String whoseTurn = serverGame.getWhoseTurn();
                     ServerMessage serverMessage = new ServerMessage("DEFAULT", whoseTurn, serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound(), serverGame.getDeckOfCards());
@@ -191,6 +192,10 @@ public class ServerPlayer implements Runnable{
     }
     public void drawCard(){
         hand.addCard(serverGame.drawCard());
+    }
+
+    public void removeAllCardsInHand(){
+        hand.removeAllCards();
     }
     public void sendServerMessage(ServerMessage serverMessage){
         try {
@@ -367,6 +372,10 @@ public class ServerPlayer implements Runnable{
                 }
             }
         }).start();
+    }
+
+    public void setGameEnded(boolean gameEnded) {
+        this.gameEnded = gameEnded;
     }
 
     public void setServerGame(ServerGame serverGame) {

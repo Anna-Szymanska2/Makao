@@ -114,6 +114,7 @@ public class ServerGame implements Runnable{
             serverPlayer.sendServerMessage(serverMessage2);
             serverPlayer.setServerGame(null);
             serverPlayer.setGameIsOn(false);
+            serverPlayer.setGameEnded(true);
            }
         gameIsOn = false;
     }
@@ -185,6 +186,7 @@ public class ServerGame implements Runnable{
 
     public void dealCards(){
         for(ServerPlayer player:serverPlayers){
+            player.removeAllCardsInHand();
             for(int i = 0; i<5; i++){
                 player.drawCard();
             }
