@@ -65,10 +65,10 @@ public class ServerPlayer implements Runnable{
 
     @Override
     public void run(){
-        ServerMessage serverMessage = new ServerMessage("WELCOME", null, null, null, getHand());
+        //ServerMessage serverMessage = new ServerMessage("WELCOME", null, null, null, getHand());
         //serverMessage.setNewHand(getHand());
         try {
-            sendServerMessage(serverMessage);
+            //sendServerMessage(serverMessage);
             loginOrRegister();
             while(users.contains(this)) {
                 while (!socket.isClosed()) {
@@ -125,14 +125,15 @@ public class ServerPlayer implements Runnable{
                             /*StateOfRound stateOfRound = new StateOfRound(serverGame.getStateOfRound());
                             DeckOfCards deckOfCards = new DeckOfCards(serverGame.getDeckOfCards());*/
                             ServerMessage serverMessage2 = new ServerMessage("INIT", serverGame.getCardOnTopOfTheStack(), serverGame.getPlayersNames(), serverGame.getPlayersAvatars());
-                            System.out.println("Server przesła init");
+                            //System.out.println("Server przesła init");
                             serverMessage2.setStateOfRound(serverGame.getStateOfRound());
                             serverMessage2.setNewHand(getHand());
                             sendServerMessage(serverMessage2);
                             isTheFirstTime = false;
                             Thread.sleep(1000);
                         }
-                        System.out.println(clientName + "playing");
+                        Thread.sleep(10);
+                        //System.out.println(clientName + "playing");
                         playMakao();
                     }
                 }
@@ -240,7 +241,7 @@ public class ServerPlayer implements Runnable{
             if(namesAndStoredDetails.register(username, password, messageFromClient.getPath())){
                 ServerMessage serverMessage = new ServerMessage("REGISTER_OK");
                 sendServerMessage(serverMessage);
-                System.out.println("Registration went ok");
+                //System.out.println("Registration went ok");
                 users.remove(this);
                 out.flush();
                 socket.close();
@@ -360,10 +361,10 @@ public class ServerPlayer implements Runnable{
 
 
                         if(messageClient.getActionID().equals("DISCONNECTED")&&messageClient.getPlayerName().equals(clientName)){
-                            System.out.println("discon");
+                           // System.out.println("discon");
                             if(gameIsOn){
                                 serverGame.closeGame();
-                                System.out.println("left");
+                                //System.out.println("left");
                             }
                             if(serverGame!=null)
                                 serverGame.removeServerPlayer(ServerPlayer.this);

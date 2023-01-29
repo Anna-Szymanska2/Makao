@@ -46,7 +46,12 @@ public class ServerGame implements Runnable{
                 code = 1;
                 initializeGame();
                 gameIsOn = true;
-                System.out.println("Gra sie zaczela");
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                //System.out.println("Gra sie zaczela");
                 ServerPlayer[] players = new ServerPlayer[serverPlayers.size()];
                 players = serverPlayers.toArray(players);
 
@@ -65,7 +70,7 @@ public class ServerGame implements Runnable{
                     }
                     playMakao(players);
                 } while (gameIsOn);
-                System.out.println("Game has ended");
+                //System.out.println("Game has ended");
                 gameExists = false;
             }
         }
@@ -95,7 +100,7 @@ public class ServerGame implements Runnable{
                 serverPlayer.setTurnIsOn(true);
             }
             if (serverPlayers.get(index).isWinner()) {
-                System.out.println("Game is finished");
+               // System.out.println("Game is finished");
             for(ServerPlayer serverPlayer : serverPlayers){
                 serverPlayer.setGameIsOn(false);
                 serverPlayer.setServerGame(null);

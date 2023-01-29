@@ -7,12 +7,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Player implements Serializable {
-    Hand hand = new Hand();
-    //ArrayList<makao.model.cards.Card> cardsInHand = new ArrayList<>();
-    ArrayList<Card> chosenCards = new ArrayList<>();
-    int roundsToStay = 0;
-    String nick;
-    transient private WaitListener listener;
+    private Hand hand = new Hand();
+    private ArrayList<Card> chosenCards = new ArrayList<>();
+    private int roundsToStay = 0;
+    private String nick;
 
     public Player(String nick){
         this.nick = nick;
@@ -21,11 +19,6 @@ public class Player implements Serializable {
     public void setHand(Hand hand) {
         this.hand = hand;
     }
-
-   /* public void setListener(WaitListener listener) {
-        this.listener = listener;
-    }*/
-
     public void setRoundsToStay(int roundsToStay) {
         this.roundsToStay = roundsToStay;
     }
@@ -74,45 +67,6 @@ public class Player implements Serializable {
             stateOfRound.setRoundsOfRequest(stateOfRound.getRoundsOfRequest() - 1);
     }
 
-    public void makeMove(StateOfRound stateOfRound, DeckOfCards deckOfCards){
-        greetPlayer();
-        hand.displayCardsInHand();
-        if(stateOfRound.getRoundsOfRequest() > 0)
-            stateOfRound.setRoundsOfRequest(stateOfRound.getRoundsOfRequest() - 1);
-
-        if(getRoundsToStay() > 0){
-            setRoundsToStay(getRoundsToStay() - 1);
-            System.out.println("This player waits in this round");
-            return;
-        }
-        Scanner scanner = new Scanner(System.in);
-        boolean isChoosingCardsInProgress = true;
-        if(stateOfRound.getRoundsToStay() != 0){
-            while(isChoosingCardsInProgress){
-                System.out.println("Choose action 1-play card(s), 2-wait round(s)");
-                int chosenNumber = scanner.nextInt();
-                if(chosenNumber == 1){
-                    isChoosingCardsInProgress = isChoosingCardsInProgress(stateOfRound,deckOfCards);
-                }else{
-                    waitRounds(stateOfRound);
-                    break;
-                }
-            }
-        }else{
-            while(isChoosingCardsInProgress){
-                System.out.println("Choose action 1-play card(s), 2-draw card(s)");
-                int chosenNumber = scanner.nextInt();
-                if(chosenNumber == 1){
-                    isChoosingCardsInProgress = isChoosingCardsInProgress(stateOfRound,deckOfCards);
-                }else{
-                    drawCard(stateOfRound, deckOfCards);
-                    break;
-                }
-            }
-        }
-
-    }
-
     public boolean areChosenCardsCorrect(StateOfRound stateOfRound){
         if(chosenCards.size() == 0)
             return false;
@@ -122,49 +76,6 @@ public class Player implements Serializable {
                 return false;
         }
         return chosenCards.get(0).isPossibleToPlayCard(stateOfRound);
-    }
-    public void chooseCards(){
-        Scanner scanner = new Scanner(System.in);
-        while (true){
-            System.out.println("Give number of card that you want to choose or press q to play all chosen cards");
-            hand.displayCardsInHand();
-            String answer = scanner.next();
-            if(!answer.equals("q"))
-                chosenCards.add(hand.getCard(Integer.parseInt(answer)-1));
-            else
-                break;
-        }
-    }
-
-
-
-//    public void displayCardsInHand(){
-//        for(int i = 0; i < cardsInHand.size(); i++){
-//            System.out.println((i+1) + ". " + cardsInHand.get(i).toString());
-//        }
-//    }
-
-    public void playChosenCardsConsole(StateOfRound stateOfRound, DeckOfCards deckOfCards){
-        Card lastCard = chosenCards.get(chosenCards.size() - 1);
-        boolean isJackOrAce = false;
-        if(lastCard.getCardValue() == CardValue.JACK || lastCard.getCardValue() == CardValue.ACE)
-            isJackOrAce = true;
-
-        if(isJackOrAce) {
-            for (Card card : chosenCards) {
-                if(!card.equals(lastCard))
-                    deckOfCards.stack.addCard(card);
-                hand.removeCard(card);
-            }
-            lastCard.playCard(stateOfRound, deckOfCards.stack);
-        }
-        else{
-            for (Card card : chosenCards) {
-                card.playCard(stateOfRound, deckOfCards.stack);
-                hand.removeCard(card);
-            }
-        }
-        chosenCards.clear();
     }
 
     public void playChosenCards(StateOfRound stateOfRound, DeckOfCards deckOfCards){
@@ -177,7 +88,6 @@ public class Player implements Serializable {
             for (Card card : chosenCards) {
                 if(!card.equals(lastCard))
                     deckOfCards.stack.addCard(card);
-                //hand.removeCard(card);
             }
             lastCard.playCard(stateOfRound, deckOfCards.stack);
         }
@@ -197,67 +107,12 @@ public class Player implements Serializable {
         chosenCards.clear();
     }
 
-    public boolean isChoosingCardsInProgress(StateOfRound stateOfRound, DeckOfCards deckOfCards){
-        chooseCards();
-        if(areChosenCardsCorrect(stateOfRound)){
-            playChosenCardsConsole(stateOfRound,deckOfCards);
-            return false;
-        }
-        else{
-            System.out.println("you cannot play those cards");
-            chosenCards.clear();
-        }
-
-
-        return true;
-    }
-
-
-
-    public void drawCard(StateOfRound stateOfRound, DeckOfCards deckOfCards){
-        Scanner scanner = new Scanner(System.in);
-        Card firstCard = deckOfCards.drawLastCard();
-        Card lastCard = stateOfRound.getLastCard();
-        System.out.println(firstCard.toString());
-        System.out.println("Choose action 1-play this card, 2-don't play this card");
-        int chosenNumber = scanner.nextInt();
-        int cardsToDraw = stateOfRound.getCardsToDraw();
-        if(chosenNumber == 1){
-            if(firstCard.isPossibleToPlayCard(stateOfRound)) {
-                firstCard.playCard(stateOfRound, deckOfCards.stack);
-            }
-            else{
-                System.out.println("you can't use this card");
-                hand.addCard(firstCard);
-                for(int i = 0; i < cardsToDraw -1; i++)
-                    hand.addCard(deckOfCards.drawLastCard());
-                stateOfRound.setCardsToDraw(0);
-                stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
-                //takeDrewCards(firstCard, stateOfRound, deckOfCards);
-            }
-
-        }
-        else{
-            hand.addCard(firstCard);
-            for(int i = 0; i < cardsToDraw -1; i++)
-                hand.addCard(deckOfCards.drawLastCard());
-            stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
-            stateOfRound.setCardsToDraw(0);
-            //takeDrewCards(firstCard, stateOfRound, deckOfCards);
-        }
-
-
-    }
 
     public void takeDrewCards(Card firstCard, StateOfRound stateOfRound, DeckOfCards deckOfCards, AceListener aceListener, JackListener jackListener){
         int cardsToDraw = stateOfRound.getCardsToDraw();
 
         if(firstCard != null){
             hand.addCard(firstCard);
-            /*if(firstCard.getCardValue() == CardValue.ACE){
-                AceCard firstCardCasted = (AceCard) firstCard;
-                firstCardCasted.setListener(listener);
-            }*/
         }
         for(int i = 0; i < cardsToDraw -1; i++){
             Card card = deckOfCards.drawLastCard();
@@ -289,9 +144,6 @@ public class Player implements Serializable {
         return nick;
     }
 
-    public void greetPlayer(){
-        System.out.println("Hi " + nick + " those are your cards");
-    }
 
 
 

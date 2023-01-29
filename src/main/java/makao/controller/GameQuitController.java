@@ -29,7 +29,7 @@ public class GameQuitController {
         stage.setOnCloseRequest(new EventHandler<WindowEvent>()
         {
             public void handle(WindowEvent e){
-                System.out.print("choosing");
+                //System.out.print("choosing");
                 ClientMessage clientMessage = new ClientMessage(client.getName(),"DISCONNECTED");
                 client.sendMessage(clientMessage);
                 client.closeEverything(client.getSocket(),client.getIn(),client.getOut());

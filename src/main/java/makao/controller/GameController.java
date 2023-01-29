@@ -425,7 +425,6 @@ public class GameController implements Initializable, AceListener, JackListener,
     public void chooseCard(ImageView chosenCardView ){
         int lastSelectedCardIndex = findLastChosenCardIndex(chosenCardView);
         player.addToChosen(lastSelectedCardIndex);
-        player.displayCards();
         showCards();
         showSelectedCards();
         if(player.getChosenCards().size() == maxNumberOfSelectedCards)
@@ -438,7 +437,6 @@ public class GameController implements Initializable, AceListener, JackListener,
         player.removeFromChosen(number);
         showSelectedCards();;
         showCards();
-        player.displayCards();
     }
     public int findLastSelectedCardIndex(ImageView selectedCard) {
         for (int i = 0; i < maxNumberOfSelectedCards; i++) {
@@ -559,7 +557,7 @@ public class GameController implements Initializable, AceListener, JackListener,
                 stage.setOnCloseRequest(new EventHandler<WindowEvent>()
                 {
                     public void handle(WindowEvent e){
-                        System.out.print("ranking");
+                        //system.out.print("ranking");
                         ClientMessage clientMessage = new ClientMessage(client.getName(),"DISCONNECTED");
                         client.sendMessage(clientMessage);
                         client.closeEverything(client.getSocket(),client.getIn(),client.getOut());
@@ -599,7 +597,7 @@ public class GameController implements Initializable, AceListener, JackListener,
                 stage.setOnCloseRequest(new EventHandler<WindowEvent>()
                 {
                     public void handle(WindowEvent e){
-                        System.out.print("quit");
+                        //System.out.print("quit");
                         ClientMessage clientMessage = new ClientMessage(client.getName(),"DISCONNECTED");
                         client.sendMessage(clientMessage);
                         client.closeEverything(client.getSocket(),client.getIn(),client.getOut());
