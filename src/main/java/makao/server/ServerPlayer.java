@@ -393,7 +393,7 @@ public class ServerPlayer implements Runnable{
         return hand;
     }
 
- 
+
 
     public boolean hasPlayerWon(){
         return hand.getCardCount() == 0;
