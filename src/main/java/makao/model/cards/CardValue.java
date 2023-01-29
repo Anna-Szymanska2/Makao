@@ -25,5 +25,7 @@ public enum CardValue {
     public int getValueOfCard() {
         return valueOfCard;
     }
+
+
 }
 

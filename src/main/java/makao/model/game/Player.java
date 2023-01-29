@@ -1,22 +1,26 @@
 package makao.model.game;
 
-import makao.model.cards.Card;
-import  makao.model.cards.CardValue;
+import makao.model.cards.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Scanner;
+/**
+ * Player class is responsible for representing a player in a game.
+ * It holds the player's hand, chosen cards, rounds to stay and nick.
+ */
+public class Player implements Serializable {
+    private Hand hand = new Hand();
+    private ArrayList<Card> chosenCards = new ArrayList<>();
+    private int roundsToStay = 0;
+    private String nick;
 
-public class Player {
-    Hand hand = new Hand();
-    //ArrayList<makao.model.cards.Card> cardsInHand = new ArrayList<>();
-    ArrayList<Card> chosenCards = new ArrayList<>();
-    int roundsToStay = 0;
-    String nick;
-
-    Player(String nick){
+    public Player(String nick){
         this.nick = nick;
     }
 
+    public void setHand(Hand hand) {
+        this.hand = hand;
+    }
     public void setRoundsToStay(int roundsToStay) {
         this.roundsToStay = roundsToStay;
     }
@@ -24,47 +28,77 @@ public class Player {
     public int getRoundsToStay() {
         return roundsToStay;
     }
-
-    public void makeMove(StateOfRound stateOfRound, DeckOfCards deckOfCards){
-        greetPlayer();
-        hand.displayCardsInHand();
-        if(stateOfRound.getRoundsOfRequest() > 0)
-            stateOfRound.setRoundsOfRequest(stateOfRound.getRoundsOfRequest() - 1);
-
-        if(getRoundsToStay() > 0){
-            setRoundsToStay(getRoundsToStay() - 1);
-            System.out.println("This player waits in this round");
-            return;
-        }
-        Scanner scanner = new Scanner(System.in);
-        boolean isChoosingCardsInProgress = true;
-        if(stateOfRound.getRoundsToStay() != 0){
-            while(isChoosingCardsInProgress){
-                System.out.println("Choose action 1-play card(s), 2-wait round(s)");
-                int chosenNumber = scanner.nextInt();
-                if(chosenNumber == 1){
-                    isChoosingCardsInProgress = isChoosingCardsInProgress(stateOfRound,deckOfCards);
-                }else{
-                    waitRounds(stateOfRound);
-                    break;
-                }
-            }
-        }else{
-            while(isChoosingCardsInProgress){
-                System.out.println("Choose action 1-play card(s), 2-draw card(s)");
-                int chosenNumber = scanner.nextInt();
-                if(chosenNumber == 1){
-                    isChoosingCardsInProgress = isChoosingCardsInProgress(stateOfRound,deckOfCards);
-                }else{
-                    drawCard(stateOfRound, deckOfCards);
-                    break;
-                }
-            }
-        }
-
+    public ArrayList<Card> getCardsInHand(){
+        return hand.cardsInHand;
+    }
+    public void addToHand(Card card){
+        hand.addCard(card);
+    }
+    public void removeFromHand(Card card){
+        hand.removeCard(card);
     }
 
-    boolean areChosenCardsCorrect(StateOfRound stateOfRound){
+    /**
+     * Method that adds a card to chosen cards list, and removes it from player's hand.
+     *
+     * @param index Index of the card in player's hand to add to chosen cards list.
+     */
+    public void addToChosen(int index){
+        Card card = hand.cardsInHand.get(index);
+        removeFromHand(card);
+        chosenCards.add(card);
+    }
+    /**
+     * Method that removes a card from chosen cards list, and adds it back to player's hand.
+     *
+     * @param index Index of the card in chosen cards list to remove.
+     */
+    public void removeFromChosen(int index){
+        Card card = chosenCards.get(index);
+        chosenCards.remove(card);
+        addToHand(card);
+    }
+
+    public ArrayList<Card> getChosenCards() {
+        return chosenCards;
+    }
+
+    public int getNumberOfCards(){
+       return hand.getCardCount();
+    }
+
+    /**
+     * Method checks the state of waiting for the player.
+     * If the player has rounds to stay, it decrements the roundsToStay by 1
+     *
+     * @param stateOfRound the current state of the round
+     */
+
+    public void checkStateOfWaiting(StateOfRound stateOfRound){
+        if(getRoundsToStay() > 0){
+            setRoundsToStay(getRoundsToStay() - 1);
+        }
+    }
+
+    /**
+     * Method checks the state of requests for the round.
+     * If the round has requests, it decrements the roundsOfRequests by 1
+     *
+     * @param stateOfRound the current state of the round
+     */
+    public void checkStateOfRequests(StateOfRound stateOfRound){
+        if(stateOfRound.getRoundsOfRequest() > 0)
+            stateOfRound.setRoundsOfRequest(stateOfRound.getRoundsOfRequest() - 1);
+    }
+
+    /**
+     * Method checks if the chosen cards are correct to be played
+     * It checks if the size of chosenCards is not 0 and if all the chosen cards have the same CardValue
+     *
+     * @param stateOfRound the current state of the round
+     * @return boolean indicating whether the chosen cards are correct
+     */
+    public boolean areChosenCardsCorrect(StateOfRound stateOfRound){
         if(chosenCards.size() == 0)
             return false;
         CardValue cardValue = chosenCards.get(0).getCardValue();
@@ -74,25 +108,15 @@ public class Player {
         }
         return chosenCards.get(0).isPossibleToPlayCard(stateOfRound);
     }
-    public void chooseCards(){
-        Scanner scanner = new Scanner(System.in);
-        while (true){
-            System.out.println("Give number of card that you want to choose or press q to play all chosen cards");
-            hand.displayCardsInHand();
-            String answer = scanner.next();
-            if(!answer.equals("q"))
-                chosenCards.add(hand.getCard(Integer.parseInt(answer)-1));
-            else
-                break;
-        }
-    }
 
-//    public void displayCardsInHand(){
-//        for(int i = 0; i < cardsInHand.size(); i++){
-//            System.out.println((i+1) + ". " + cardsInHand.get(i).toString());
-//        }
-//    }
-
+    /**
+     * Method plays the chosen cards
+     * If the last card is a jack or an ace, it adds all other cards to the stack and plays the last card
+     * Otherwise, it plays all the chosen cards
+     *
+     * @param stateOfRound the current state of the round
+     * @param deckOfCards the current deck of cards
+     */
     public void playChosenCards(StateOfRound stateOfRound, DeckOfCards deckOfCards){
         Card lastCard = chosenCards.get(chosenCards.size() - 1);
         boolean isJackOrAce = false;
@@ -103,72 +127,65 @@ public class Player {
             for (Card card : chosenCards) {
                 if(!card.equals(lastCard))
                     deckOfCards.stack.addCard(card);
-                hand.removeCard(card);
             }
             lastCard.playCard(stateOfRound, deckOfCards.stack);
         }
         else{
             for (Card card : chosenCards) {
                 card.playCard(stateOfRound, deckOfCards.stack);
-                hand.removeCard(card);
+                //hand.removeCard(card);
             }
         }
         chosenCards.clear();
     }
 
-    public boolean isChoosingCardsInProgress(StateOfRound stateOfRound, DeckOfCards deckOfCards){
-        chooseCards();
-        if(areChosenCardsCorrect(stateOfRound)){
-            playChosenCards(stateOfRound,deckOfCards);
-            return false;
+    public void putBackChosenCards(){
+        for(Card card: chosenCards){
+            addToHand(card);
         }
-        else{
-            System.out.println("you cannot play those cards");
-            chosenCards.clear();
-        }
-
-
-        return true;
+        chosenCards.clear();
     }
 
-    public void drawCard(StateOfRound stateOfRound, DeckOfCards deckOfCards){
-        Scanner scanner = new Scanner(System.in);
-        Card firstCard = deckOfCards.drawLastCard();
-        Card lastCard = stateOfRound.getLastCard();
-        System.out.println(firstCard.toString());
-        System.out.println("Choose action 1-play this card, 2-don't play this card");
-        int chosenNumber = scanner.nextInt();
+    /**
+     * Method takes in a Card, StateOfRound, DeckOfCards, AceListener, and JackListener
+     * and adds the card to the player's hand. It also iterates cardsToDraw number of times and draws a card
+     * from the deck, checking if it is an Ace or Jack card and setting its listener accordingly.
+     * The method also sets the possible next cards and cards to draw to 0.
+     *
+     * @param firstCard The first card to add to the player's hand
+     * @param stateOfRound The current state of the round
+     * @param deckOfCards The deck of cards to draw from
+     * @param aceListener The listener for Ace cards
+     * @param jackListener The listener for Jack cards
+     */
+    public void takeDrewCards(Card firstCard, StateOfRound stateOfRound, DeckOfCards deckOfCards, AceListener aceListener, JackListener jackListener){
         int cardsToDraw = stateOfRound.getCardsToDraw();
-        if(chosenNumber == 1){
-            if(firstCard.isPossibleToPlayCard(stateOfRound)) {
-                firstCard.playCard(stateOfRound, deckOfCards.stack);
-            }
-            else{
-                System.out.println("you can't use this card");
-                hand.addCard(firstCard);
-                for(int i = 0; i < cardsToDraw -1; i++)
-                    hand.addCard(deckOfCards.drawLastCard());
-                stateOfRound.setCardsToDraw(0);
-                stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
 
-                /*if(lastCard.getClass() == FightingKing.class)
-                    stateOfRound.setPossibleNextColour(new ArrayList<>() {{add(lastCard.getCardColour());}});*/
-            }
-
-        }
-        else{
+        if(firstCard != null){
             hand.addCard(firstCard);
-            for(int i = 0; i < cardsToDraw -1; i++)
-                hand.addCard(deckOfCards.drawLastCard());
-            stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
-            /*if(lastCard.getClass() == FightingKing.class)
-                stateOfRound.setPossibleNextColour(new ArrayList<>() {{add(lastCard.getCardColour());}});*/
-            stateOfRound.setCardsToDraw(0);
         }
-
-
+        for(int i = 0; i < cardsToDraw -1; i++){
+            Card card = deckOfCards.drawLastCard();
+            if(card.getCardValue() == CardValue.ACE){
+                AceCard cardCasted = (AceCard) card;
+                cardCasted.setListener(aceListener);
+            }
+            if(card.getCardValue() == CardValue.JACK){
+                JackCard cardCasted = (JackCard) card;
+                cardCasted.setListener(jackListener);
+            }
+            hand.addCard(card);
+        }
+        stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
+        stateOfRound.setCardsToDraw(0);
     }
 
+    /**
+     * Method takes in StateOfRound, decrements the roundsToStay by 1 and sets the roundsToStay to 0
+     * and sets the possible next cards to CardValue.ANYCARD.
+     *
+     * @param stateOfRound The current state of the round
+     */
     public void waitRounds(StateOfRound stateOfRound){
         setRoundsToStay(stateOfRound.getRoundsToStay() - 1);
         stateOfRound.setRoundsToStay(0);
@@ -178,11 +195,5 @@ public class Player {
     public boolean hasPlayerWon(){
         return hand.getCardCount() == 0;
     }
-
-    public void greetPlayer(){
-        System.out.println("Hi " + nick + " those are your cards");
-    }
-
-
 
 }

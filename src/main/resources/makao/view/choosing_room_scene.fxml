@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="choosingRoomPane" prefHeight="235.0" prefWidth="340.0" style="-fx-background-color: BLACK;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="makao.controller.ChoosingRoomController">
+   <children>
+      <Label layoutX="48.0" layoutY="24.0" style="-fx-font-family: Consolas;" text="Enter the code to join a created room" textFill="WHITE" />
+      <Button fx:id="enterButton" layoutX="219.0" layoutY="54.0" mnemonicParsing="false" onAction="#tryToEnterTheRoom" style="-fx-background-color: #3f3f3f; -fx-text-fill: white; -fx-font-family: Consolas;" text="Enter" />
+      <Label layoutX="38.0" layoutY="110.0" style="-fx-font-family: Consolas;" text="Or create your own" textFill="WHITE" />
+      <Button fx:id="createRoomButton" layoutX="180.0" layoutY="105.0" mnemonicParsing="false" onAction="#createNewRoom" style="-fx-background-color: #3f3f3f; -fx-text-fill: white; -fx-font-family: Consolas;" text="Create a new room" />
+      <TextField fx:id="codeTextField" layoutX="48.0" layoutY="52.0" prefHeight="26.0" prefWidth="118.0" style="-fx-background-color: #8e8e8e; -fx-font-family: Consolas;" />
+      <Label layoutX="41.0" layoutY="156.0" style="-fx-font-family: Consolas;" text="Number of players" textFill="WHITE" />
+      <ChoiceBox fx:id="numberOfPlayersChoiceBox" layoutX="205.0" layoutY="150.0" prefHeight="26.0" prefWidth="86.0" style="-fx-background-color: #8e8e8e; -fx-font-family: Consolas;" />
+      <ChoiceBox fx:id="timeOfRoundChoiceBox" layoutX="205.0" layoutY="189.0" prefHeight="26.0" prefWidth="86.0" style="-fx-background-color: #8e8e8e; -fx-font-family: Consolas;" />
+      <Label layoutX="54.0" layoutY="195.0" style="-fx-font-family: Consolas;" text="Time of round" textFill="WHITE" />
+   </children>
+</AnchorPane>

@@ -4,12 +4,14 @@ import  makao.model.cards.Card;
 import  makao.model.cards.CardColour;
 import  makao.model.cards.CardValue;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class StateOfRound {
-
-
-
+/**
+ * The StateOfRound class is responsible for keeping track of all the information related to the state of the current round.
+ *
+ */
+public class StateOfRound implements Serializable {
     private ArrayList<CardValue> possibleNextCards = new ArrayList<>();
     private CardColour possibleNextColour = null;
     private Card lastCard =  null;
@@ -17,7 +19,9 @@ public class StateOfRound {
     private int roundsToStay;
     private int players;
     private int roundsOfRequest;
+    private int timeOfRound;
     private CardValue requestedValue = null;
+    private CardColour chosenColor = null;
 
     public StateOfRound(ArrayList<CardValue> possibleNextCards, CardColour possibleNextColour, Card lastCard, int players) {
         this.possibleNextCards = possibleNextCards;
@@ -27,12 +31,32 @@ public class StateOfRound {
         this.players = players;
     }
 
+    public StateOfRound (StateOfRound stateOfRound){
+        this.possibleNextCards = new ArrayList<>(stateOfRound.getPossibleNextCards());
+        this.possibleNextColour = stateOfRound.getPossibleNextColour();
+        this.lastCard =  stateOfRound.getLastCard();
+        this.cardsToDraw = stateOfRound.getCardsToDraw();
+        this.roundsToStay = stateOfRound.getRoundsToStay();
+        this.players = stateOfRound.getPlayers();
+        this.roundsOfRequest = stateOfRound.getRoundsOfRequest();
+        this.requestedValue = stateOfRound.requestedValue;
+        this.chosenColor = stateOfRound.getChosenColor();
+    }
+
     public StateOfRound(int players) {
         this.players = players;
     }
 
     public CardValue getRequestedValue() {
         return requestedValue;
+    }
+
+    public CardColour getChosenColor() {
+        return chosenColor;
+    }
+
+    public void setChosenColor(CardColour chosenColor) {
+        this.chosenColor = chosenColor;
     }
 
     public void setRequestedValue(CardValue requestedValue) {
@@ -96,5 +120,11 @@ public class StateOfRound {
         this.cardsToDraw = cardsToDraw;
     }
 
+    public void setTimeOfRound(int timeOfRound) {
+        this.timeOfRound = timeOfRound;
+    }
 
+    public int getTimeOfRound() {
+        return timeOfRound;
+    }
 }

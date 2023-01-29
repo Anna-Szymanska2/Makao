@@ -1,47 +1,44 @@
 package makao.model.cards;
 
-import  makao.model.game.Stack;
-import  makao.model.game.StateOfRound;
+import makao.model.game.Stack;
+import makao.model.game.StateOfRound;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-
-public class Card {
+/**
+ *
+ * The Card class represents a card in a standard deck of playing cards.
+ * It has a card value and a card color, as well as an image path representing its visual representation.
+ * The class also contains methods for determining if the card can be played, playing the card, and getting its properties.
+ *
+ */
+public class Card implements Serializable {
     private CardValue cardValue;
     private CardColour cardColour;
-
+    private String imagePath;
     private int points;
 
-    public Card(CardColour cardColour, CardValue cardValue) {
+    public Card(CardColour cardColour, CardValue cardValue, String imagePath) {
         this.cardValue = cardValue;
         this.cardColour = cardColour;
-
+        this.imagePath = imagePath;
         this.points = cardValue.getValueOfCard();
-    }
-
-    public void setCardValue(CardValue cardValue) {
-        this.cardValue = cardValue;
     }
 
     public CardValue getCardValue() {
         return cardValue;
     }
 
-    public void setCardColour(CardColour cardColour) {
-        this.cardColour = cardColour;
-    }
-
     public CardColour getCardColour() {
         return cardColour;
     }
 
-    public void setPoints(int points) {
-        this.points = points;
-    }
-
-    public int getPoints() {
-        return points;
-    }
-
+    /**
+     * Check if a card can be played based on the current round state
+     *
+     * @param stateOfRound current state of the round
+     * @return true if the card can be played, false otherwise
+     */
     public boolean isPossibleToPlayCard(StateOfRound stateOfRound){
         Card lastCard = stateOfRound.getLastCard();
         CardValue lastCardValue = lastCard.getCardValue();
@@ -83,20 +80,22 @@ public class Card {
         return true;
     }
 
+    /**
+     * Play the card, updating the state of the round and adding the card to the stack
+     * @param stateOfRound the current state of the round
+     * @param stack the current stack of cards
+     */
     public void playCard(StateOfRound stateOfRound, Stack stack){
         stack.addCard(this);
-
-       /* if(stateOfRound.getRoundsOfRequest() - 1 > 0){
-            stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(stateOfRound.getRequestedValue());}});
-
-        }
-        else{*/
         stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
         stateOfRound.setPossibleNextColour(cardColour);
-
-        // }
         stateOfRound.setLastCard(this);
+        stateOfRound.setChosenColor(null);
 
+    }
+
+    public String getImagePath() {
+        return imagePath;
     }
 
     @Override
