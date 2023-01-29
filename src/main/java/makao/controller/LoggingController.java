@@ -16,6 +16,7 @@ import makao.server.ClientMessage;
 import makao.view.Main;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.Socket;
 
 /**
@@ -96,12 +97,16 @@ public class LoggingController {
             clearFields();
             return;
         }
-        Socket socket = new Socket("localhost", 4444);
-        client = new Client(socket, nick, password);
-        client.setLoggingController(this);
-        client.listenForMessage();
-        ClientMessage clientMessage = new ClientMessage(client.getName(), client.getPassword(), "LOGIN");
-        client.sendMessage(clientMessage);
+        try{
+            Socket socket = new Socket("localhost", 4444);
+            client = new Client(socket, nick, password);
+            client.setLoggingController(this);
+            client.listenForMessage();
+            ClientMessage clientMessage = new ClientMessage(client.getName(), client.getPassword(), "LOGIN");
+            client.sendMessage(clientMessage);
+        }catch (ConnectException e) {
+            showMessage("There are connections issues because server doesn't work", Alert.AlertType.ERROR);
+        }
 
     }
 

@@ -18,6 +18,7 @@ import makao.server.ClientMessage;
 import makao.view.Main;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -118,14 +119,19 @@ public class RegisterController implements Initializable {
             return;
         }
 
-        Socket socket = new Socket("localhost", 4444);
-        int index = chosenAvatarView.getImage().getUrl().indexOf("avatars");
-        chosenAvatarPath = chosenAvatarView.getImage().getUrl().substring(index);
-        client = new Client(socket, nick, password, chosenAvatarPath);
-        client.setRegisterController(this);
-        client.listenForMessage();
-        ClientMessage clientMessage = new ClientMessage(client.getName(), "REGISTER", client.getPassword(),  chosenAvatarPath);
-        client.sendMessage(clientMessage);
+        try{
+            Socket socket = new Socket("localhost", 4444);
+            int index = chosenAvatarView.getImage().getUrl().indexOf("avatars");
+            chosenAvatarPath = chosenAvatarView.getImage().getUrl().substring(index);
+            client = new Client(socket, nick, password, chosenAvatarPath);
+            client.setRegisterController(this);
+            client.listenForMessage();
+            ClientMessage clientMessage = new ClientMessage(client.getName(), "REGISTER", client.getPassword(),  chosenAvatarPath);
+            client.sendMessage(clientMessage);
+
+        }catch (ConnectException e){
+            showMessage("There are connections issues because server doesn't work", Alert.AlertType.ERROR);
+        }
 
     }
 
