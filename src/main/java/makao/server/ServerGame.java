@@ -98,6 +98,7 @@ public class ServerGame implements Runnable{
                 System.out.println("Game is finished");
             for(ServerPlayer serverPlayer : serverPlayers){
                 serverPlayer.setGameIsOn(false);
+                serverPlayer.setServerGame(null);
             }
                 gameIsOn = false;
             }

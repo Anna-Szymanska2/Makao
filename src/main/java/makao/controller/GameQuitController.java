@@ -46,8 +46,8 @@ public class GameQuitController {
         Scene scene = new Scene(fxmlLoader.load());
         stage.setScene(scene);
 
-       /* fxmlLoader.<ChoosingRoomController>getController().setClient(client);
-        client.setChoosingRoomController(fxmlLoader.<ChoosingRoomController>getController());*/
+       fxmlLoader.<ChoosingRoomController>getController().setClient(client);
+        client.setChoosingRoomController(fxmlLoader.<ChoosingRoomController>getController());
 
         stage.show();
     }

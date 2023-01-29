@@ -21,6 +21,7 @@ public class ServerPlayer implements Runnable{
     private boolean gameIsOn = false;
     private boolean turnIsOn = false;
     private boolean receivedMessage = false;
+    private boolean gameEnded = false;
     private ClientMessage messageFromClient;
     private String clientName;
     private String clientAvatar;
@@ -70,31 +71,32 @@ public class ServerPlayer implements Runnable{
         try {
             sendServerMessage(serverMessage);
             loginOrRegister();
-            while(!socket.isClosed()){
-                receivedMessage = false;
-                getClientMessage(false);
-                if(messageFromClient.getActionID().equals("START_ROOM")){
-                    int code = gameCodeGenerator();
-                    ServerGame serverGame = new ServerGame(code,messageFromClient.getNumberOfPlayers(), messageFromClient.getTimeOfRound());
-                    Thread gameThread = new Thread(serverGame);
-                    serverGame.addServerPlayer(this);
-                    setServerGame(serverGame);
-                    server.getGames().add(serverGame);
-                    gameThread.start();
-                    ServerMessage serverMessage2 = new ServerMessage("ROOM_STARTED", code);
-                    sendServerMessage(serverMessage2);
-                    break;
-                }else if(messageFromClient.getActionID().equals("JOIN_ROOM")) {
-                    int code = messageFromClient.getCode();
-                    boolean gameExists = false;
-                    for(ServerGame serverGame: server.getGames()){
-                        if(serverGame.getCode() == code) {
-                            serverGame.addServerPlayer(this);
-                            setServerGame(serverGame);
-                            ServerMessage serverMessage2 = new ServerMessage("ROOM_JOINED", code);
-                            sendServerMessage(serverMessage2);
-                            gameExists = true;
-                        }
+            while(users.contains(this)) {
+                while (!socket.isClosed()) {
+                    receivedMessage = false;
+                    getClientMessage(false);
+                    if (messageFromClient.getActionID().equals("START_ROOM")) {
+                        int code = gameCodeGenerator();
+                        ServerGame serverGame = new ServerGame(code, messageFromClient.getNumberOfPlayers(), messageFromClient.getTimeOfRound());
+                        Thread gameThread = new Thread(serverGame);
+                        serverGame.addServerPlayer(this);
+                        setServerGame(serverGame);
+                        server.getGames().add(serverGame);
+                        gameThread.start();
+                        ServerMessage serverMessage2 = new ServerMessage("ROOM_STARTED", code);
+                        sendServerMessage(serverMessage2);
+                        break;
+                    } else if (messageFromClient.getActionID().equals("JOIN_ROOM")) {
+                        int code = messageFromClient.getCode();
+                        boolean gameExists = false;
+                        for (ServerGame serverGame : server.getGames()) {
+                            if (serverGame.getCode() == code) {
+                                serverGame.addServerPlayer(this);
+                                setServerGame(serverGame);
+                                ServerMessage serverMessage2 = new ServerMessage("ROOM_JOINED", code);
+                                sendServerMessage(serverMessage2);
+                                gameExists = true;
+                            }
                            /* if(!serverGame.isGameIsOn()) {
 
                             }*/
@@ -104,23 +106,24 @@ public class ServerPlayer implements Runnable{
                             }*/
 
 
-                    }
-                    if(!gameExists){
-                        ServerMessage serverMessage2 = new ServerMessage("GAME_NOT_EXISTS");
-                        sendServerMessage(serverMessage2);
-                    }else{
-                        break;
+                        }
+                        if (!gameExists) {
+                            ServerMessage serverMessage2 = new ServerMessage("GAME_NOT_EXISTS");
+                            sendServerMessage(serverMessage2);
+                        } else {
+                            break;
+                        }
                     }
                 }
-            }
-            //synchronized (serverGame.getDeckOfCards()){
-                while (!socket.isClosed()) {
-                   // System.out.println(clientName + "connected");
-                    while(gameIsOn){
-                        if(isTheFirstTime){
+                gameEnded = false;
+                //synchronized (serverGame.getDeckOfCards()){
+                while (!socket.isClosed() && !gameEnded) {
+                    // System.out.println(clientName + "connected");
+                    while (gameIsOn) {
+                        if (isTheFirstTime) {
                             /*StateOfRound stateOfRound = new StateOfRound(serverGame.getStateOfRound());
                             DeckOfCards deckOfCards = new DeckOfCards(serverGame.getDeckOfCards());*/
-                            ServerMessage serverMessage2 = new ServerMessage("INIT", serverGame.getCardOnTopOfTheStack(), serverGame.getPlayersNames(),serverGame.getPlayersAvatars());
+                            ServerMessage serverMessage2 = new ServerMessage("INIT", serverGame.getCardOnTopOfTheStack(), serverGame.getPlayersNames(), serverGame.getPlayersAvatars());
                             System.out.println("Server przesła init");
                             serverMessage2.setStateOfRound(serverGame.getStateOfRound());
                             serverMessage2.setNewHand(getHand());
@@ -132,6 +135,7 @@ public class ServerPlayer implements Runnable{
                         playMakao();
                     }
                 }
+            }
 
            // }
 
@@ -159,7 +163,7 @@ public class ServerPlayer implements Runnable{
                         if (messageFromClient.getActionID().equals("END")) {
                             serverGame.setStateOfRound(messageFromClient.getStateOfRound());
                             serverGame.setDeckOfCards(messageFromClient.getDeckOfCards());
-
+                            gameEnded = true;
                         }
                         if (messageFromClient.getActionID().equals("WIN")) {
                             serverGame.setStateOfRound(messageFromClient.getStateOfRound());
@@ -169,7 +173,7 @@ public class ServerPlayer implements Runnable{
                             serverGame.setGameIsOn(false);
                             serverGame.setWinner(messageFromClient.getPlayerName());
                             serverGame.endGameForAllPlayers();
-
+                            gameEnded = true;
                         }
 
                     }

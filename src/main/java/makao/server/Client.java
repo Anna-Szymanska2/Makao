@@ -117,11 +117,11 @@ public class Client implements Serializable{
 
                 while (!socket.isClosed()){
                     try{
-                        if(gameClosed){
+                        /*if(gameClosed){
                             System.out.println("test");
                             closeEverything(socket, in, out);
                             return;
-                        }
+                        }*/
                         messageFromServer = (ServerMessage) in.readObject();
 
                         switch(messageFromServer.getActionID()){
