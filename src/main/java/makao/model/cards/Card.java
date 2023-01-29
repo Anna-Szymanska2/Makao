@@ -16,7 +16,6 @@ public class Card implements Serializable {
     private CardValue cardValue;
     private CardColour cardColour;
     private String imagePath;
-
     private int points;
 
     public Card(CardColour cardColour, CardValue cardValue, String imagePath) {

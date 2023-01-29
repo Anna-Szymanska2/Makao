@@ -42,8 +42,5 @@ public class QueenCard extends Card {
             return false;
 
         return possibleNextCards.get(0) == CardValue.ANYCARD;
-
-
     }
-
 }

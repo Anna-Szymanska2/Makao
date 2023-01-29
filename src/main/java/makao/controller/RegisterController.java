@@ -6,7 +6,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -24,7 +23,11 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 
-
+/**
+ * RegisterController is a class that contains the logic of the registration scene. It is responsible for handling the
+ * registration process and displaying the avatars to choose from.
+ *
+ */
 public class RegisterController implements Initializable {
     @FXML
     private TextField nickTextField;
@@ -52,6 +55,12 @@ public class RegisterController implements Initializable {
         return registerPane;
     }
 
+    /**
+     * Initializes the HBoxes with the avatars.
+     *
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initHBox(0, firstHBox);
@@ -60,6 +69,13 @@ public class RegisterController implements Initializable {
         initHBox(15, fourthHBox);
 
     }
+
+    /**
+     * Initializes the avatars in the HBoxes.
+     *
+     * @param startNumber an int representing the starting index of the avatars
+     * @param hBox an HBox to add avatars to
+     */
     public void initHBox(int startNumber, HBox hBox){
         int imageIndex = startNumber + 1;
         for(int i = 0; i < numberOfAvatarsInRow; i++) {
@@ -78,6 +94,15 @@ public class RegisterController implements Initializable {
         chosenAvatarView.setImage(view.getImage());
 
     }
+
+    /**
+     * Tries to sign up the user by checking if all fields are filled in,
+     * if the passwords match, and if the chosen username is not already taken.
+     * If everything is correct, it sends a message to the server to register the user
+     * and sets up a listener for server messages.
+     *
+     * @throws IOException
+     */
     public void tryToSignUp() throws IOException {
         String nick = nickTextField.getText();
         String password = passwordField.getText();
@@ -103,6 +128,12 @@ public class RegisterController implements Initializable {
         client.sendMessage(clientMessage);
 
     }
+
+    /**
+     * Returns the user to the login view
+     *
+     * @throws IOException
+     */
     public void returnToLogView() throws IOException {
         Platform.runLater(new Runnable() {
             @Override
@@ -120,9 +151,11 @@ public class RegisterController implements Initializable {
                 stage.show();
             }
         });
-
-
     }
+
+    /**
+     * Displays a message to the user when registration is successful
+     */
     public void registerOK() {
         Platform.runLater(new Runnable() {
             @Override
@@ -137,9 +170,11 @@ public class RegisterController implements Initializable {
                 }
             }
         });
-
-
     }
+
+    /**
+     * Displays a message to the user when registration failed
+     */
     public void registerFailed(){
         Platform.runLater(new Runnable() {
             @Override

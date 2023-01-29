@@ -1,15 +1,12 @@
 package makao.server;
 
 import makao.controller.*;
-import makao.model.cards.Card;
-import makao.model.game.Hand;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
-import java.util.ArrayList;
 
 /**
  * The Client class is responsible for handling all client-side communication with the server.
@@ -33,11 +30,6 @@ public class Client implements Serializable{
     private String path;
     private String password;
     private boolean gameIsOn = false;
-    private boolean turnIsOn = false;
-    private boolean gameClosed = false;
-    Hand hand = new Hand();
-    ArrayList<Card> chosenCards = new ArrayList<>();
-    int roundsToStay = 0;
 
     public Client(Socket socket, String name, String password) {
         this.socket = socket;
@@ -64,10 +56,6 @@ public class Client implements Serializable{
             closeEverything(socket, in, out);
         }
 
-    }
-
-    public String getPath() {
-        return path;
     }
 
     public void setGameEndingController(GameEndingController gameEndingController) {
@@ -217,10 +205,6 @@ public class Client implements Serializable{
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
     }
-    public void setGameClosed(boolean gameClosed) {
-        this.gameClosed = gameClosed;
-    }
-
     public ObjectOutputStream getOut() {
         return out;
     }

@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -19,6 +18,13 @@ import makao.view.Main;
 import java.io.IOException;
 import java.net.Socket;
 
+/**
+ * LoggingController is a class that handles the logic for the login scene of the application.
+ * It allows users to input their username and password, and try to log in to the application.
+ * If the login is successful, the user is taken to the room selection scene.
+ * If the login fails, an error message is displayed.
+ *
+ */
 public class LoggingController {
     @FXML
     private AnchorPane loggingPane;
@@ -28,12 +34,23 @@ public class LoggingController {
     private PasswordField passwordField;
     private Client client;
 
+    /**
+     * Changes the scene to the registration scene.
+     *
+     * @throws IOException
+     */
     public void changeViewToRegister() throws IOException {
         clearFields();
         changeScene("register_scene.fxml");
 
     }
 
+    /**
+     * Changes the scene to the specified scene.
+     *
+     * @param sceneName the name of the FXML file for the desired scene
+     * @throws IOException
+     */
     public void changeScene(String sceneName) throws IOException {
         Stage stage = (Stage) loggingPane.getScene().getWindow();
         stage.setOnCloseRequest(new EventHandler<WindowEvent>()
@@ -61,6 +78,12 @@ public class LoggingController {
         }
         stage.show();
     }
+
+    /**
+     * Attempts to log in to the application using the username and password entered by the user.
+     *
+     * @throws IOException
+     */
     public void tryToLogIn() throws IOException {
         String nick = nickTextField.getText();
         String password = passwordField.getText();
@@ -82,6 +105,9 @@ public class LoggingController {
 
     }
 
+    /**
+     * This method is used when login is successful. It clears the fields and changes the scene to "choosing_room_scene.fxml"
+     */
     public void loginCorrect() {
         Platform.runLater(new Runnable() {
             @Override
@@ -97,6 +123,9 @@ public class LoggingController {
 
     }
 
+    /**
+     * This method is used when login fails. It shows a warning message "Wrong username or password" and closes the socket.
+     */
     public void loginFailed() {
 
         Platform.runLater(new Runnable() {
@@ -113,6 +142,12 @@ public class LoggingController {
         });
 
     }
+
+    /**
+     * Show message method which is used to show the message of specified type.
+     * @param message the message to be shown
+     * @param type the type of message to be shown.
+     */
     public void showMessage(String message, Alert.AlertType type){
         Alert alert = new Alert(type);
         alert.setTitle(null);

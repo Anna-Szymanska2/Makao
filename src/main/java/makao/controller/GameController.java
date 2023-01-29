@@ -31,6 +31,11 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.*;
 
+/**
+ * GameController is the main class responsible for controlling the game logic and communication between the server and the client.
+ * It implements Initializable, AceListener, JackListener, and Serializable interfaces.
+ *
+ */
 public class GameController implements Initializable, AceListener, JackListener, Serializable {
     @FXML
     private transient ImageView thisPlayerView;
@@ -112,6 +117,12 @@ public class GameController implements Initializable, AceListener, JackListener,
         client.setGameController(this);
     }
 
+    /**
+     * Initializes the game controller
+     *
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         nickLabels = new Label[]{playerNick1, playerNick2, playerNick3};
@@ -133,6 +144,12 @@ public class GameController implements Initializable, AceListener, JackListener,
         });
     }
 
+    /**
+     * Initializes the game by setting up the player's information and updating the UI elements.
+     *
+     * @param msgFromServer The message received from the server containing information about the game state.
+     * @param name The name of the current player.
+     */
     public void init(ServerMessage msgFromServer, String name){
         player = new Player(name);
         player.setHand(msgFromServer.getNewHand());
@@ -161,9 +178,11 @@ public class GameController implements Initializable, AceListener, JackListener,
                 initAvatarsHBox(msgFromServer, name);
             }
         });
-
-
     }
+
+    /**
+     * Updates the label indicating that it is the current player's turn.
+     */
     public void updateThisPlayerTurnLabel(){
         for(Label turnLabel: turnLabels){
             turnLabel.setVisible(false);
@@ -172,6 +191,13 @@ public class GameController implements Initializable, AceListener, JackListener,
         thisPlayerTurnLabel.setVisible(true);
     }
 
+    /**
+     * Returns the index of the current player in the list of player names.
+     *
+     * @param name The name of the current player.
+     * @param names The list of player names.
+     * @return The index of the current player in the list of player names.
+     */
     public int returnPlayerIndex(String name, ArrayList<String> names){
         int thisPlayerIndex;
         for(thisPlayerIndex = 0; thisPlayerIndex <  names.size(); thisPlayerIndex++){
@@ -181,6 +207,11 @@ public class GameController implements Initializable, AceListener, JackListener,
         return thisPlayerIndex;
     }
 
+    /**
+     * Updates the turn labels to indicate whose turn it is.
+     *
+     * @param name The name of the player whose turn it is.
+     */
     public void updateTurnLabels(String name){
         Platform.runLater(new Runnable() {
             @Override
@@ -197,6 +228,12 @@ public class GameController implements Initializable, AceListener, JackListener,
 
     }
 
+    /**
+     * Initializes the avatars for the players in the game.
+     *
+     * @param msgFromServer The message from the server containing information about the players in the game.
+     * @param name The name of the player using this client.
+     */
     public void initAvatarsHBox(ServerMessage msgFromServer, String name){
         thisPlayerNick.setText(name);
         thisPlayerNick.setVisible(true);
@@ -229,12 +266,20 @@ public class GameController implements Initializable, AceListener, JackListener,
         thisPlayerView.setVisible(true);
     }
 
+    /**
+     * Updates the game state for the next player's move.
+     * @param msgFromServer The message from the server containing information about the current game state.
+     */
     public  void nextPlayerMove(ServerMessage msgFromServer){
         updateStateOfRoundLabels(msgFromServer.getStateOfRound());
         updateStackView(msgFromServer.getStateOfRound());
         updateTurnLabels(msgFromServer.getWhoseTurn());
     }
 
+    /**
+     * Updates the game state for the next move of the player using this client.
+     * @param msgFromServer The message from the server containing information about the current game state.
+     */
     public void nextThisPlayerMove(ServerMessage msgFromServer){
         if(timer != null)
             timer.cancel();
@@ -297,24 +342,22 @@ public class GameController implements Initializable, AceListener, JackListener,
                                     player.addToHand(firstCard);
                                 }
                                 endOfThisPlayerRound();
-
                             }
-
                         });
-
-
                     }
                 };
                 timer.scheduleAtFixedRate(task, 0, 1000);
             }
         });
-
-
-
-
-
     }
 
+    /**
+     * Updates the state of round labels by setting the text of the "cards to draw" label to the number of
+     * cards to draw, the "chosen color" label to the chosen color, the "requested value" label to the requested value,
+     * and the "rounds to wait" label to the number of rounds to wait.
+     *
+     * @param stateOfRound the current state of the round
+     */
     public void updateStateOfRoundLabels(StateOfRound stateOfRound){
         Platform.runLater(new Runnable() {
             @Override
@@ -331,9 +374,11 @@ public class GameController implements Initializable, AceListener, JackListener,
                 roundsToWaitLabel.setText("Rounds to wait - " + stateOfRound.getRoundsToStay());
             }
         });
-
-
     }
+
+    /**
+     * Updates the deck view by making it visible and hiding the "wait rounds" button.
+     */
     public void updateDeckView(){
         Platform.runLater(new Runnable() {
             @Override
@@ -342,11 +387,12 @@ public class GameController implements Initializable, AceListener, JackListener,
                 waitRoundsButton.setVisible(false);
             }
         });
-
-
     }
 
-
+    /**
+     * Initializes the selected card HBox by making each ImageView in the HBox invisible,
+     * and adding a mouse click event to each ImageView that calls the "chooseSelectedCard" method.
+     */
     public void initSelectedCardHBox(){
         for(int i = 0; i <maxNumberOfSelectedCards; i++) {
             ImageView view = (ImageView) selectedCardsHBox.getChildren().get(i);
@@ -373,6 +419,13 @@ public class GameController implements Initializable, AceListener, JackListener,
             });
         }
     }
+
+    /**
+     * Initializes the cards in hand HBox by making each ImageView in the HBox invisible,
+     * and adding a mouse click event to each ImageView that calls the "chooseCard" method if it is
+     * the current player's round.
+     * @param chosenCardView cards in the player's hand
+     */
     public void chooseCard(ImageView chosenCardView ){
         int lastSelectedCardIndex = findLastChosenCardIndex(chosenCardView);
         player.addToChosen(lastSelectedCardIndex);
@@ -383,12 +436,23 @@ public class GameController implements Initializable, AceListener, JackListener,
 
     }
 
+    /**
+     * Method that allows to choose selected card.
+     * @param chosenCardView ImageView of the selected card
+     */
     public void chooseSelectedCard(ImageView chosenCardView){
         int number = findLastSelectedCardIndex(chosenCardView);
         player.removeFromChosen(number);
         showSelectedCards();;
         showCards();
     }
+
+    /**
+     * Method that finds the last selected card index.
+     *
+     * @param selectedCard ImageView of the selected card
+     * @return int index of the selected card
+     */
     public int findLastSelectedCardIndex(ImageView selectedCard) {
         for (int i = 0; i < maxNumberOfSelectedCards; i++) {
             if (selectedCardsHBox.getChildren().get(i) == selectedCard) {
@@ -399,6 +463,12 @@ public class GameController implements Initializable, AceListener, JackListener,
         return 100; //something went wrong
     }
 
+    /**
+     * Method that finds the last chosen card index.
+     *
+     * @param chosenCard ImageView of the chosen card
+     * @return int index of the chosen card
+     */
     public int findLastChosenCardIndex(ImageView chosenCard) {
         int playerNumberOfCards = player.getNumberOfCards();
         if(playerNumberOfCards > maxNumberOfCardsInRow){
@@ -418,6 +488,12 @@ public class GameController implements Initializable, AceListener, JackListener,
         return 100; //something went wrong then
 
     }
+
+    /**
+     * Method that draws first card.
+     *
+     * @return Card first drawn card
+     */
     Card drawFirstCard(){
         player.putBackChosenCards();
         showCards();
@@ -434,7 +510,11 @@ public class GameController implements Initializable, AceListener, JackListener,
         return firstCard;
     }
 
-
+    /**
+     * The method is used to draw a card from the deck and update the state of the game accordingly.
+     * The method updates the GUI by setting the image of the card and showing the options to the user.
+     * It also updates the state of the round and the cards of the player.
+     */
     public void drawCard(){
         GameController controller = this;
         Platform.runLater(new Runnable() {
@@ -483,7 +563,13 @@ public class GameController implements Initializable, AceListener, JackListener,
 
     }
 
-
+    /**
+     * The method is used to change the scene to the ranking scene.
+     * The method updates the GUI by closing the current window and opening the ranking scene window.
+     * It also updates the state of the ranking and the client.
+     * @param msgFromServer ServerMessage object which contains the ranking and winner of the game.
+     * @throws IOException
+     */
     public void changeSceneToRanking(ServerMessage msgFromServer) throws IOException {
         Platform.runLater(new Runnable() {
             @Override
@@ -523,6 +609,11 @@ public class GameController implements Initializable, AceListener, JackListener,
 
     }
 
+    /**
+     *  The method is used to change the scene to the quit scene.
+     *  The method updates the GUI by closing the current window and opening the quit scene window.
+     * @throws IOException
+     */
     public void changeSceneToQuit() throws IOException {
         Platform.runLater(new Runnable() {
             @Override
@@ -560,6 +651,10 @@ public class GameController implements Initializable, AceListener, JackListener,
         });
 
     }
+
+    /**
+     * Ends the current player round and sends a message to the client indicating if the player won or not.
+     */
     public void endOfThisPlayerRound(){
         isThisPlayerRound = false;
         timer.cancel();
@@ -575,6 +670,11 @@ public class GameController implements Initializable, AceListener, JackListener,
         if(!client.getSocket().isClosed())
             client.sendMessage(clientMessage);
     }
+
+    /**
+     * Attempts to play the chosen cards.
+     * If the cards are not allowed to be played, an alert is shown and the cards are put back.
+     */
     public void tryToPlayCards(){
         if(player.areChosenCardsCorrect(stateOfRound)){
             player.playChosenCards(stateOfRound, deckOfCards);
@@ -597,10 +697,13 @@ public class GameController implements Initializable, AceListener, JackListener,
             showSelectedCards();;
             showCards();
         }
-
-
     }
 
+    /**
+     * Updates the stack view to display the last card played.
+     *
+     * @param stateOfRound The current state of the round
+     */
     public void updateStackView(StateOfRound stateOfRound){
         Platform.runLater(new Runnable() {
             @Override
@@ -613,6 +716,9 @@ public class GameController implements Initializable, AceListener, JackListener,
 
     }
 
+    /**
+     * Shows the cards that the player has selected.
+     */
     public void showSelectedCards(){
         Platform.runLater(new Runnable() {
             @Override
@@ -627,8 +733,6 @@ public class GameController implements Initializable, AceListener, JackListener,
                 clearViews(chosenCardsNumber, maxNumberOfSelectedCards, selectedCardsHBox);
             }
         });
-
-
     }
 
     public void clearViews(int firstView, int lastView, HBox viewsHBox){
@@ -646,6 +750,11 @@ public class GameController implements Initializable, AceListener, JackListener,
         view.setVisible(true);
     }
 
+    /**
+     * Shows the cards in the hand of the player.
+     * It gets the cards in hand of the player and sets the number of cards in the bottom row.
+     * It clears the views for the up row and bottom row and sets the view for each card.
+     */
     public void showCards(){
         Platform.runLater(new Runnable() {
             @Override
@@ -672,6 +781,12 @@ public class GameController implements Initializable, AceListener, JackListener,
         });
 
     }
+
+    /**
+     * Used to wait for the player's round.
+     * It calls the waitRounds method on the player and updates the deck view.
+     * It then calls the endOfThisPlayerRound method.
+     */
     public void waitRounds(){
         Platform.runLater(new Runnable() {
             @Override
@@ -684,6 +799,13 @@ public class GameController implements Initializable, AceListener, JackListener,
 
     }
 
+    /**
+     * Called when an Ace is played
+     * It creates a ChoiceDialog to ask the player what color they want and returns the chosen color.
+     *
+     * @param event the event that triggers the method
+     * @return the chosen color
+     */
     @Override
     public CardColour aceWasPlayed(ActionEvent event) {
 
@@ -700,6 +822,13 @@ public class GameController implements Initializable, AceListener, JackListener,
         return chosenColor;
     }
 
+    /**
+     * The jackWasPlayed method is called when a jack card is played. It creates a choice dialog that prompts the user to select
+     * a card value from a list of predefined values. The selected value is then returned.
+     *
+     * @param event the event that triggers this method
+     * @return the selected card value
+     */
     @Override
     public CardValue jackWasPlayed(ActionEvent event) {
         CardValue[]  values = { CardValue.FIVE, CardValue.SIX, CardValue.SEVEN, CardValue.EIGHT, CardValue.NINE, CardValue.TEN, CardValue.ANYCARD};
@@ -715,7 +844,12 @@ public class GameController implements Initializable, AceListener, JackListener,
         return chosenValue;
     }
 
-
+    /**
+     * The playerWaitsInThisRound method is called when a player chooses to wait during their turn. It displays an alert dialog
+     * with information about how many rounds the player has to wait.
+     * 
+     * @param roundsToStay the number of rounds the player has to wait
+     */
     public void playerWaitsInThisRound(int roundsToStay) {
         GameController controller = this;
         Platform.runLater(new Runnable() {

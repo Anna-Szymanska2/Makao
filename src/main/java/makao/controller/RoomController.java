@@ -16,6 +16,10 @@ import makao.view.Main;
 
 import java.io.IOException;
 
+/**
+ * RoomController class is responsible for handling the room scene where user will wait for other players to join the game.
+ *
+ */
 public class RoomController {
 
     @FXML
@@ -33,6 +37,12 @@ public class RoomController {
         codeLabel.setText(String.valueOf(code));
     }
 
+    /**
+     * method that changes the scene to game scene and initializes the game controller
+     *
+     * @param msgFromServer message from the server
+     * @param name name of the player
+     */
     public void changeScene(ServerMessage msgFromServer, String name){
         Platform.runLater(new Runnable() {
             @Override

@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"m":"makao","l":"makao.controller"},{"m":"makao","l":"makao.model.cards"},{"m":"makao","l":"makao.model.game"},{"m":"makao","l":"makao.server"},{"m":"makao","l":"makao.view"}];updateSearchResults();

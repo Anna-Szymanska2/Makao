@@ -66,9 +66,6 @@ public class Player implements Serializable {
     public int getNumberOfCards(){
        return hand.getCardCount();
     }
-    public void displayCards(){
-        hand.displayCardsInHand();
-    }
 
     /**
      * Method checks the state of waiting for the player.
@@ -199,7 +196,4 @@ public class Player implements Serializable {
         return hand.getCardCount() == 0;
     }
 
-    public String getNick() {
-        return nick;
-    }
 }

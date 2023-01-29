@@ -17,11 +17,9 @@ import java.util.Random;
 public class DeckOfCards implements Serializable {
     public ArrayList<Card> deckOfCards;
     public Stack stack;
-
     public DeckOfCards(){
         this.stack = new Stack();
         this.deckOfCards = new ArrayList();
-
 
         for (int j = 1; j < 5; j++) {
             String imagePath = "cards_images/ace_of_" + CardColour.values()[j].toString() + ".png";
@@ -75,11 +73,6 @@ public class DeckOfCards implements Serializable {
         Card card4 = new FightingKingCard(CardColour.SPADES, CardValue.KING, imagePath);
         this.deckOfCards.add(card4);
 
-    }
-
-    public DeckOfCards (DeckOfCards deckOfCards){
-        this.stack = new Stack(deckOfCards.getStack());
-        this.deckOfCards = new ArrayList<>(deckOfCards.getDeckOfCards());
     }
 
     public ArrayList<Card> getDeckOfCards() {

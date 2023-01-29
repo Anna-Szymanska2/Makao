@@ -65,13 +65,6 @@ public class ServerMessage implements Serializable {
     public void setNewHand(Hand newHand) {
         this.newHand = newHand;
     }
-    public void setActionID(String actionID) {
-        this.actionID = actionID;
-    }
-
-    public void setWhoseTurn(String whoseTurn) {
-        this.whoseTurn = whoseTurn;
-    }
     public String getActionID() {
         return actionID;
     }
@@ -98,10 +91,6 @@ public class ServerMessage implements Serializable {
 
     public DeckOfCards getDeckOfCards() {
         return deckOfCards;
-    }
-
-    public ArrayList<Card> getCardsInHand() {
-        return cardsInHand;
     }
 
     public void setStateOfRound(StateOfRound stateOfRound) {
