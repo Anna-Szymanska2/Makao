@@ -2,10 +2,7 @@ package makao.server;
 
 import makao.controller.*;
 import makao.model.cards.Card;
-import makao.model.cards.CardValue;
-import makao.model.game.DeckOfCards;
 import makao.model.game.Hand;
-import makao.model.game.StateOfRound;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -13,8 +10,13 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Scanner;
 
+/**
+ * The Client class is responsible for handling all client-side communication with the server.
+ * It provides methods for sending messages to the server, listening for incoming messages,
+ * and handling those messages based on their type.
+ *
+ */
 public class Client implements Serializable{
 
     transient private Socket socket;
@@ -88,6 +90,12 @@ public class Client implements Serializable{
         return password;
     }
 
+    /**
+     * Sends a message to the server.
+     *
+     * @param clientMessage the message to be sent
+     */
+
     public void sendMessage(ClientMessage clientMessage) {
         try {
             out.writeObject(clientMessage);
@@ -96,6 +104,12 @@ public class Client implements Serializable{
             e.printStackTrace();
         }
     }
+
+    /**
+     * Listens for messages from the server and handles them according to their actionID.
+     * This method starts a new thread to run the listening in the background.
+     *
+     */
 
     public void listenForMessage(){
         new Thread(new Runnable(){
@@ -158,6 +172,13 @@ public class Client implements Serializable{
         }).start();
     }
 
+    /**
+     * Closes the given socket, input stream, and output stream
+     *
+     * @param socket The socket to be closed
+     * @param in The input stream to be closed
+     * @param out The output stream to be closed
+     */
     public void closeEverything(Socket socket, ObjectInputStream in, ObjectOutputStream out){
         try{
             if(in != null){

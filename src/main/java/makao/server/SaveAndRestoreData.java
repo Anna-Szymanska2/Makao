@@ -2,7 +2,17 @@ package makao.server;
 
 import java.io.*;
 
+/**
+ * The SaveAndRestoreData class provides methods to save and restore the state of a NamesAndStoredDetails object to/from a binary file.
+ *
+ */
 public class SaveAndRestoreData {
+
+    /**
+     * Saves the state of a NamesAndStoredDetails object to a binary file
+     *
+     * @param namesAndStoredDetails the object to be saved
+     */
     public static void save(NamesAndStoredDetails namesAndStoredDetails){
         FileOutputStream fileOut;
         try {
@@ -15,6 +25,11 @@ public class SaveAndRestoreData {
         }
     }
 
+    /**
+     * Restores the state of a NamesAndStoredDetails object from a binary file
+     *
+     * @return the restored NamesAndStoredDetails object
+     */
     public static NamesAndStoredDetails restore(){
         NamesAndStoredDetails namesAndStoredDetails;
         FileInputStream fileIn;

@@ -11,6 +11,12 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * The class ServerPlayer implements the Runnable interface and is responsible for handling the communication between
+ * the server and a single client.
+ * It contains methods for handling the login and registration of clients, creating and joining rooms, and playing the game.
+ *
+ */
 public class ServerPlayer implements Runnable{
     private Socket socket;
     private ObjectOutputStream out;
@@ -48,6 +54,10 @@ public class ServerPlayer implements Runnable{
         }
     }
 
+    /**
+     * The run method of the ServerPlayer class. It handles the login and registration of clients,
+     * creating and joining rooms, and playing the game.
+     */
     @Override
     public void run(){
         try {
@@ -115,6 +125,14 @@ public class ServerPlayer implements Runnable{
         }
     }
 
+    /**
+     * Method checks if a server game is currently ongoing and if the turn is on for the client.
+     * If so, it sends a ServerMessage to the client containing information about the current game state,
+     * including the top card on the stack, the current round state, and the deck of cards.
+     * If the client's turn is currently active, the method also waits for a message from the client and updates the game state accordingly
+     *
+     * @throws IOException
+     */
     private void playMakao() throws IOException {
         if (serverGame != null) {
             if (serverGame.isGameIsOn()) {
@@ -149,7 +167,12 @@ public class ServerPlayer implements Runnable{
         }
     }
 
-
+    /**
+     * Method sends a ServerMessage to the client containing information about the game winner
+     * and the final ranking of the players.
+     *
+     * @param ranking the final ranking of the players
+     */
     public void endGame(ArrayList<String> ranking){
         ServerMessage serverMessage = new ServerMessage("END", serverGame.getWinner(), serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound(), serverGame.getDeckOfCards());
         serverMessage.setRanking(ranking);
@@ -162,6 +185,12 @@ public class ServerPlayer implements Runnable{
     public void removeAllCardsInHand(){
         hand.removeAllCards();
     }
+
+    /**
+     * Method sends a given ServerMessage to the client.
+     *
+     * @param serverMessage
+     */
     public void sendServerMessage(ServerMessage serverMessage){
         try {
             out.writeObject(serverMessage);
@@ -191,6 +220,13 @@ public class ServerPlayer implements Runnable{
         this.turnIsOn = turnIsOn;
     }
 
+    /**
+     * Method handles the login and registration process for the client.
+     * It first checks the actionID of the message received from the client, and based on that,
+     * either registers or logs in the user.
+     *
+     * @throws IOException
+     */
     public synchronized void loginOrRegister() throws IOException {
         String action = messageFromClient.getActionID();
         String username = messageFromClient.getPlayerName();
@@ -239,12 +275,24 @@ public class ServerPlayer implements Runnable{
         }
     }
 
+    /**
+     * The gameCodeGenerator method generates a random 6-digit game code.
+     *
+     * @return a random 6-digit game code
+     */
     public int gameCodeGenerator(){
         Random rnd = new Random();
         int code = 100000 + rnd.nextInt(900000);
         return code;
     }
 
+    /**
+     * The closeEverything method closes the socket, input and output streams.
+     *
+     * @param socket the socket to be closed
+     * @param in the input stream to be closed
+     * @param out the output stream to be closed
+     */
     public void closeEverything(Socket socket, ObjectInputStream in, ObjectOutputStream out){
         users.remove(this);
         try{
@@ -261,6 +309,12 @@ public class ServerPlayer implements Runnable{
             e.printStackTrace();
         }
     }
+
+    /**
+     * Waits for message from the client
+     *
+     * @param gameIsOn
+     */
     public void getClientMessage(boolean gameIsOn){
         //try {
             while (!receivedMessage) {
@@ -272,6 +326,11 @@ public class ServerPlayer implements Runnable{
             }
 
     }
+
+    /**
+     * Starts a new thread that listens for messages from the client and processes it.
+     *
+     */
     public void listenForMessage(){
         new Thread(new Runnable(){
             @Override
@@ -323,8 +382,6 @@ public class ServerPlayer implements Runnable{
     public Hand getHand() {
         return hand;
     }
-
-
 
     public boolean hasPlayerWon(){
         return hand.getCardCount() == 0;

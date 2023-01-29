@@ -7,7 +7,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -21,6 +20,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * The ChoosingRoomController class is responsible for handling events and actions
+ * related to the choosing room view. It allows users to join an existing room by
+ * entering a room code or create a new room by choosing the number of players and
+ * the time of round.
+ *
+ */
 public class ChoosingRoomController implements Initializable {
     @FXML
     private TextField codeTextField;
@@ -35,7 +41,12 @@ public class ChoosingRoomController implements Initializable {
     private Integer[] timeOfRound = {30, 45, 60, 90};
     private Client client;
 
-
+    /**
+     * Attempts to join a room by sending a JOIN_ROOM message to the server with the code entered by the user.
+     * If the code is invalid, the user is informed with an error message.
+     *
+     * @throws IOException
+     */
     public void tryToEnterTheRoom() throws IOException {
         String code = codeTextField.getText();
         if(code.length() != 6){
@@ -55,6 +66,10 @@ public class ChoosingRoomController implements Initializable {
         client.sendMessage(clientMessage);
 
     }
+    /**
+     * Creates a new room by sending a START_ROOM message to the server with the chosen number of players
+     * and time of round.
+     */
     public void createNewRoom(){
         ClientMessage clientMessage = new ClientMessage(client.getName(),"START_ROOM",client.getPassword(),
                 numberOfPlayersChoiceBox.getValue(),timeOfRoundChoiceBox.getValue());
@@ -62,6 +77,9 @@ public class ChoosingRoomController implements Initializable {
 
     }
 
+    /**
+     * Displays a message to the user indicating that the room code entered is not valid.
+     */
     public void wrongRoom(){
         Platform.runLater(new Runnable() {
             @Override
@@ -74,6 +92,13 @@ public class ChoosingRoomController implements Initializable {
 
     }
 
+    /**
+     * Changes the current scene to the waiting scene.
+     * Closes the current stage and opens a new stage with the waiting scene.
+     * Sets the client, code, and room controller for the new scene.
+     *
+     * @param code the code to be set on the label of the waiting scene.
+     */
     public void changeToWaitingScene(int code){
         Platform.runLater(new Runnable() {
             @Override
@@ -111,10 +136,16 @@ public class ChoosingRoomController implements Initializable {
 
     }
 
-
     public void setClient(Client client) {
         this.client = client;
     }
+
+    /**
+     * Shows a message to the user with the provided type and message.
+     *
+     * @param message the message to be displayed.
+     * @param type the type of the message to be displayed.
+     */
     public void showMessage(String message, Alert.AlertType type){
         Alert alert = new Alert(type);
         alert.setTitle(null);
@@ -123,6 +154,12 @@ public class ChoosingRoomController implements Initializable {
         alert.showAndWait();
     }
 
+    /**
+     * Initializes the choice boxes for number of players and time of round.
+     *
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         numberOfPlayersChoiceBox.getItems().addAll(numberOfPlayers);

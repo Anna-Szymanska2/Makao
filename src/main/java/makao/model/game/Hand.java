@@ -4,10 +4,10 @@ import makao.model.cards.Card;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.stream.Collectors;
-
+/**
+ * The Hand class represents a collection of Card objects in a player hand.
+ *
+ */
 public class Hand implements Serializable {
     ArrayList<Card> cardsInHand  = new ArrayList<>();
     public Hand(){};
@@ -43,19 +43,5 @@ public class Hand implements Serializable {
     public void displayCardsInHand(){
         for(Card card:cardsInHand)
             System.out.println((cardsInHand.indexOf(card)+1) + ". " + card.toString());
-    }
-
-    public void sortByCardValue(){
-        ArrayList<Card> handAfterSorting = (ArrayList<Card>) cardsInHand.stream()
-                .sorted(Comparator.comparing(card -> card.getCardValue().getValueOfCard()))
-                .collect(Collectors.toList());
-        Collections.copy(cardsInHand,handAfterSorting);
-    }
-
-    public void sortByCardColour(){
-        ArrayList<Card> handAfterSorting = (ArrayList<Card>) cardsInHand.stream()
-                .sorted(Comparator.comparing(card -> card.getCardColour().getColourValue()))
-                .collect(Collectors.toList());
-        Collections.copy(cardsInHand,handAfterSorting);
     }
 }

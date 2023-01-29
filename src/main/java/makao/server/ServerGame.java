@@ -7,6 +7,11 @@ import makao.model.game.*;
 
 import java.util.ArrayList;
 
+/**
+ * The ServerGame class is responsible for handling the state of a game of Makao on the server side. It implements the Runnable interface,
+ * which allows it to be run in a separate thread.
+ *
+ */
 public class ServerGame implements Runnable{
 
     private ArrayList<ServerPlayer> serverPlayers = new ArrayList<>();
@@ -29,6 +34,9 @@ public class ServerGame implements Runnable{
 
     }
 
+    /**
+     * Runs the game in a separate thread.
+     */
     @Override
     public void run() {
         gameExists = true;
@@ -68,6 +76,14 @@ public class ServerGame implements Runnable{
         }
     }
 
+    /**
+     * The playMakao method is responsible for managing the turns of players in the Makao game.
+     * It sets the turn of the next player and checks if the last card played was a king of spades and if so,
+     * changes the turn to the previous player.
+     * It also checks if the current player is a winner and if so, ends the game for all players.
+     *
+     * @param players
+     */
     public void playMakao(ServerPlayer [] players){
         nextTurn = true;
         for (ServerPlayer serverPlayer : players) {
@@ -99,6 +115,11 @@ public class ServerGame implements Runnable{
 
     }
 
+    /**
+     * The closeGame method is responsible for ending the game and sending a message to all players that the game has ended.
+     * It also sets the relevant fields for the players and the game to indicate that the game is no longer in progress.
+     *
+     */
     public void closeGame(){
         for(ServerPlayer serverPlayer : serverPlayers){
             ServerMessage serverMessage2 = new ServerMessage("GAME_EXITED");
@@ -153,7 +174,6 @@ public class ServerGame implements Runnable{
         return whoseTurn;
     }
     public void addServerPlayer(ServerPlayer serverPlayer){
-
         serverPlayers.add(serverPlayer);
         playersNames.add(serverPlayer.getClientName());
         playersAvatars.add(serverPlayer.getClientAvatar());
@@ -163,6 +183,11 @@ public class ServerGame implements Runnable{
         serverPlayers.remove(serverPlayer);
     }
 
+    /**
+     * Initializes the game by shuffling the deck, dealing cards to players and playing a random card
+     * to start the game
+     *
+     */
     public void initializeGame(){
         index = 0;
         deckOfCards.shuffle();
@@ -175,6 +200,10 @@ public class ServerGame implements Runnable{
         card.playCard(stateOfRound, deckOfCards.stack);
     }
 
+    /**
+     * Deals 5 cards to each player
+     *
+     */
     public void dealCards(){
         for(ServerPlayer player:serverPlayers){
             player.removeAllCardsInHand();
@@ -194,6 +223,10 @@ public class ServerGame implements Runnable{
         return gameIsOn;
     }
 
+    /**
+     * Ends the game for all players by sending the final ranking and resetting the game state
+     *
+     */
     public void endGameForAllPlayers(){
         ArrayList<String> ranking = returnUpdatedRanking(getWinner());
         for(ServerPlayer serverPlayer : serverPlayers){
@@ -201,6 +234,13 @@ public class ServerGame implements Runnable{
             serverPlayer.endGame(ranking);
         }
     }
+
+    /**
+     * Returns an updated ranking of players by name
+     *
+     * @param name the name of the player who won the game
+     * @return an ArrayList of strings representing the updated ranking of players
+     */
     public synchronized ArrayList<String> returnUpdatedRanking(String name){
         NamesAndStoredDetails namesAndStoredDetails = SaveAndRestoreData.restore();
         namesAndStoredDetails.addVictory(name);

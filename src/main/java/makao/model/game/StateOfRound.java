@@ -7,10 +7,11 @@ import  makao.model.cards.CardValue;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * The StateOfRound class is responsible for keeping track of all the information related to the state of the current round.
+ *
+ */
 public class StateOfRound implements Serializable {
-
-
-
     private ArrayList<CardValue> possibleNextCards = new ArrayList<>();
     private CardColour possibleNextColour = null;
     private Card lastCard =  null;

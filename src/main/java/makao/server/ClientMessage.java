@@ -5,6 +5,11 @@ import makao.model.game.StateOfRound;
 
 import java.io.Serializable;
 
+/**
+ * Class representing a message sent from the client to the server.
+ * Implements Serializable to allow for sending over a network.
+ *
+ */
 public class ClientMessage implements Serializable {
 
     private String playerName;

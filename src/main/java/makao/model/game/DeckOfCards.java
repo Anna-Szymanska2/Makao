@@ -8,6 +8,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+/**
+ * The DeckOfCards class represents a deck of playing cards. It contains a stack and an ArrayList of Card objects.
+ * The class also includes methods to shuffle the deck and draw a random card.
+ * The class implements the Serializable interface which allows it to be written to a file.
+ *
+ */
 public class DeckOfCards implements Serializable {
     public ArrayList<Card> deckOfCards;
     public Stack stack;
@@ -79,9 +85,19 @@ public class DeckOfCards implements Serializable {
     public ArrayList<Card> getDeckOfCards() {
         return deckOfCards;
     }
+
+    /**
+     * Shuffles the deck of cards using the Collections. shuffle method.
+     */
     public void shuffle(){
         Collections.shuffle(deckOfCards);
     }
+
+    /**
+     *Draws a random card from the deck and removes it from the deck.
+     *  @return the randomly drawn card
+     *
+     */
     public Card drawRandomCard(){
         Random rand = new Random();
         int randomIndex = rand.nextInt(deckOfCards.size()-1);
@@ -90,6 +106,12 @@ public class DeckOfCards implements Serializable {
         deckOfCards.remove(randomIndex);
         return card;
     }
+
+    /**
+     * Draws last card from the deck and removes it from the deck.
+     *  @return the randomly drawn card
+     *
+     */
     public Card drawLastCard(){
         if(deckOfCards.size()==1){
             Card card = stack.getLastCard();

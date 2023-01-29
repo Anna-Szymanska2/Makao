@@ -5,6 +5,10 @@ import  makao.model.cards.Card;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * The Stack class represents a stack of cards that has been played.
+ *
+ */
 public class Stack implements Serializable {
     public ArrayList<Card> stack = new ArrayList<>();
 

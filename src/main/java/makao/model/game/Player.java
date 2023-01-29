@@ -4,8 +4,10 @@ import makao.model.cards.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Scanner;
-
+/**
+ * Player class is responsible for representing a player in a game.
+ * It holds the player's hand, chosen cards, rounds to stay and nick.
+ */
 public class Player implements Serializable {
     private Hand hand = new Hand();
     private ArrayList<Card> chosenCards = new ArrayList<>();
@@ -35,11 +37,22 @@ public class Player implements Serializable {
     public void removeFromHand(Card card){
         hand.removeCard(card);
     }
+
+    /**
+     * Method that adds a card to chosen cards list, and removes it from player's hand.
+     *
+     * @param index Index of the card in player's hand to add to chosen cards list.
+     */
     public void addToChosen(int index){
         Card card = hand.cardsInHand.get(index);
         removeFromHand(card);
         chosenCards.add(card);
     }
+    /**
+     * Method that removes a card from chosen cards list, and adds it back to player's hand.
+     *
+     * @param index Index of the card in chosen cards list to remove.
+     */
     public void removeFromChosen(int index){
         Card card = chosenCards.get(index);
         chosenCards.remove(card);
@@ -56,17 +69,38 @@ public class Player implements Serializable {
     public void displayCards(){
         hand.displayCardsInHand();
     }
+
+    /**
+     * Method checks the state of waiting for the player.
+     * If the player has rounds to stay, it decrements the roundsToStay by 1
+     *
+     * @param stateOfRound the current state of the round
+     */
+
     public void checkStateOfWaiting(StateOfRound stateOfRound){
         if(getRoundsToStay() > 0){
             setRoundsToStay(getRoundsToStay() - 1);
         }
     }
 
+    /**
+     * Method checks the state of requests for the round.
+     * If the round has requests, it decrements the roundsOfRequests by 1
+     *
+     * @param stateOfRound the current state of the round
+     */
     public void checkStateOfRequests(StateOfRound stateOfRound){
         if(stateOfRound.getRoundsOfRequest() > 0)
             stateOfRound.setRoundsOfRequest(stateOfRound.getRoundsOfRequest() - 1);
     }
 
+    /**
+     * Method checks if the chosen cards are correct to be played
+     * It checks if the size of chosenCards is not 0 and if all the chosen cards have the same CardValue
+     *
+     * @param stateOfRound the current state of the round
+     * @return boolean indicating whether the chosen cards are correct
+     */
     public boolean areChosenCardsCorrect(StateOfRound stateOfRound){
         if(chosenCards.size() == 0)
             return false;
@@ -78,6 +112,14 @@ public class Player implements Serializable {
         return chosenCards.get(0).isPossibleToPlayCard(stateOfRound);
     }
 
+    /**
+     * Method plays the chosen cards
+     * If the last card is a jack or an ace, it adds all other cards to the stack and plays the last card
+     * Otherwise, it plays all the chosen cards
+     *
+     * @param stateOfRound the current state of the round
+     * @param deckOfCards the current deck of cards
+     */
     public void playChosenCards(StateOfRound stateOfRound, DeckOfCards deckOfCards){
         Card lastCard = chosenCards.get(chosenCards.size() - 1);
         boolean isJackOrAce = false;
@@ -107,7 +149,18 @@ public class Player implements Serializable {
         chosenCards.clear();
     }
 
-
+    /**
+     * Method takes in a Card, StateOfRound, DeckOfCards, AceListener, and JackListener
+     * and adds the card to the player's hand. It also iterates cardsToDraw number of times and draws a card
+     * from the deck, checking if it is an Ace or Jack card and setting its listener accordingly.
+     * The method also sets the possible next cards and cards to draw to 0.
+     *
+     * @param firstCard The first card to add to the player's hand
+     * @param stateOfRound The current state of the round
+     * @param deckOfCards The deck of cards to draw from
+     * @param aceListener The listener for Ace cards
+     * @param jackListener The listener for Jack cards
+     */
     public void takeDrewCards(Card firstCard, StateOfRound stateOfRound, DeckOfCards deckOfCards, AceListener aceListener, JackListener jackListener){
         int cardsToDraw = stateOfRound.getCardsToDraw();
 
@@ -130,6 +183,12 @@ public class Player implements Serializable {
         stateOfRound.setCardsToDraw(0);
     }
 
+    /**
+     * Method takes in StateOfRound, decrements the roundsToStay by 1 and sets the roundsToStay to 0
+     * and sets the possible next cards to CardValue.ANYCARD.
+     *
+     * @param stateOfRound The current state of the round
+     */
     public void waitRounds(StateOfRound stateOfRound){
         setRoundsToStay(stateOfRound.getRoundsToStay() - 1);
         stateOfRound.setRoundsToStay(0);
@@ -143,8 +202,4 @@ public class Player implements Serializable {
     public String getNick() {
         return nick;
     }
-
-
-
-
 }

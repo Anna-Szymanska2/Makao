@@ -6,6 +6,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+/**
+ * The Server class is responsible for handling the socket connections and creating new game rooms
+ * for players to play in. It also contains methods for closing the server socket and accessing the
+ * NamesAndStoredDetails object containing player information.
+ *
+ */
 public class Server {
     private ServerSocket serverSocket;
     private int port;
@@ -24,6 +30,11 @@ public class Server {
         }
     }
 
+    /**
+     * Starts the server and waits for incoming socket connections. When a new connection is
+     * received, a new ServerPlayer thread is created to handle it.
+     *
+     */
     public void startServer(){
         try{
             while(!serverSocket.isClosed()) {
@@ -54,6 +65,13 @@ public class Server {
         return games;
     }
 
+    /**
+     * The main method that starts the server by creating a new Server object and calling the
+     * startServer() method.
+     *
+     * @param args command line arguments
+     * @throws IOException if an I/O error occurs when creating the server socket.
+     */
     public static void main(String[] args) throws IOException{
         NamesAndStoredDetails namesAndStoredDetails = new NamesAndStoredDetails();
         File file = new File("namesAndStoredDetails.ser");

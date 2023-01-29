@@ -8,6 +8,9 @@ import makao.model.game.StateOfRound;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * The class ServerMessage is used to represent the messages sent by the server to the clients.
+ */
 public class ServerMessage implements Serializable {
     private String actionID = "DEFAULT";
     private String whoseTurn;
