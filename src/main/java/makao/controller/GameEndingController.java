@@ -22,13 +22,8 @@ public class GameEndingController {
 
     @FXML
     private Label winnerLabel;
-
     @FXML
     private ListView<String> rankingList;
-
-    @FXML
-    private Button goBackButton;
-
     @FXML
     private AnchorPane endingPane;
     private Client client;
@@ -41,8 +36,6 @@ public class GameEndingController {
     }
 
     public void addRanking(ArrayList<String> ranking){
-   /*     Scene scene = (Scene) endingPane.getScene();
-        scene.getStylesheets().add("style.css");*/
         rankingList.getItems().addAll(ranking);
     }
 
@@ -54,7 +47,6 @@ public class GameEndingController {
         stage.setOnCloseRequest(new EventHandler<WindowEvent>()
         {
             public void handle(WindowEvent e){
-                //System.out.print("choosing");
                 ClientMessage clientMessage = new ClientMessage(client.getName(),"DISCONNECTED");
                 client.sendMessage(clientMessage);
                 client.closeEverything(client.getSocket(),client.getIn(),client.getOut());

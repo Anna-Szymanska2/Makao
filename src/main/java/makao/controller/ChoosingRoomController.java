@@ -23,11 +23,7 @@ import java.util.ResourceBundle;
 
 public class ChoosingRoomController implements Initializable {
     @FXML
-    private Button createRoomButton;
-    @FXML
     private TextField codeTextField;
-    @FXML
-    private Button enterButton;
     @FXML
     private AnchorPane choosingRoomPane;
     @FXML
@@ -55,24 +51,13 @@ public class ChoosingRoomController implements Initializable {
             codeTextField.clear();
             return;
         }
-       // changeToWaitingScene(codeInt);
         ClientMessage clientMessage = new ClientMessage(client.getName(),"JOIN_ROOM", codeInt);
-        //client.listenForMessage();
         client.sendMessage(clientMessage);
-        /*Stage stage = (Stage) choosingRoomPane.getScene().getWindow();
-        stage.close();
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("roommaker_scene.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
-        stage.setScene(scene);
-        RoomController roomController = fxmlLoader.<RoomController>getController();
-        roomController.setClient(client);
-        client.setRoomController(roomController);
-        stage.show();*/
+
     }
     public void createNewRoom(){
         ClientMessage clientMessage = new ClientMessage(client.getName(),"START_ROOM",client.getPassword(),
                 numberOfPlayersChoiceBox.getValue(),timeOfRoundChoiceBox.getValue());
-        //client.listenForMessage();
         client.sendMessage(clientMessage);
 
     }
@@ -98,7 +83,6 @@ public class ChoosingRoomController implements Initializable {
                     stage.setOnCloseRequest(new EventHandler<WindowEvent>()
                     {
                         public void handle(WindowEvent e){
-                            //System.out.print("waiting");
                             ClientMessage clientMessage = new ClientMessage(client.getName(),"DISCONNECTED");
                             client.sendMessage(clientMessage);
                             client.closeEverything(client.getSocket(),client.getIn(),client.getOut());

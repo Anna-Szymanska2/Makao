@@ -27,15 +27,11 @@ import java.util.ResourceBundle;
 
 public class RegisterController implements Initializable {
     @FXML
-    transient private Button signUpButton;
-    @FXML
     private TextField nickTextField;
     @FXML
     private PasswordField passwordField;
     @FXML
     private PasswordField secondPasswordField;
-    @FXML
-    private Button backToSignInButton;
     @FXML
     private ImageView chosenAvatarView;
     @FXML
@@ -49,7 +45,6 @@ public class RegisterController implements Initializable {
     @FXML
     private AnchorPane registerPane;
     private String chosenAvatarPath;
-
     private final int numberOfAvatarsInRow = 5;
     private Client client;
 

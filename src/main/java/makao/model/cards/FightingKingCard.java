@@ -14,7 +14,6 @@ public class FightingKingCard extends Card {
     public void playCard(StateOfRound stateOfRound, Stack stack){
         super.playCard(stateOfRound, stack);
         stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.KING);}});
-       // stateOfRound.setPossibleNextColour(new ArrayList<>() {{add(makao.model.cards.CardColour.SPADES); add(makao.model.cards.CardColour.HEARTS);}});
         stateOfRound.setCardsToDraw(stateOfRound.getCardsToDraw() + 5);
     }
 }

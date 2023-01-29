@@ -20,7 +20,6 @@ public class NamesAndStoredDetails implements Serializable {
     public boolean checkLogin(String name, String password) {
         if (namesAndStoredDetails.containsKey(name)) {
             if (namesAndStoredDetails.get(name).getPassword().equals(password)) {
-                System.out.println("Logowanie przebiegło pomyślnie jako: " + name);
                     return true;
                 }
             }

@@ -28,10 +28,6 @@ public class Stack implements Serializable {
         stack.clear();
     }
 
-    public void printStack(){
-        for(Card card:stack)
-            System.out.println(card.toString());
-    }
     public Card getLastCard(){
         return stack.get(stack.size()-1);
     }

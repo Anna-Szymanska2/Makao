@@ -58,7 +58,6 @@ public class GameController implements Initializable, AceListener, JackListener,
     private transient VBox avatarsVBox;
     @FXML
     private transient Label thisPlayerTurnLabel;
-    //private Game game;
     private DeckOfCards deckOfCards;
     private StateOfRound stateOfRound;
     private Player player;
@@ -97,12 +96,8 @@ public class GameController implements Initializable, AceListener, JackListener,
     transient private Label nickLabel;
 
     transient private ChoiceDialog choiceDialog;
-    private int selectedCardsIndex;
-    private int lastSelectedCardIndex;
-    transient private ImageView chosenCardView;
     private boolean isThisPlayerRound;
     private int timeOfRound;
-    private int[] playerCardsIndexes = new int[2];
     private boolean wasSelectedCardFromBottomRow = true;
     transient private Client client;
     transient private Label[] turnLabels;
@@ -111,40 +106,6 @@ public class GameController implements Initializable, AceListener, JackListener,
     @FXML
     transient private AnchorPane gamePane;
 
-
-
-
-    /*public HelloController(Client client){
-        this.client = client;
-        this.client.setController(this);
-        Player maciej = new Player("Maciej");
-        Player agata = new Player("Agata");
-        Player kuba = new Player("Kuba");
-        ArrayList<Player> players = new ArrayList<>();
-        players.add(maciej);
-        players.add(agata);
-        players.add(kuba);
-        game = new Game(players);
-        game.initializeGame();
-        player = maciej;*/
-
-    //}
-    public GameController(){
-        /*Player maciej = new Player("Maciej");
-        Player agata = new Player("Agata");
-        Player kuba = new Player("Kuba");
-        ArrayList<Player> players = new ArrayList<>();
-        players.add(maciej);
-        players.add(agata);
-        players.add(kuba);
-        game = new Game(players);
-        game.initializeGame();
-        player = maciej;*/
-    }
-    public static void main(String []arg){
-
-
-    }
 
     public void setClient(Client client) {
         this.client = client;
@@ -175,12 +136,8 @@ public class GameController implements Initializable, AceListener, JackListener,
     public void init(ServerMessage msgFromServer, String name){
         player = new Player(name);
         player.setHand(msgFromServer.getNewHand());
-
-        // player.setListener(this);
         timeOfRound = msgFromServer.getStateOfRound().getTimeOfRound();
-       // player.setListener(this);
-        //stateOfRound = msgFromServer.getStateOfRound();
-       // deckOfCards = msgFromServer.getDeckOfCards();
+
         for(Card card: player.getCardsInHand()){
             if(card.getCardValue() == CardValue.ACE){
                 AceCard cardCasted = (AceCard) card;
@@ -194,13 +151,10 @@ public class GameController implements Initializable, AceListener, JackListener,
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                //updateStateOfRoundLabels(stateOfRound);
                 for(int i = 0; i < 12; i++){
                     avatarsVBox.getChildren().get(i).setVisible(false);
                 }
                 showCards();
-                playerCardsIndexes[0] = 0;
-                playerCardsIndexes[1] = 4;
                 nickLabel.setText(name);
                 Image stackImage = new Image(getClass().getResource(msgFromServer.getCardOnTopOfTheStack().getImagePath()).toExternalForm());
                 stackCardImageView.setImage(stackImage);
@@ -282,7 +236,6 @@ public class GameController implements Initializable, AceListener, JackListener,
     }
 
     public void nextThisPlayerMove(ServerMessage msgFromServer){
-    //nwm czy to ptzrebne
         if(timer != null)
             timer.cancel();
         isThisPlayerRound = true;
@@ -344,8 +297,6 @@ public class GameController implements Initializable, AceListener, JackListener,
                                     player.addToHand(firstCard);
                                 }
                                 endOfThisPlayerRound();
-
-
 
                             }
 
@@ -532,22 +483,6 @@ public class GameController implements Initializable, AceListener, JackListener,
 
     }
 
-    public void endOfGame(ServerMessage msgFromServer){
-
-        /*Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle(null);
-                alert.setHeaderText(null);
-                if(msgFromServer.getWhoseTurn().equals(player.getNick()))
-                    alert.setContentText("Congratulations, you have won the game!!!");
-                else
-                    alert.setContentText(msgFromServer.getWhoseTurn() + " has won the game");
-                alert.showAndWait();
-            }
-        });*/
-    }
 
     public void changeSceneToRanking(ServerMessage msgFromServer) throws IOException {
         Platform.runLater(new Runnable() {
@@ -557,7 +492,6 @@ public class GameController implements Initializable, AceListener, JackListener,
                 stage.setOnCloseRequest(new EventHandler<WindowEvent>()
                 {
                     public void handle(WindowEvent e){
-                        //system.out.print("ranking");
                         ClientMessage clientMessage = new ClientMessage(client.getName(),"DISCONNECTED");
                         client.sendMessage(clientMessage);
                         client.closeEverything(client.getSocket(),client.getIn(),client.getOut());
@@ -649,8 +583,6 @@ public class GameController implements Initializable, AceListener, JackListener,
             updateStackView(stateOfRound);
             updateStateOfRoundLabels(stateOfRound);
             updateDeckView();
-            //end of round, send message
-            //endOfThisPlayerRound();
             endOfThisPlayerRound();
 
         }
@@ -750,8 +682,6 @@ public class GameController implements Initializable, AceListener, JackListener,
             }
         });
 
-        // end of round
-
     }
 
     @Override
@@ -798,8 +728,6 @@ public class GameController implements Initializable, AceListener, JackListener,
                 alert.initModality(Modality.APPLICATION_MODAL);
                 alert.initOwner(controller.stackCardImageView.getScene().getWindow());
                 alert.show();
-                //timer.cancel();
-                //end of round
                 endOfThisPlayerRound();
             }
         });

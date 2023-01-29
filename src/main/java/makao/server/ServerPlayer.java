@@ -29,21 +29,6 @@ public class ServerPlayer implements Runnable{
     private  NamesAndStoredDetails namesAndStoredDetails;
     private boolean isWinner;
 
-
-
-    public ServerPlayer(Socket socket, ServerGame serverGame){
-        try{
-            this.socket = socket;
-            this.serverGame = serverGame;
-            this.out = new ObjectOutputStream(socket.getOutputStream());
-            this.in = new ObjectInputStream(socket.getInputStream());
-            ClientMessage clientMessage;
-            clientMessage = (ClientMessage) in.readObject();
-            this.clientName = clientMessage.getPlayerName();
-        }catch  (IOException | ClassNotFoundException e) {
-            closeEverything(socket, in, out);
-        }
-    }
     public ServerPlayer(Socket socket, Server server){
         try{
             this.socket = socket;
@@ -65,10 +50,7 @@ public class ServerPlayer implements Runnable{
 
     @Override
     public void run(){
-        //ServerMessage serverMessage = new ServerMessage("WELCOME", null, null, null, getHand());
-        //serverMessage.setNewHand(getHand());
         try {
-            //sendServerMessage(serverMessage);
             loginOrRegister();
             while(users.contains(this)) {
                 while (!socket.isClosed()) {
@@ -96,14 +78,6 @@ public class ServerPlayer implements Runnable{
                                 sendServerMessage(serverMessage2);
                                 gameExists = true;
                             }
-                           /* if(!serverGame.isGameIsOn()) {
-
-                            }*/
-                            /*else{
-                                ServerMessage serverMessage2 = new ServerMessage("GAME_ALREADY_STARTED");
-                                sendServerMessage(serverMessage2);
-                            }*/
-
 
                         }
                         if (!gameExists) {
@@ -116,16 +90,11 @@ public class ServerPlayer implements Runnable{
                 }
                 gameEnded = false;
                 isWinner = false;
-                //synchronized (serverGame.getDeckOfCards()){
                 while (!socket.isClosed() && !gameEnded) {
                     boolean isTheFirstTime = true;
-                    // System.out.println(clientName + "connected");
                     while (gameIsOn) {
                         if (isTheFirstTime) {
-                            /*StateOfRound stateOfRound = new StateOfRound(serverGame.getStateOfRound());
-                            DeckOfCards deckOfCards = new DeckOfCards(serverGame.getDeckOfCards());*/
                             ServerMessage serverMessage2 = new ServerMessage("INIT", serverGame.getCardOnTopOfTheStack(), serverGame.getPlayersNames(), serverGame.getPlayersAvatars());
-                            //System.out.println("Server przesła init");
                             serverMessage2.setStateOfRound(serverGame.getStateOfRound());
                             serverMessage2.setNewHand(getHand());
                             sendServerMessage(serverMessage2);
@@ -133,20 +102,15 @@ public class ServerPlayer implements Runnable{
                             Thread.sleep(1000);
                         }
                         Thread.sleep(10);
-                        //System.out.println(clientName + "playing");
                         playMakao();
                     }
                 }
             }
 
-           // }
-
 
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } /*catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }*/ catch (InterruptedException e) {
+        }   catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
@@ -202,15 +166,9 @@ public class ServerPlayer implements Runnable{
         try {
             out.writeObject(serverMessage);
             out.reset();
-            //serverGame.getDeckOfCards().wait();
-            //serverGame.getDeckOfCards().notifyAll();
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } /*catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalMonitorStateException e){
-            System.out.println("Wątek nie jest włascicielem monitora");
-        }*/
+        }
     }
 
     public boolean isTurnIsOn() {
@@ -241,7 +199,6 @@ public class ServerPlayer implements Runnable{
             if(namesAndStoredDetails.register(username, password, messageFromClient.getPath())){
                 ServerMessage serverMessage = new ServerMessage("REGISTER_OK");
                 sendServerMessage(serverMessage);
-                //System.out.println("Registration went ok");
                 users.remove(this);
                 out.flush();
                 socket.close();
@@ -288,26 +245,6 @@ public class ServerPlayer implements Runnable{
         return code;
     }
 
-
-//    public ClientMessage saveMessage(ClientMessage clientMessage){
-//        return clientMessage;
-//    }
-//
-//    public void broadcastMessage(ServerMessage messageToSend){
-//        for(ServerPlayer serverPlayer : serverPlayers){
-//            try{
-//                serverPlayer.out.writeObject(messageToSend);
-//                out.flush();
-//            }catch (IOException e){
-//                closeEverything(socket, in, out);
-//            }
-//        }
-//    }
-//
-//    public void removeClientHandler(){
-//        serverPlayers.remove(this);
-//    }
-//
     public void closeEverything(Socket socket, ObjectInputStream in, ObjectOutputStream out){
         users.remove(this);
         try{
@@ -332,17 +269,8 @@ public class ServerPlayer implements Runnable{
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-               /* ClientMessage clientMessage;
-                if ((clientMessage = (ClientMessage) in.readObject()) != null) {
-                    messageFromClient = clientMessage;
-                    receivedMessage = true;
-                    if(gameIsOn)
-                        serverGame.setStateOfRound(clientMessage.getStateOfRound());
-                }*/
             }
-/*        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }*/
+
     }
     public void listenForMessage(){
         new Thread(new Runnable(){
@@ -353,7 +281,6 @@ public class ServerPlayer implements Runnable{
                 while (!socket.isClosed()){
                     try {
                         messageClient = (ClientMessage) in.readObject();
-                        //if (messageClient != null) {
                             messageFromClient = messageClient;
                             receivedMessage = true;
                             if(gameIsOn)
@@ -361,10 +288,8 @@ public class ServerPlayer implements Runnable{
 
 
                         if(messageClient.getActionID().equals("DISCONNECTED")&&messageClient.getPlayerName().equals(clientName)){
-                           // System.out.println("discon");
                             if(gameIsOn){
                                 serverGame.closeGame();
-                                //System.out.println("left");
                             }
                             if(serverGame!=null)
                                 serverGame.removeServerPlayer(ServerPlayer.this);

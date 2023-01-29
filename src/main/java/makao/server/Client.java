@@ -64,18 +64,6 @@ public class Client implements Serializable{
 
     }
 
-    public Client(Socket socket, String name){
-        try{
-        this.socket = socket;
-        this.out = new ObjectOutputStream(socket.getOutputStream());
-        this.in = new ObjectInputStream(socket.getInputStream());
-        this.name = name;
-
-    }catch  (IOException e) {
-        closeEverything(socket, in, out);
-    }
-    }
-
     public String getPath() {
         return path;
     }
@@ -117,30 +105,14 @@ public class Client implements Serializable{
 
                 while (!socket.isClosed()){
                     try{
-                        /*if(gameClosed){
-                            System.out.println("test");
-                            closeEverything(socket, in, out);
-                            return;
-                        }*/
                         messageFromServer = (ServerMessage) in.readObject();
 
                         switch(messageFromServer.getActionID()){
-                            /*case "WELCOME":
-                                System.out.println("Welcome, the game is starting soon ");
-                                break;*/
                             case "INIT":
-                                //System.out.println("INIT");
                                 roomController.changeScene(messageFromServer, name);
-                                //gameController.init(messageFromServer, name);
                                 break;
                             case "END":
-                                //controller.endOfGame(messageFromServer);
                                 gameController.changeSceneToRanking(messageFromServer);
-                                //zakomentowane bo poki działa w petli jest dosyć mordercze
-                               /* if(!name.equals(messageFromServer.getWhoseTurn()))
-                                    System.out.println(messageFromServer.getWhoseTurn() + " has won the game");
-                                else
-                                    System.out.println("Congratulations, you have won the game!!!");*/
                                 gameIsOn = false;
                                 break;
                             case "REGISTER_OK":
@@ -160,8 +132,6 @@ public class Client implements Serializable{
                                 choosingRoomController.changeToWaitingScene(messageFromServer.getCode());
                                 Thread.sleep(100);
                                 break;
-                            /*case "GAME_ALREADY_STATED":
-                                break;*/
                             case "GAME_NOT_EXISTS":
                                 choosingRoomController.wrongRoom();
                                 break;
@@ -169,17 +139,11 @@ public class Client implements Serializable{
                                 gameController.changeSceneToQuit();
                                 break;
                             case "DEFAULT":
-                               // System.out.println("Card on top of the stack: " + messageFromServer.getCardOnTopOfTheStack().toString());
-                                /*if(hand.getCardCount() == 0)
-                                    hand = messageFromServer.getNewHand();*/
                                 if(messageFromServer.getWhoseTurn().equals(name))
                                     gameController.nextThisPlayerMove(messageFromServer);
                                 else{
-                                    //System.out.println(messageFromServer.getWhoseTurn() + " is making their move");
                                     gameController.nextPlayerMove(messageFromServer);
                                 }
-
-
                                 break;
                         }
                     }catch (IOException e){

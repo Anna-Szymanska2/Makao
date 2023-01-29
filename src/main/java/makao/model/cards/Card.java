@@ -88,16 +88,8 @@ public class Card implements Serializable {
 
     public void playCard(StateOfRound stateOfRound, Stack stack){
         stack.addCard(this);
-
-       /* if(stateOfRound.getRoundsOfRequest() - 1 > 0){
-            stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(stateOfRound.getRequestedValue());}});
-
-        }
-        else{*/
         stateOfRound.setPossibleNextCards(new ArrayList<>() {{add(CardValue.ANYCARD);}});
         stateOfRound.setPossibleNextColour(cardColour);
-
-        // }
         stateOfRound.setLastCard(this);
         stateOfRound.setChosenColor(null);
 

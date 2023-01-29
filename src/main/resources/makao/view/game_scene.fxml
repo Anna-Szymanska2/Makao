@@ -320,7 +320,7 @@
             <Font size="25.0" />
          </font>
       </Label>
-      <Label fx:id="nickLabel" layoutX="454.0" layoutY="58.0" style="-fx-font-family: consolas;" text="Label">
+      <Label fx:id="nickLabel" layoutX="454.0" layoutY="58.0" style="-fx-font-family: consolas;">
          <font>
             <Font size="24.0" />
          </font></Label>

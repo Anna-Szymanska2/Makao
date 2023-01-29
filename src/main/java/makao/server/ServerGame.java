@@ -41,7 +41,6 @@ public class ServerGame implements Runnable{
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            //System.out.println(serverPlayers.size());
             if (serverPlayers.size() == stateOfRound.getPlayers()) {
                 code = 1;
                 initializeGame();
@@ -51,26 +50,19 @@ public class ServerGame implements Runnable{
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                //System.out.println("Gra sie zaczela");
                 ServerPlayer[] players = new ServerPlayer[serverPlayers.size()];
                 players = serverPlayers.toArray(players);
 
                 for (ServerPlayer serverPlayer : players) {
-            /*ServerMessage serverMessage = new ServerMessage("INIT", null, getStateOfRound(),getDeckOfCards(), serverPlayer.getHand());
-            serverPlayer.sendServerMessage(serverMessage);*/
                     serverPlayer.setGameIsOn(true);
                 }
 
-
-//        whoseTurn = serverPlayers.get(0).getClientName();
-//        serverPlayers.get(0).setTurnIsOn(true);
                 do {
                     if(serverPlayers.size() == 0){
                         break;
                     }
                     playMakao(players);
                 } while (gameIsOn);
-                //System.out.println("Game has ended");
                 gameExists = false;
             }
         }
@@ -78,10 +70,6 @@ public class ServerGame implements Runnable{
 
     public void playMakao(ServerPlayer [] players){
         nextTurn = true;
-        /*for (ServerPlayer serverPlayer : serverPlayers) {
-            if(serverPlayer.getTurnIsOn())
-                nextTurn = false;
-        }*/
         for (ServerPlayer serverPlayer : players) {
             if(serverPlayer.getTurnIsOn())
                 nextTurn = false;
@@ -93,14 +81,11 @@ public class ServerGame implements Runnable{
             else
                 index = (index + 1) % serverPlayers.size();
             whoseTurn = serverPlayers.get(index).getClientName();
-            /*for (ServerPlayer serverPlayer : serverPlayers) {
-                serverPlayer.setTurnIsOn(true);
-            }*/
+
             for (ServerPlayer serverPlayer : players) {
                 serverPlayer.setTurnIsOn(true);
             }
             if (serverPlayers.get(index).isWinner()) {
-               // System.out.println("Game is finished");
             for(ServerPlayer serverPlayer : serverPlayers){
                 serverPlayer.setGameIsOn(false);
                 serverPlayer.setServerGame(null);

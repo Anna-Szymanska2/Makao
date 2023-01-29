@@ -29,17 +29,8 @@ public class Server {
             while(!serverSocket.isClosed()) {
                 Socket socket = serverSocket.accept();
                 ServerPlayer serverPlayer = new ServerPlayer(socket, this);
-                //System.out.println("A new client has connected: " + serverPlayer.getClientName());
                 Thread clientThread = new Thread(serverPlayer);
                 clientThread.start();
-
-                /*ServerGame serverGame = new ServerGame();
-                Thread gameThread = new Thread(serverGame);
-                for (int i = 0; i < numberOfPlayers; i++) {
-                    //Socket socket = serverSocket.accept();
-                    serverGame.addServerPlayer(serverPlayer);
-                }
-                gameThread.start();*/
             }
         }catch (IOException e) {
             e.printStackTrace();

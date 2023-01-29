@@ -79,12 +79,6 @@ public class DeckOfCards implements Serializable {
     public ArrayList<Card> getDeckOfCards() {
         return deckOfCards;
     }
-
-    public void printDeckOfCards(){
-        for(Card card:deckOfCards)
-            System.out.println(card.toString());
-    }
-
     public void shuffle(){
         Collections.shuffle(deckOfCards);
     }

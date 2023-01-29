@@ -21,17 +21,9 @@ import java.net.Socket;
 
 public class LoggingController {
     @FXML
-    private Button registerButton;
-
-    @FXML
     private AnchorPane loggingPane;
-
-    @FXML
-    private Button logInButton;
-
     @FXML
     private TextField nickTextField;
-
     @FXML
     private PasswordField passwordField;
     private Client client;
@@ -39,10 +31,6 @@ public class LoggingController {
     public void changeViewToRegister() throws IOException {
         clearFields();
         changeScene("register_scene.fxml");
-
-        /*RegisterController controller = new RegisterController();
-        Stage newStage = (Stage) scene.getWindow();
-        newStage.show();*/
 
     }
 

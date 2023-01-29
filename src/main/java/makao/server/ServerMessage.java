@@ -20,13 +20,7 @@ public class ServerMessage implements Serializable {
     private ArrayList<String> playersNames;
     private ArrayList<String> playersAvatars;
     private ArrayList<String> ranking;
-   //private ArrayList<Card> cardsToDraw = new ArrayList<>();
 
-    ServerMessage(String whoseTurn, Card cardOnTopOfTheStack, StateOfRound stateOfRound){
-        this.whoseTurn = whoseTurn;
-        this.cardOnTopOfTheStack = cardOnTopOfTheStack;
-        this.stateOfRound = stateOfRound;
-    }
     ServerMessage(String actionID){
         this.actionID = actionID;
     }
@@ -49,18 +43,6 @@ public class ServerMessage implements Serializable {
         this.stateOfRound = stateOfRound;
         this.deckOfCards = deckOfCards;
     }
-    ServerMessage(String actionID, String whoseTurn, StateOfRound stateOfRound, DeckOfCards deckOfCards, Hand hand){
-        this.actionID = actionID;
-        this.whoseTurn = whoseTurn;
-        this.stateOfRound = stateOfRound;
-        this.deckOfCards = deckOfCards;
-        this.newHand = hand;
-    }
-    ServerMessage(String actionID, StateOfRound stateOfRound, DeckOfCards deckOfCards){
-        this.actionID = actionID;
-        this.stateOfRound = stateOfRound;
-        this.deckOfCards = deckOfCards;
-    }
 
     public ArrayList<String> getPlayersNames() {
         return playersNames;
@@ -77,10 +59,6 @@ public class ServerMessage implements Serializable {
     public void setRanking(ArrayList<String> ranking) {
         this.ranking = ranking;
     }
-
-    //    public void setCardsToDraw(ArrayList<Card> cardsToDraw) {
-//        this.cardsToDraw = cardsToDraw;
-//    }
     public void setNewHand(Hand newHand) {
         this.newHand = newHand;
     }
