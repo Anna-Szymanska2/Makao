@@ -2,6 +2,7 @@ package makao.controller;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -16,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import makao.model.cards.*;
 import makao.model.game.*;
 import makao.server.Client;
@@ -554,6 +556,21 @@ public class GameController implements Initializable, AceListener, JackListener,
             @Override
             public void run() {
                 Stage stage = (Stage) gamePane.getScene().getWindow();
+                stage.setOnCloseRequest(new EventHandler<WindowEvent>()
+                {
+                    public void handle(WindowEvent e){
+                        System.out.print("ranking");
+                        ClientMessage clientMessage = new ClientMessage(client.getName(),"DISCONNECTED");
+                        client.sendMessage(clientMessage);
+                        client.closeEverything(client.getSocket(),client.getIn(),client.getOut());
+                        try {
+                            Platform.exit();
+                        }
+                        catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                });
                 stage.close();
                 FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("game_ending_scene.fxml"));
                 Scene scene = null;
@@ -579,6 +596,21 @@ public class GameController implements Initializable, AceListener, JackListener,
             @Override
             public void run() {
                 Stage stage = (Stage) gamePane.getScene().getWindow();
+                stage.setOnCloseRequest(new EventHandler<WindowEvent>()
+                {
+                    public void handle(WindowEvent e){
+                        System.out.print("quit");
+                        ClientMessage clientMessage = new ClientMessage(client.getName(),"DISCONNECTED");
+                        client.sendMessage(clientMessage);
+                        client.closeEverything(client.getSocket(),client.getIn(),client.getOut());
+                        try {
+                            Platform.exit();
+                        }
+                        catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                });
                 stage.close();
                 FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("game_quit_scene.fxml"));
                 Scene scene = null;
@@ -608,7 +640,8 @@ public class GameController implements Initializable, AceListener, JackListener,
         else {
              clientMessage = new ClientMessage(client.getName(),stateOfRound,"END", deckOfCards);
         }
-        client.sendMessage(clientMessage);
+        if(!client.getSocket().isClosed())
+            client.sendMessage(clientMessage);
     }
     public void tryToPlayCards(){
         if(player.areChosenCardsCorrect(stateOfRound)){

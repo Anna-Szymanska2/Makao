@@ -39,21 +39,6 @@ public class RoomController {
             public void run() {
                 try {
                     Stage stage = (Stage) waitingPane.getScene().getWindow();
-                    stage.setOnCloseRequest(new EventHandler<WindowEvent>()
-                    {
-                        public void handle(WindowEvent e){
-                            System.out.print("game");
-                            ClientMessage clientMessage = new ClientMessage(client.getName(),"DISCONNECTED");
-                            client.sendMessage(clientMessage);
-                            client.closeEverything(client.getSocket(),client.getIn(),client.getOut());
-                            try {
-                                Platform.exit();
-                            }
-                            catch (Exception e1) {
-                                e1.printStackTrace();
-                            }
-                        }
-                    });
                     stage.close();
                     FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("game_scene.fxml"));
                     Scene scene = new Scene(fxmlLoader.load());
@@ -62,6 +47,23 @@ public class RoomController {
                     client.setGameController(gameController);
                     gameController.setClient(client);
                     gameController.init(msgFromServer, name);
+                    stage.setOnCloseRequest(new EventHandler<WindowEvent>()
+                    {
+                        public void handle(WindowEvent e){
+                            System.out.print("game");
+                            ClientMessage clientMessage = new ClientMessage(client.getName(),"DISCONNECTED");
+                            client.sendMessage(clientMessage);
+                            client.closeEverything(client.getSocket(),client.getIn(),client.getOut());
+                            client.getGameController().endOfThisPlayerRound();
+                            try {
+                                Platform.exit();
+                            }
+                            catch (Exception e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                    });
+
                     stage.show();
                 } catch (IOException e) {
                     throw new RuntimeException(e);

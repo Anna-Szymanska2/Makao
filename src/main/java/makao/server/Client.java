@@ -386,6 +386,10 @@ public class Client implements Serializable{
         this.registerController = registerController;
     }
 
+    public GameController getGameController() {
+        return gameController;
+    }
+
     public void setRoomController(RoomController roomController) {
         this.roomController = roomController;
     }
