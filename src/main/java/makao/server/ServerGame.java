@@ -99,6 +99,7 @@ public class ServerGame implements Runnable{
             for(ServerPlayer serverPlayer : serverPlayers){
                 serverPlayer.setGameIsOn(false);
                 serverPlayer.setServerGame(null);
+                serverPlayer.setWinner(false);
             }
                 gameIsOn = false;
             }

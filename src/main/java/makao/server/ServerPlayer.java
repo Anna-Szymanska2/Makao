@@ -115,6 +115,7 @@ public class ServerPlayer implements Runnable{
                     }
                 }
                 gameEnded = false;
+                isWinner = false;
                 //synchronized (serverGame.getDeckOfCards()){
                 while (!socket.isClosed() && !gameEnded) {
                     boolean isTheFirstTime = true;
@@ -152,7 +153,6 @@ public class ServerPlayer implements Runnable{
     private void playMakao() throws IOException {
         if (serverGame != null) {
             if (serverGame.isGameIsOn()) {
-                System.out.println("Działaj");
                 if (turnIsOn) {
                     String whoseTurn = serverGame.getWhoseTurn();
                     ServerMessage serverMessage = new ServerMessage("DEFAULT", whoseTurn, serverGame.getCardOnTopOfTheStack(), serverGame.getStateOfRound(), serverGame.getDeckOfCards());
@@ -224,6 +224,10 @@ public class ServerPlayer implements Runnable{
         return isWinner;
     }
 
+    public void setWinner(boolean winner) {
+        isWinner = winner;
+    }
+
     public void setTurnIsOn(boolean turnIsOn) {
         this.turnIsOn = turnIsOn;
     }
@@ -260,6 +264,7 @@ public class ServerPlayer implements Runnable{
                     i++;
                 if(i>1)
                     alreadyLogged = true;
+
             }
 
             if(!alreadyLogged && namesAndStoredDetails.checkLogin(username, password)){
