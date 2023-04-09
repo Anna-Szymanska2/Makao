@@ -14,10 +14,10 @@ Anna Szymańska, Dorota Wlazło
 - ranking players based on the number of wins.
 
 ## Usage
-You need to run the main class Server once and the main class in the Main package (view) as many times as the number of clients you want to connect. The first window that appears is the login window. If we are not registered, we need to click the "Register" button, and if we are, we need to enter our login details and click "Login".
+<p>You need to run the main class Server once and the main class in the Main package (view) as many times as the number of clients you want to connect. The first window that appears is the login window. If we are not registered, we need to click the "Register" button, and if we are, we need to enter our login details and click "Login". </p>
 
 ![Fig. 1 – login view](doc_images/img.png "Fig. 1 – login view")
-a)	After clicking "Register", the registration view will appear, where you need to enter your login details and select your avatar by clicking on a given icon. Registration will be completed after clicking "Sign up", and we will be automatically redirected to the login view. The same will happen after clicking "Back to sign in", but then the entered data will not be remembered.
+<p> a)	After clicking "Register", the registration view will appear, where you need to enter your login details and select your avatar by clicking on a given icon. Registration will be completed after clicking "Sign up", and we will be automatically redirected to the login view. The same will happen after clicking "Back to sign in", but then the entered data will not be remembered. </p>
 ![Fig. 2 – register view](doc_images/img_1.png "Fig. 2 – register view")
 b)	After clicking "Login", if our details are correct, we will be taken to a panel where we can create a game or join an existing one. <br>
 If we want to create a new game, we need to select the number of players we want and the duration of each player's turn, and then click "Create a new room". We will then be taken to the waiting room view, where the number of our game will be displayed. If we want to join a game created by another player, we need to enter this number in the game selection panel and click "Enter". After clicking "Enter", we will also be taken to the waiting room.
