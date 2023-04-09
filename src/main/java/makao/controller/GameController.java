@@ -657,8 +657,10 @@ public class GameController implements Initializable, AceListener, JackListener,
      */
     public void endOfThisPlayerRound(){
         isThisPlayerRound = false;
-        timer.cancel();
-        showSelectedCards();;
+        if(timer != null){
+            timer.cancel();
+        }
+        showSelectedCards();
         showCards();
         ClientMessage clientMessage;
         if(player.hasPlayerWon()){
