@@ -1,7 +1,7 @@
 # OPA22Z_Szymańska_Wlazło_Makao
 An application that allows multiplayer game of Makao (a card game).
 
-## Authors and acknowledgment
+## Authors
 Anna Szymańska, Dorota Wlazło
 
 ## Requirements:
@@ -19,7 +19,7 @@ Anna Szymańska, Dorota Wlazło
 ![Fig. 1 – login view](doc_images/img.png "Fig. 1 – login view")
 <p> a)	After clicking "Register", the registration view will appear, where you need to enter your login details and select your avatar by clicking on a given icon. Registration will be completed after clicking "Sign up", and we will be automatically redirected to the login view. The same will happen after clicking "Back to sign in", but then the entered data will not be remembered. </p>
 ![Fig. 2 – register view](doc_images/img_1.png "Fig. 2 – register view")
-b)	After clicking "Login", if our details are correct, we will be taken to a panel where we can create a game or join an existing one. <br>
+<p>  b)	After clicking "Login", if our details are correct, we will be taken to a panel where we can create a game or join an existing one. </p> 
 <p>If we want to create a new game, we need to select the number of players we want and the duration of each player's turn, and then click "Create a new room". We will then be taken to the waiting room view, where the number of our game will be displayed. If we want to join a game created by another player, we need to enter this number in the game selection panel and click "Enter". After clicking "Enter", we will also be taken to the waiting room.</p>
 ![Fig. 3 – game launch panel](doc_images/img_2.png "Fig. 3 – game launch panel")
 ![Fig. 4 – waiting room](doc_images/img_3.png "Fig. 4 – waiting room")
@@ -30,5 +30,5 @@ The player can only play cards during their turn, and the turn time is counted d
 ![Fig. 6 – game view, 4 was chosen to play](doc_images/img_5.png "Fig. 6 – game view, 4 was chosen to play")
 <p>Clicking the "Back to join game room" button changes the view to the panel where you can create a new game or join an existing one (Figure 3).</p>
 ![Fig. 7 – end of the game](doc_images/img_6.png "Fig. 7 – end of the game")</p>
-<p>vIf during the game one of the players leaves, the remaining players will be transferred to a panel with relevant information, where there is also a button "Back to join game room", which works the same way as in the ranking view.
+<p>If during the game one of the players leaves, the remaining players will be transferred to a panel with relevant information, where there is also a button "Back to join game room", which works the same way as in the ranking view. </p>
 ![Fig. 8 – player leaving](doc_images/img_7.png "Fig. 8 – player leaving")
