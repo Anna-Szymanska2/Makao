@@ -1,4 +1,4 @@
-# OPA22Z_Szymańska_Wlazło_Makao
+# Makao
 An application that allows multiplayer game of Makao (a card game).
 
 ## Authors
